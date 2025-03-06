@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Ui/Static/onboarding_screen.dart';
+import 'package:jost_pay_wallet/services/local_storage.dart/local_storage_export.dart';
 import 'package:jost_pay_wallet/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 // import 'package:uni_links/uni_links.dart';
@@ -20,6 +22,8 @@ bool _initialUriIsHandled = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
+  await Hive.initFlutter();
+  await Hive.openBox(LocalStoreKeysManger.appBox.rawValue);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
@@ -86,7 +90,11 @@ class _MyAppState extends State<MyApp> {
         // ChangeNotifierProvider(create: (context) => BuySellProvider()),
         // ChangeNotifierProvider(create: (context) => ExchangeProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        Provider<LocalStorageRepo>(
+          create: (context) => LocalStorageRepoImpl(
+              Hive.box(LocalStoreKeysManger.appBox.rawValue)),
+        ),
+        ChangeNotifierProvider(create: (context) => AuthProvider(context.read<LocalStorageRepo>())),
       ],
       child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
         return ScreenUtilInit(
@@ -97,6 +105,7 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             navigatorKey: NavigationService.navigatorKey,
+            
             title: 'JostPayWallet',
             theme: themeProvider.lightTheme,
             darkTheme: themeProvider.darkTheme,

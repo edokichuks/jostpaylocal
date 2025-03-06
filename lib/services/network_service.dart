@@ -70,6 +70,8 @@ class NetworkService {
     Map<String, dynamic>? body,
     Map<String, String>? headers,
   }) async {
+    debugLog('Body data coming in => $body');
+    debugLog('Body data going out => ${Uri(queryParameters: body).query}');
     try {
       var response = await http
           .post(

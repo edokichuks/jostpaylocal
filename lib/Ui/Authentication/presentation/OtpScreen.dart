@@ -1,10 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jost_pay_wallet/Values/Helper/logger.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
+import 'package:jost_pay_wallet/domain/info.dart';
+import 'package:provider/provider.dart';
 import '../../../Values/MyColor.dart';
 import '../../../Values/MyStyle.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -17,10 +21,8 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  late SharedPreferences sharedPreferences;
-  late String emailCode;
+  String emailCode = '';
 
-  bool isLoading = false;
   bool clearText = false;
 
   @override
@@ -98,9 +100,15 @@ class _OtpScreenState extends State<OtpScreen> {
                 borderWidth: 0.68,
                 borderRadius: const BorderRadius.all(Radius.circular(12.5)),
                 showFieldAsBox: true,
-                clearText: clearText,
+                // clearText: clearText,
                 autoFocus: true,
-                onCodeChanged: (String code) {},
+                onCodeChanged: (String code) {
+                  if (code.length > 4) {
+                    setState(() {
+                      emailCode = code;
+                    });
+                  }
+                },
                 onSubmit: (String verificationCode) {
                   emailCode = verificationCode;
                 },
@@ -113,37 +121,40 @@ class _OtpScreenState extends State<OtpScreen> {
                         .copyWith(fontSize: 16, fontWeight: FontWeight.w500)),
               ),
               const SizedBox(height: 28),
-              isLoading == true
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                      color: MyColor.greenColor,
-                    ))
-                  : SizedBox(
-                      width: double.infinity,
-                      child: TextButton(
-                        onPressed: () => {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DashboardScreen()))
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: MyColor.greenColor,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16), // Padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // Rounded corners
+              Consumer<AuthProvider>(builder: (context, providerData, _) {
+                return providerData.isVerifyEmail
+                    ? const Center(
+                        child: CupertinoActivityIndicator(
+                        color: MyColor.greenColor,
+                      ))
+                    : SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: () async {
+                            if (emailCode.length == 6) {
+                              debugLog('code sednding out $emailCode');
+                              await providerData.verifyEmail(emailCode);
+                            } else {
+                              Info.showErrorMessage('Code not complete');
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: MyColor.greenColor,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16), // Padding
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // Rounded corners
+                            ),
+                          ),
+                          child: Text(
+                            "Confirm",
+                            style: NewStyle.btnTx16SplashBlue
+                                .copyWith(color: NewColor.mainWhiteColor),
                           ),
                         ),
-                        child: Text(
-                          "Confirm",
-                          style: NewStyle.btnTx16SplashBlue
-                              .copyWith(color: NewColor.mainWhiteColor),
-                        ),
-                      ),
-                    ),
+                      );
+              }),
             ],
           ),
         ),

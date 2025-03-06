@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/models/login_response.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/repository/auth_repository.dart';
+import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:jost_pay_wallet/Values/Helper/logger.dart';
 import 'package:jost_pay_wallet/domain/info.dart';
+import 'package:jost_pay_wallet/services/local_storage.dart/local_storage_export.dart';
 import 'package:jost_pay_wallet/services/navigation_service.dart';
 
 class AuthProvider extends ChangeNotifier {
+  final LocalStorageRepo _localStorageRepo;
+  AuthProvider(this._localStorageRepo);
   static final context = NavigationService.navigatorKey.currentContext;
   final authRepository = AuthRepository();
   // final LocalStorageService storageService = LocalStorageService();
@@ -24,6 +28,7 @@ class AuthProvider extends ChangeNotifier {
   String userName = "";
   String userEmail = "";
   String email = "";
+  String tempToken = "";
   String password = "";
   String? error;
   String id = "";
@@ -48,24 +53,35 @@ class AuthProvider extends ChangeNotifier {
   //   }
   // }
 
-  // Future verifyEmail(String pin, bool isReset) async {
-  //   try {
-  //     setError(null);
-  //     setgetVerifyEmail(true);
-  //     final response = await authRepository.verifyEmail(pin);
-  //     if (response.success == true) {
-  //       verifyEmailResponse = response;
-  //       setgetVerifyEmail(true);
-  //       isReset == true
-  //           ? Navigator.pushNamed(context!, AppRoutes.newPassword)
-  //           : Navigator.pushNamed(context!, AppRoutes.roleSelection);
-  //     } else {
-  //       setgetVerifyEmail(false);
-  //     }
-  //   } catch (e) {
-  //     setgetVerifyEmail(false);
-  //   }
-  // }
+  Future verifyEmail(
+    String pin,
+  ) async {
+    debugLog('Attempting to verify email');
+    try {
+      setError(null);
+      setgetVerifyEmail(true);
+
+      final response = await authRepository.verifyEmail(pin, tempToken);
+      debugLog('verigy Response =>> ${response.toString()}');
+
+      if (response.result == true) {
+        _localStorageRepo.put(
+            LocalStoreKeysManger.token.rawValue, response.token);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+              NavigationService.navigatorKey.currentContext!,
+              MaterialPageRoute(builder: (context) => const DashboardScreen()));
+        });
+      } else {
+        Info.showErrorMessage(response.message);
+        setError(response.message);
+      }
+
+      setgetVerifyEmail(false);
+    } catch (e) {
+      setgetVerifyEmail(false);
+    }
+  }
 
   // Future verifyToken(String pin, bool isReset, String id) async {
   //   try {
@@ -100,6 +116,7 @@ class AuthProvider extends ChangeNotifier {
       debugLog('login Response =>> ${response.toString()}');
 
       if (response.result == true) {
+        settempToken(response.token);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
               NavigationService.navigatorKey.currentContext!,
@@ -177,6 +194,11 @@ class AuthProvider extends ChangeNotifier {
 
   void setgetRegister(value) {
     isRegistering = value;
+    notifyListeners();
+  }
+
+  void settempToken(value) {
+    tempToken = value;
     notifyListeners();
   }
 

@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
@@ -11,8 +9,6 @@ import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -31,50 +27,17 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final String _response = "";
-
-  static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", token);
-  }
-
-  void _validateForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        isLoading = true;
-      });
-
-      final Map<String, dynamic> body = {
-        "email": _emailController.text,
-        "password": _passwordController.text,
-      };
-      AuthProvider auth = AuthProvider();
-
-      await auth.login(
-          _emailController.text.trim(), _passwordController.text.trim());
-
-      setState(() {
-        isLoading = false;
-      });
-      // loginAccount();
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      // Form is invalid, no action needed here since warnings are shown automatically
-    }
-  }
-
-  loginAccount() async {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const OtpScreen()));
-    // Navigator.pushReplacement(context,
-    //     MaterialPageRoute(builder: (context) => const DashboardScreen()));
-  }
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -181,8 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 //         color: MyColor.greenColor,
                 //       ))
                 //     :
-                Consumer<AuthProvider>(builder: (context, data, _) {
-           
+                  Consumer<AuthProvider>(builder: (context, data, _) {
                   return SizedBox(
                     width: double.infinity,
                     child: TextButton(

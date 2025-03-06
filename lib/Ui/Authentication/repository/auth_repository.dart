@@ -44,18 +44,23 @@ class AuthRepository {
     return LoginResponse.fromMap(response);
   }
 
-  // Future<VerifyEmailResponse> verifyEmail(String pin) async {
-  //   var response = await networkService.postWithQuery(
-  //     "auth/verification",
-  //     headers: headers,
-  //     query: HelperService.buildQuery(pin),
-  //   );
+  Future<LoginResponse> verifyEmail(String pin, String token) async {
+    
+    final _header = 
+    {
+      "Accept": "application/x-www-form-urlencoded",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": token,
+    };
+    var response = await networkService
+        .post("verify-email", headers: _header, body: {"code": pin});
 
-  //   var data = VerifyEmailResponse.fromJson(response).data!;
-  //   await storageService.writeSecureData("userToken", data.token!);
-  //   await storageService.writeSecureData("userId", data.uuid!);
-  //   return VerifyEmailResponse.fromJson(response);
-  // }
+    var resp = LoginResponse.fromMap(response);
+    if (resp.result == true) {
+      // await storageService.writeSecureData("userToken", resp.token!);
+    }
+    return LoginResponse.fromMap(response);
+  }
 
   // Future<GenericResponse> forgotPassword(String email) async {
   //   var body = <String, dynamic>{
