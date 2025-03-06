@@ -1,7 +1,7 @@
 class RegisterResponse {
   bool? success;
   String? message;
-  Data? data;
+  RegisterModel? data;
 
   RegisterResponse({this.success, this.message, this.data});
 
@@ -9,7 +9,7 @@ class RegisterResponse {
     success = json['success'];
     message = json['message'];
 
-    data = Data.fromJson(json["data"]);
+    data = RegisterModel.fromJson(json["data"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -23,25 +23,44 @@ class RegisterResponse {
   }
 }
 
-class Data {
-  String? fullName;
+class RegisterModel {
+  String? firstName;
+  String? lastName;
+  String? phone;
+  String? country;
   String? email;
+  String? password;
+  String? referralCode;
 
-  Data({
-    this.fullName,
+  RegisterModel({
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.password,
+    this.country,
+    this.referralCode,
     this.email,
   });
 
-  Data.fromJson(Map<String, dynamic> json) {
-    fullName = json['fullName'];
-
+  RegisterModel.fromJson(Map<String, dynamic> json) {
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    phone = json['phone'];
+    country = json['country'];
+    password = json['password'];
+    referralCode = json['referral_code'];
     email = json['email'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> response = <String, dynamic>{};
 
-    response['fullName'] = fullName;
+    response['last_name'] = lastName;
+    response['first_name'] = firstName;
+    response['phone'] = phone;
+    response['country'] = country;
+    response['password'] = password;
+    response['referral_code'] = response;
     response['email'] = email;
 
     return response;

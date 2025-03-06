@@ -6,15 +6,16 @@ class LoginResponse extends Equatable {
   final bool? result;
   final String? token;
   final String? loginMethod;
-  final String? message;
+  final dynamic message;
 
-  const LoginResponse({this.result, this.token, this.loginMethod, this.message});
+  const LoginResponse(
+      {this.result, this.token, this.loginMethod, this.message});
 
   factory LoginResponse.fromMap(Map<String, dynamic> data) => LoginResponse(
         result: data['result'] as bool?,
         token: data['token'] as String?,
         loginMethod: data['login_method'] as String?,
-        message: data['message'] as String?,
+        message: data['message'] as dynamic,
       );
 
   Map<String, dynamic> toMap() => {

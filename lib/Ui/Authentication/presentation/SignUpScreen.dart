@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/models/register_model.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignInScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
+import 'package:jost_pay_wallet/domain/info.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:csc_picker/csc_picker.dart';
 
@@ -32,21 +37,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final referralController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final String _response = '';
 
-  static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", token);
-  }
-
-  void _validateForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      // userRegister();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const OtpScreen()));
-    } else {}
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _firstNameController.dispose();
+    referralController.dispose();
+    _lastNameController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    super.dispose();
   }
 
   @override
@@ -123,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         color: themedata.tertiary,
                         fontFamily: 'SF Pro Rounded',
                       ),
-                      // controller: _fullNameController,
+                      controller: _firstNameController,
                       decoration: NewStyle.authInputDecoration,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -147,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         color: themedata.tertiary,
                         fontFamily: 'SF Pro Rounded',
                       ),
-                      controller: _fullNameController,
+                      controller: _lastNameController,
                       decoration: NewStyle.authInputDecoration,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -213,9 +219,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
+                    // const SizedBox(height: 14),
+                    // Text(
+                    //   'Country',
+                    //   style: NewStyle.tx14SplashWhite.copyWith(
+                    //       color: MyColor.lightBlackColor,
+                    //       fontWeight: FontWeight.w700,
+                    //       height: 2),
+                    // ),
+                    // TextFormField(
+                    //   style: TextStyle(
+                    //     fontSize: 14.sp,
+                    //     color: themedata.tertiary,
+                    //     fontFamily: 'SF Pro Rounded',
+                    //   ),
+                    //   // controller: _phoneNumberController,
+                    //   decoration: NewStyle.authInputDecoration,
+                    //   keyboardType: TextInputType.phone,
+                    // ),
                     const SizedBox(height: 14),
                     Text(
-                      'Refer ID',
+                      'Refer ID (Optional))',
                       style: NewStyle.tx14SplashWhite.copyWith(
                           color: MyColor.lightBlackColor,
                           fontWeight: FontWeight.w700,
@@ -227,7 +251,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         color: themedata.tertiary,
                         fontFamily: 'SF Pro Rounded',
                       ),
-                      // controller: _phoneNumberController,
+                      controller: referralController,
                       decoration: NewStyle.authInputDecoration,
                       keyboardType: TextInputType.phone,
                     ),
@@ -263,64 +287,84 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: MyStyle.tx11Grey,
                     ),
                     const SizedBox(height: 14),
-                    Text(
-                      'Confirm Password',
-                      style: NewStyle.tx14SplashWhite.copyWith(
-                          color: MyColor.lightBlackColor,
-                          fontWeight: FontWeight.w700,
-                          height: 2),
-                    ),
-                    TextFormField(
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: themedata.tertiary,
-                        fontFamily: 'SF Pro Rounded',
-                      ),
-                      // controller: _passwordController,
-                      obscureText: true,
-                      decoration: NewStyle.authInputDecoration,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        } else if (value.length < 8) {
-                          return 'Please enter at least 8 letters';
-                        }
-                        return null;
-                      },
-                    ),
-                    const Text(
-                      'Only letters, numbers and characters are allowed',
-                      style: MyStyle.tx11Grey,
-                    )
+                    // Text(
+                    //   'Confirm Password',
+                    //   style: NewStyle.tx14SplashWhite.copyWith(
+                    //       color: MyColor.lightBlackColor,
+                    //       fontWeight: FontWeight.w700,
+                    //       height: 2),
+                    // ),
+                    // TextFormField(
+                    //   style: TextStyle(
+                    //     fontSize: 14.sp,
+                    //     color: themedata.tertiary,
+                    //     fontFamily: 'SF Pro Rounded',
+                    //   ),
+                    //   // controller: _passwordController,
+                    //   obscureText: true,
+                    //   decoration: NewStyle.authInputDecoration,
+                    //   keyboardType: TextInputType.emailAddress,
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Please enter some text';
+                    //     } else if (value != passwordController.text) {
+                    //       return 'Passwords must match';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
+                    // const Text(
+                    //   'Only letters, numbers and characters are allowed',
+                    //   style: MyStyle.tx11Grey,
+                    // )
                   ],
                 ),
               ),
               const SizedBox(height: 40),
               Column(children: [
-                isLoading == true
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        color: MyColor.greenColor,
-                      ))
-                    : SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: () => {_validateForm()},
-                          style: TextButton.styleFrom(
-                            backgroundColor: MyColor.greenColor,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                Consumer<AuthProvider>(builder: (context, prov, _) {
+                  return prov.isRegistering
+                      ? Center(
+                          child: CupertinoActivityIndicator(
+                            color: MyColor.greenColor,
+                          ),
+                        )
+                      : SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                final model = RegisterModel(
+                                  country: "Nigeria",
+                                  phone: _phoneNumberController.text,
+                                  email: _emailController.text,
+                                  firstName: _firstNameController.text,
+                                  lastName: _lastNameController.text,
+                                  password: _passwordController.text,
+                                  referralCode: referralController.text.isEmpty
+                                      ? 'nil'
+                                      : referralController.text,
+                                );
+                                await prov.signup(model: model);
+                              } else {
+                                Info.showErrorMessage('Invalid form inputs');
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: MyColor.greenColor,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              "Sign Up",
+                              style: NewStyle.btnTx16SplashBlue
+                                  .copyWith(color: NewColor.mainWhiteColor),
                             ),
                           ),
-                          child: Text(
-                            "Sign Up",
-                            style: NewStyle.btnTx16SplashBlue
-                                .copyWith(color: NewColor.mainWhiteColor),
-                          ),
-                        ),
-                      ),
+                        );
+                }),
                 const SizedBox(height: 117),
                 Container(
                   child: Row(mainAxisSize: MainAxisSize.min, children: [

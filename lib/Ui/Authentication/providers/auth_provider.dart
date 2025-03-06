@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/models/login_response.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/models/register_model.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/repository/auth_repository.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
@@ -129,6 +130,32 @@ class AuthProvider extends ChangeNotifier {
       setgetLogin(false);
     } catch (e) {
       setgetLogin(false);
+    }
+  }
+
+  Future signup({required RegisterModel model}) async {
+    debugLog('Attempting to signup with ${model.toJson()}');
+    try {
+      setError(null);
+      setgetRegister(true);
+
+      final response = await authRepository.register(model: model);
+      debugLog('signup Response =>> ${response.toString()}');
+
+      if (response.result == true) {
+        settempToken(response.token);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+              NavigationService.navigatorKey.currentContext!,
+              MaterialPageRoute(builder: (context) => const OtpScreen()));
+        });
+      } else {
+        Info.showErrorMessage(response.message);
+      }
+
+      setgetRegister(false);
+    } catch (e) {
+      setgetRegister(false);
     }
   }
 

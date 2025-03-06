@@ -1,4 +1,5 @@
 import 'package:jost_pay_wallet/Ui/Authentication/models/login_response.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/models/register_model.dart';
 import 'package:jost_pay_wallet/services/helper_service.dart';
 import 'package:jost_pay_wallet/services/navigation_service.dart';
 import 'package:jost_pay_wallet/services/network_service.dart';
@@ -44,10 +45,28 @@ class AuthRepository {
     return LoginResponse.fromMap(response);
   }
 
+  Future<LoginResponse> register({required RegisterModel model}) async {
+    final Map<String, dynamic> data = {
+      'last_name': model.lastName,
+      'first_name': model.firstName,
+      'phone': model.phone,
+      'country': model.country,
+      'password': model.password,
+      'referral_code': model.referralCode,
+      'email': model.email
+    };
+    var response =
+        await networkService.post("signup", headers: headers, body: data);
+
+    var resp = LoginResponse.fromMap(response);
+    if (resp.result == true) {
+      // await storageService.writeSecureData("userToken", resp.token!);
+    }
+    return LoginResponse.fromMap(response);
+  }
+
   Future<LoginResponse> verifyEmail(String pin, String token) async {
-    
-    final _header = 
-    {
+    final _header = {
       "Accept": "application/x-www-form-urlencoded",
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": token,

@@ -1,6 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/services/navigation_service.dart';
 
 class Info {
@@ -9,7 +8,7 @@ class Info {
     message,
   ) {
     Flushbar(
-      message: message,
+      message: message.toString(),
       backgroundColor: const Color(0xFFB92E00),
       flushbarStyle: FlushbarStyle.FLOATING,
       duration: const Duration(seconds: 2),
