@@ -11,13 +11,9 @@ import 'package:jost_pay_wallet/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 // import 'package:uni_links/uni_links.dart';
 
-import 'Provider/Account_Provider.dart';
-import 'Provider/BuySellProvider.dart';
 import 'Provider/DashboardProvider.dart';
-import 'Provider/ExchangeProvider.dart';
 import 'Provider/InternetProvider.dart';
 import 'Provider/Token_Provider.dart';
-import 'Provider/Transection_Provider.dart';
 
 bool _initialUriIsHandled = false;
 
@@ -83,12 +79,12 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DashboardProvider()),
-        ChangeNotifierProvider(create: (context) => AccountProvider()),
+        // ChangeNotifierProvider(create: (context) => AccountProvider()),
         ChangeNotifierProvider(create: (context) => InternetProvider()),
         ChangeNotifierProvider(create: (context) => TokenProvider()),
-        ChangeNotifierProvider(create: (context) => TransectionProvider()),
-        ChangeNotifierProvider(create: (context) => BuySellProvider()),
-        ChangeNotifierProvider(create: (context) => ExchangeProvider()),
+        // ChangeNotifierProvider(create: (context) => TransectionProvider()),
+        // ChangeNotifierProvider(create: (context) => BuySellProvider()),
+        // ChangeNotifierProvider(create: (context) => ExchangeProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],

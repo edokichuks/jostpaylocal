@@ -31,7 +31,7 @@ class SellCoinConfirmScreen extends StatefulWidget {
 }
 
 class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
-  late TransectionProvider transectionProvider;
+  // late TransectionProvider transectionProvider;
   late TokenProvider tokenProvider;
   late Map<String, dynamic> bankData;
   late Map<String, dynamic> sellInfo;
@@ -73,10 +73,10 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
         setState(() {
           isLoading = false;
         });
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return SellCoinDetailScreen(
-              data: res, sData: sellInfo, cData: coinInfo);
-        }));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return SellCoinDetailScreen(
+        //       data: res, sData: sellInfo, cData: coinInfo);
+        // }));
       } else {
         setState(() {
           isLoading = false;

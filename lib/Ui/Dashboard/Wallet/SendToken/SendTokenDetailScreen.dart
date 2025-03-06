@@ -18,7 +18,7 @@ class SendTokenDetailScreen extends StatefulWidget {
 }
 
 class _SendTokenDetailScreenState extends State<SendTokenDetailScreen> {
-  late TransectionProvider transectionProvider;
+  // late TransectionProvider transectionProvider;
   late TokenProvider tokenProvider;
   bool isLoading = false;
 
@@ -207,10 +207,12 @@ class _SendTokenDetailScreenState extends State<SendTokenDetailScreen> {
                         // width: double.infinity,
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: () => (Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const CoinScreen();
-                          }))),
+                          onPressed: () {},
+                          
+                          // => (Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return const CoinScreen();
+                          // }))),
                           style: TextButton.styleFrom(
                             backgroundColor: NewColor.btnBgGreenColor,
                             padding: const EdgeInsets.symmetric(vertical: 12),

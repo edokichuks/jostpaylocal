@@ -22,7 +22,7 @@ class SendTokenConfirmScreen extends StatefulWidget {
 }
 
 class _SendTokenConfirmScreenState extends State<SendTokenConfirmScreen> {
-  late TransectionProvider transectionProvider;
+  // late TransectionProvider transectionProvider;
   late TokenProvider tokenProvider;
   bool isLoading = false;
 

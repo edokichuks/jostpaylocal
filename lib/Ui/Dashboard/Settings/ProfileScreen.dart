@@ -7,10 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../DashboardScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final Map<String, dynamic> data;
   const ProfileScreen({
     super.key,
-    required this.data,
   });
 
   @override
@@ -18,23 +16,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String selectedAccountName = "";
-  late Map<String, dynamic> profile = {};
-
-  getWalletName() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      selectedAccountName = sharedPreferences.getString('accountName') ?? "";
-    });
-  }
-
-  @override
-  void initState() {
-    getWalletName();
-    profile = widget.data;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);

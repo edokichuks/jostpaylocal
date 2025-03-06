@@ -81,14 +81,14 @@ class _AccountRecoveryPhraseState extends State<AccountRecoveryPhrase> {
               //print(randomFive);
 
               Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => VerifyRecoveryPhrase(
-                            seedPhrase: widget.seedPhrase,
-                            selectedParse: randomFive,
-                            isNew: widget.isNew,
-                          )));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => VerifyRecoveryPhrase(
+              //               seedPhrase: widget.seedPhrase,
+              //               selectedParse: randomFive,
+              //               isNew: widget.isNew,
+              //             )));
             },
             child: Container(
               alignment: Alignment.center,
