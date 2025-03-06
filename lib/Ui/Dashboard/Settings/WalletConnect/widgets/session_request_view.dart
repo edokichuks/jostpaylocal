@@ -8,19 +8,18 @@ import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_connect_dart_v2/wallet_connect_dart_v2.dart';
 
-
 class SessionRequestView extends StatefulWidget {
   final String account1;
   final RequestSessionPropose proposal;
-  final void Function(SessionNamespaces,List<String>) onApprove;
+  final void Function(SessionNamespaces, List<String>) onApprove;
   final void Function() onReject;
 
   const SessionRequestView({
     super.key,
-     required this.account1,
-     required this.proposal,
-     required this.onApprove,
-     required this.onReject,
+    required this.account1,
+    required this.proposal,
+    required this.onApprove,
+    required this.onReject,
   });
 
   @override
@@ -28,15 +27,14 @@ class SessionRequestView extends StatefulWidget {
 }
 
 class _SessionRequestViewState extends State<SessionRequestView> {
-   late AppMetadata _metadata;
-   late List<String> _selectedAccountIds;
+  late AppMetadata _metadata;
+  late List<String> _selectedAccountIds;
 
-   late TokenProvider tokenProvider;
+  late TokenProvider tokenProvider;
 
-   @override
+  @override
   void initState() {
-
-    tokenProvider = Provider.of<TokenProvider>(context,listen: false);
+    tokenProvider = Provider.of<TokenProvider>(context, listen: false);
 
     _metadata = widget.proposal.proposer.metadata;
     // print(widget.proposal.requiredNamespaces.entries.first.value.chains);
@@ -44,20 +42,18 @@ class _SessionRequestViewState extends State<SessionRequestView> {
     // print("Metadata :->>>>>>");
     // print(_metadata.toJson());
 
-
     super.initState();
   }
 
   var chinId = "0";
   @override
   Widget build(BuildContext context) {
-    tokenProvider = Provider.of<TokenProvider>(context,listen: true);
+    tokenProvider = Provider.of<TokenProvider>(context, listen: true);
 
     return Container(
       decoration: BoxDecoration(
           color: MyColor.backgroundColor,
-          borderRadius: BorderRadius.circular(10)
-      ),
+          borderRadius: BorderRadius.circular(10)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -83,9 +79,7 @@ class _SessionRequestViewState extends State<SessionRequestView> {
                       : Center(
                           child: Text(
                             _metadata.name.substring(0, 1),
-                            style:  MyStyle.tx18BWhite.copyWith(
-                                fontSize: 22
-                            ),
+                            style: MyStyle.tx18BWhite.copyWith(fontSize: 22),
                           ),
                         ),
                 ),
@@ -96,19 +90,15 @@ class _SessionRequestViewState extends State<SessionRequestView> {
                     children: [
                       Text(
                         _metadata.name,
-                        style:  MyStyle.tx18BWhite.copyWith(
-                            fontSize: 16
-                        ),
+                        style: MyStyle.tx18BWhite.copyWith(fontSize: 16),
                         maxLines: 1,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          _metadata.url,   
+                          _metadata.url,
                           maxLines: 1,
-                          style:  MyStyle.tx18RWhite.copyWith(
-                              fontSize: 16
-                          ),
+                          style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                         ),
                       ),
                     ],
@@ -123,25 +113,31 @@ class _SessionRequestViewState extends State<SessionRequestView> {
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               itemBuilder: (_, idx) {
-                final item = widget.proposal.requiredNamespaces.entries.elementAt(idx);
+                final item =
+                    widget.proposal.requiredNamespaces.entries.elementAt(idx);
                 // print(item.value.toJson());
                 // print(item.key);
                 // print(item.value.chains);
                 //
                 // print("check ---> ");
 
-
-                int value = DbNetwork.dbNetwork.networkList.indexWhere((element) {
+                int value =
+                    DbNetwork.dbNetwork.networkList.indexWhere((element) {
                   // print(element.chain);
-                  return "${element.chain}" == item.value.chains.first.split(":").last && element.isEVM == 1;
+                  return "${element.chain}" ==
+                          item.value.chains.first.split(":").last &&
+                      element.isEVM == 1;
                 });
-                if(value != -1){
+                if (value != -1) {
                   // print("test val"+value.toString());
                   chinId = item.value.chains.first.split(":").last;
                   // print("test chain id"+chinId);
-                }else{
+                } else {
                   // print("check 2 ---> ");
-                  Helper.dialogCall.showToast(context,  "Network not implemented!!",);
+                  Helper.dialogCall.showToast(
+                    context,
+                    "Network not implemented!!",
+                  );
                   Navigator.pop(context);
                 }
 
@@ -166,7 +162,8 @@ class _SessionRequestViewState extends State<SessionRequestView> {
                     height: 40.0,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: MyColor.blueColor,
+                        foregroundColor: Colors.white,
+                        backgroundColor: MyColor.blueColor,
                       ),
                       onPressed: () {
                         final SessionNamespaces params = {};
@@ -184,14 +181,14 @@ class _SessionRequestViewState extends State<SessionRequestView> {
                           log('SESSION: ${params[entry.key]!.toJson()}');
                         }
                         // widget.onApprove(params);
-                        widget.onApprove(params,widget.proposal.requiredNamespaces.entries.first.value.chains);
-
+                        widget.onApprove(
+                            params,
+                            widget.proposal.requiredNamespaces.entries.first
+                                .value.chains);
                       },
                       child: const Text(
-                          'Approve',
-                        style: TextStyle(
-                          fontFamily: "Lato-Semibold"
-                        ),
+                        'Approve',
+                        style: TextStyle(fontFamily: "Lato-Semibold"),
                       ),
                     ),
                   ),
@@ -202,16 +199,14 @@ class _SessionRequestViewState extends State<SessionRequestView> {
                     height: 40.0,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.red.shade300,
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red.shade300,
                       ),
                       onPressed: widget.onReject,
                       child: const Text(
                         'Reject',
-                        style: TextStyle(
-                            fontFamily: "Lato-Semibold"
-                        ),
+                        style: TextStyle(fontFamily: "Lato-Semibold"),
                       ),
-
                     ),
                   ),
                 ),
@@ -229,10 +224,11 @@ class NamespaceView extends StatefulWidget {
   final String accountAddress;
   final ProposalRequiredNamespace namespace;
 
-  const NamespaceView({super.key,
-     required this.type,
-     required this.accountAddress,
-     required this.namespace,
+  const NamespaceView({
+    super.key,
+    required this.type,
+    required this.accountAddress,
+    required this.namespace,
   });
 
   @override
@@ -254,95 +250,75 @@ class _NamespaceViewState extends State<NamespaceView> {
         children: [
           Text(
             'Review Permissions',
-            style:  MyStyle.tx18RWhite.copyWith(
-                fontSize: 16
-            ),
+            style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
           ),
           const SizedBox(height: 8.0),
-          ...widget.namespace.chains
-              .map((chain) => Container(
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border:
-                          Border.all(color: Colors.grey.shade300, width: 1.5),
+          ...widget.namespace.chains.map((chain) => Container(
+                margin: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  border: Border.all(color: Colors.grey.shade300, width: 1.5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      chain,
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          chain,
-                          style:  MyStyle.tx18RWhite.copyWith(
-                              fontSize: 16
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                          child: Text(
-                            'Methods',
-                            style:  MyStyle.tx18RWhite.copyWith(
-                                fontSize: 14
-                            ),
-                          ),
-                        ),
-                        Text(
-                          widget.namespace.methods.isEmpty
-                              ? '-'
-                              : widget.namespace.methods.join(', '),
-                          style:  MyStyle.tx18RWhite.copyWith(
-                              fontSize: 14
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                          child: Text(
-                            'Events',
-                            style:  MyStyle.tx18RWhite.copyWith(
-                                fontSize: 14
-                            ),
-                          ),
-                        ),
-                        Text(
-                          widget.namespace.events.isEmpty
-                              ? '-'
-                              : widget.namespace.events.join(', '),
-                          style:  MyStyle.tx18RWhite.copyWith(
-                              fontSize: 14
-                          ),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                      child: Text(
+                        'Methods',
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                      ),
                     ),
-                  ))
-              ,
+                    Text(
+                      widget.namespace.methods.isEmpty
+                          ? '-'
+                          : widget.namespace.methods.join(', '),
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                      child: Text(
+                        'Events',
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                      ),
+                    ),
+                    Text(
+                      widget.namespace.events.isEmpty
+                          ? '-'
+                          : widget.namespace.events.join(', '),
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                    ),
+                  ],
+                ),
+              )),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               "Selected Account",
-              style:  MyStyle.tx18RWhite.copyWith(
-                  fontSize: 16
-              ),
+              style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
             ),
           ),
-
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 4.0),
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: MyColor.darkGrey01Color,
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                      '${widget.accountAddress.substring(0, 6)}...${widget.accountAddress.substring(widget.accountAddress.length - 6)}',
-                    style:  MyStyle.tx18RWhite.copyWith(
-                        fontSize: 14
-                    ),
-                  ),
-                ],
-              ),
-            )
+            margin: const EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: MyColor.darkGrey01Color,
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  '${widget.accountAddress.substring(0, 6)}...${widget.accountAddress.substring(widget.accountAddress.length - 6)}',
+                  style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

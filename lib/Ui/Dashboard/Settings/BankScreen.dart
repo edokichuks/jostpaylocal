@@ -30,7 +30,8 @@ class _BankScreenState extends State<BankScreen> {
   }
 
   deleteBank(String bankId) async {
-    const String url = 'https://instantexchangers.com/mobile_server/delete-user-bank';
+    const String url =
+        'https://instantexchangers.com/mobile_server/delete-user-bank';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -40,9 +41,7 @@ class _BankScreenState extends State<BankScreen> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'bank_id': bankId
-        },
+        body: {'bank_id': bankId},
       );
 
       if (response.statusCode == 200) {
@@ -53,34 +52,28 @@ class _BankScreenState extends State<BankScreen> {
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black54,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
         getBanks();
       } else {
-        if(response.statusCode == 301)
-          {
-            final redirectedResponse = await http.post(
-              Uri.parse(response.headers['location']!),
-              headers: {
-                'Authorization': 'Bearer $token',
-              },
-              body: {
-                'bank_id': bankId
-              },
-            );
+        if (response.statusCode == 301) {
+          final redirectedResponse = await http.post(
+            Uri.parse(response.headers['location']!),
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+            body: {'bank_id': bankId},
+          );
 
-            Fluttertoast.showToast(
-                msg: "Bank account deleted successfully",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.black54,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            getBanks();
-          }
-        else {
+          Fluttertoast.showToast(
+              msg: "Bank account deleted successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          getBanks();
+        } else {
           Fluttertoast.showToast(
               msg: "Something went wrong",
               toastLength: Toast.LENGTH_SHORT,
@@ -88,8 +81,7 @@ class _BankScreenState extends State<BankScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
         }
       }
     } catch (e) {
@@ -100,8 +92,7 @@ class _BankScreenState extends State<BankScreen> {
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.black54,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
       setState(() {
         _response = 'Exception: $e';
       });
@@ -112,7 +103,8 @@ class _BankScreenState extends State<BankScreen> {
     setState(() {
       isLoading = true;
     });
-    const String url = 'https://instantexchangers.com/mobile_server/get-user-banks';
+    const String url =
+        'https://instantexchangers.com/mobile_server/get-user-banks';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -122,16 +114,15 @@ class _BankScreenState extends State<BankScreen> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'type': 'buy'
-        },
+        body: {'type': 'buy'},
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
+        Map<String, dynamic> res = await jsonDecode(response.body);
         List<dynamic> result = res['banks'];
-        List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
-        if(mounted) {
+        List<Map<String, dynamic>> info =
+            result.map((item) => Map<String, dynamic>.from(item)).toList();
+        if (mounted) {
           setState(() {
             data = info;
             isLoading = false;
@@ -139,29 +130,27 @@ class _BankScreenState extends State<BankScreen> {
         }
         return info;
       } else {
-        if(response.statusCode == 301) {
+        if (response.statusCode == 301) {
           final redirectedResponse = await http.post(
             Uri.parse(response.headers['location']!),
             headers: {
               'Authorization': 'Bearer $token',
             },
-            body: {
-              'type': 'buy'
-            },
+            body: {'type': 'buy'},
           );
 
-          Map<String, dynamic> res= await jsonDecode(redirectedResponse.body);
+          Map<String, dynamic> res = await jsonDecode(redirectedResponse.body);
           List<dynamic> result = res['banks'];
-          List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
-          if(mounted) {
+          List<Map<String, dynamic>> info =
+              result.map((item) => Map<String, dynamic>.from(item)).toList();
+          if (mounted) {
             setState(() {
               data = info;
               isLoading = false;
             });
           }
           return info;
-        }
-        else {
+        } else {
           setState(() {
             isLoading = false;
           });
@@ -174,7 +163,8 @@ class _BankScreenState extends State<BankScreen> {
     }
   }
 
-  Future<void> _showConfirmationDialog(BuildContext context, String bankId) async {
+  Future<void> _showConfirmationDialog(
+      BuildContext context, String bankId) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -255,7 +245,8 @@ class _BankScreenState extends State<BankScreen> {
                   onTap: () async {
                     final result = await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AddBankScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const AddBankScreen()),
                     );
 
                     await getBanks();
@@ -266,8 +257,8 @@ class _BankScreenState extends State<BankScreen> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: NewColor.dashboardPrimaryColor,
-                        border:
-                            Border.all(width: 0.5, color: const Color(0x33D1D1D1))),
+                        border: Border.all(
+                            width: 0.5, color: const Color(0x33D1D1D1))),
                     child: Row(children: [
                       Image.asset(
                         "assets/images/bank.png",
@@ -305,74 +296,80 @@ class _BankScreenState extends State<BankScreen> {
               ],
             ),
             Expanded(
-              child:
-              isLoading ?
-              const Align(
-                alignment: Alignment.topCenter,
-                child: Center(
-                    child: CircularProgressIndicator(
-                      color: MyColor.greenColor,
-                    )),
-              ) : Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 0),
-                  decoration: const BoxDecoration(
-                    color: MyColor.backgroundColor,
-                  ),
-                  child: data.isNotEmpty ? ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        var item = data[index];
-                        return InkWell(
-                            child: Padding(padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-                              child: Row(
-                                  children: [
-                                    CachedNetworkImage(
-                                      height: 40,
-                                      width: 40,
-                                      fit: BoxFit.fill,
-                                      imageUrl: item['bank_image'],
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${item['bank_full_name']}",
-                                          style: NewStyle.tx28White.copyWith(fontSize: 16),
-                                        ),
-                                        Text(
-                                          "${item['account_number']}",
-                                          style: NewStyle.tx14SplashWhite.copyWith(
-                                              fontSize: 12,
-                                              height: 1.25,
-                                              color: NewColor.txGrayColor),
-                                        ),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    InkWell(
-                                      onTap: () {
-                                        _showConfirmationDialog(context, item['user_bank_id']);
-                                      },
-                                      child: Image.asset(
-                                        "assets/images/remove_bank.png",
-                                        fit: BoxFit.cover,
+                child: isLoading
+                    ? const Align(
+                        alignment: Alignment.topCenter,
+                        child: Center(
+                            child: CircularProgressIndicator(
+                          color: MyColor.greenColor,
+                        )),
+                      )
+                    : Container(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 0),
+                        decoration: const BoxDecoration(
+                          color: MyColor.backgroundColor,
+                        ),
+                        child: data.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: data.length,
+                                itemBuilder: (context, index) {
+                                  var item = data[index];
+                                  return InkWell(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 6),
+                                    child: Row(children: [
+                                      CachedNetworkImage(
+                                        height: 40,
+                                        width: 40,
+                                        fit: BoxFit.fill,
+                                        imageUrl: item['bank_image'],
                                       ),
-                                    ),
-                                  ]),)
-                        );
-                      }
-                  ) : Align(
-                    alignment: Alignment.topCenter,
-                    child: Text("Please add new bank account",
-                      style: NewStyle.tx28White.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      ),
-                    )
-                  )
-              )
-            )
+                                      const SizedBox(width: 8),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${item['bank_full_name']}",
+                                            style: NewStyle.tx28White
+                                                .copyWith(fontSize: 16),
+                                          ),
+                                          Text(
+                                            "${item['account_number']}",
+                                            style: NewStyle.tx14SplashWhite
+                                                .copyWith(
+                                                    fontSize: 12,
+                                                    height: 1.25,
+                                                    color:
+                                                        NewColor.txGrayColor),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      InkWell(
+                                        onTap: () {
+                                          _showConfirmationDialog(
+                                              context, item['user_bank_id']);
+                                        },
+                                        child: Image.asset(
+                                          "assets/images/remove_bank.png",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ]),
+                                  ));
+                                })
+                            : Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  "Please add new bank account",
+                                  style: NewStyle.tx28White.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ))))
           ],
         ),
       ),

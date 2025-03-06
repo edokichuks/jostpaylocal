@@ -12,14 +12,13 @@ import 'SecureScreen.dart';
 
 class CreatePassword extends StatefulWidget {
   final bool isNew;
-  const CreatePassword({super.key,required this.isNew});
+  const CreatePassword({super.key, required this.isNew});
 
   @override
   State<CreatePassword> createState() => _CreatePasswordState();
 }
 
 class _CreatePasswordState extends State<CreatePassword> {
-
   late AccountProvider accountProvider;
   late TokenProvider tokenProvider;
 
@@ -27,10 +26,10 @@ class _CreatePasswordState extends State<CreatePassword> {
   TextEditingController nameController = TextEditingController();
   TextEditingController rePassController = TextEditingController();
 
-  bool showPassword = true,showRePassword = true;
+  bool showPassword = true, showRePassword = true;
   final formKey = GlobalKey<FormState>();
 
-  String deviceId = "",phraseLength = "12";
+  String deviceId = "", phraseLength = "12";
   bool isLoading = false;
   bool fingerBool = false;
 
@@ -42,30 +41,29 @@ class _CreatePasswordState extends State<CreatePassword> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     deviceId = sharedPreferences.getString('deviceId')!;
 
-
     var data = {
       "name": nameController.text.isEmpty ? "Main Wallet" : nameController.text,
       "device_id": deviceId,
       "type": "new",
       "password": widget.isNew ? "" : passController.text,
-      "words":12,
+      "words": 12,
       "mnemonic": ""
     };
 
     // print(jsonEncode(data));
 
-    await accountProvider.addAccount(data, widget.isNew ? '/createWallet' : '/initCreateWallet');
+    await accountProvider.addAccount(
+        data, widget.isNew ? '/createWallet' : '/initCreateWallet');
     if (accountProvider.isSuccess == true) {
-
-      if(!widget.isNew) {
+      if (!widget.isNew) {
         sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString('isLogin', 'false');
         sharedPreferences.setInt('account', 1);
         sharedPreferences.setString('password', passController.text);
-        sharedPreferences.setBool('fingerOn',fingerBool);
+        sharedPreferences.setBool('fingerOn', fingerBool);
       }
       var body = accountProvider.accountData;
-      String seedPhase = body/*['accounts']*/[0]['mnemonic'];
+      String seedPhase = body /*['accounts']*/ [0]['mnemonic'];
 
       List seedPharse = seedPhase.trim().split(" ");
 
@@ -80,7 +78,6 @@ class _CreatePasswordState extends State<CreatePassword> {
         ),
       );
     } else {
-
       setState(() {
         isLoading = false;
       });
@@ -89,7 +86,6 @@ class _CreatePasswordState extends State<CreatePassword> {
       Helper.dialogCall.showToast(context, "Account Create Error");
     }
   }
-
 
   @override
   void initState() {
@@ -100,7 +96,6 @@ class _CreatePasswordState extends State<CreatePassword> {
 
   @override
   Widget build(BuildContext context) {
-
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -113,82 +108,65 @@ class _CreatePasswordState extends State<CreatePassword> {
         mainAxisSize: MainAxisSize.min,
         children: [
           isLoading == true
-              ?
-          const SizedBox(
-              height:52,
-              child: Center(
-                  child: CircularProgressIndicator(
+              ? const SizedBox(
+                  height: 52,
+                  child: Center(
+                      child: CircularProgressIndicator(
                     color: MyColor.greenColor,
-                  )
-              )
-          )
-              :
-          widget.isNew
-              ?
-          InkWell(
-            onTap: () {
-              if(nameController.text.isNotEmpty) {
-                importAccount();
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              height: 45,
-              margin: const EdgeInsets.only(left: 12,right: 12,bottom: 15),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: nameController.text.isEmpty
-                  ?
-              MyStyle.invalidDecoration
-                  :
-              MyStyle.buttonDecoration,
-              child: Text(
-                  "Continue",
-                  style: MyStyle.tx18BWhite.copyWith(
-                      color: nameController.text.isEmpty
-                          ?
-                      MyColor.mainWhiteColor.withOpacity(0.4)
-                          :
-                      MyColor.mainWhiteColor
-                  )
-              ),
-            ),
-          )
-              :
-          InkWell(
-            onTap: () {
-              if(formKey.currentState!.validate()) {
-                importAccount();
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              height: 45,
-              margin: const EdgeInsets.only(left: 12,right: 12,bottom: 15),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration:  passController.text.isEmpty || rePassController.text.isEmpty
-                  ?
-              MyStyle.invalidDecoration
-                  :
-              MyStyle.buttonDecoration,
-              child: Text(
-                  "Continue",
-                  style: MyStyle.tx18BWhite.copyWith(
-                      color:  passController.text.isEmpty || rePassController.text.isEmpty
-                          ?
-                      MyColor.mainWhiteColor.withOpacity(0.4)
-                          :
-                      MyColor.mainWhiteColor
-                  )
-              ),
-            ),
-          ),
-
+                  )))
+              : widget.isNew
+                  ? InkWell(
+                      onTap: () {
+                        if (nameController.text.isNotEmpty) {
+                          importAccount();
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 45,
+                        margin: const EdgeInsets.only(
+                            left: 12, right: 12, bottom: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: nameController.text.isEmpty
+                            ? MyStyle.invalidDecoration
+                            : MyStyle.buttonDecoration,
+                        child: Text("Continue",
+                            style: MyStyle.tx18BWhite.copyWith(
+                                color: nameController.text.isEmpty
+                                    ? MyColor.mainWhiteColor.withOpacity(0.4)
+                                    : MyColor.mainWhiteColor)),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        if (formKey.currentState!.validate()) {
+                          importAccount();
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 45,
+                        margin: const EdgeInsets.only(
+                            left: 12, right: 12, bottom: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: passController.text.isEmpty ||
+                                rePassController.text.isEmpty
+                            ? MyStyle.invalidDecoration
+                            : MyStyle.buttonDecoration,
+                        child: Text("Continue",
+                            style: MyStyle.tx18BWhite.copyWith(
+                                color: passController.text.isEmpty ||
+                                        rePassController.text.isEmpty
+                                    ? MyColor.mainWhiteColor.withOpacity(0.4)
+                                    : MyColor.mainWhiteColor)),
+                      ),
+                    ),
           SizedBox(height: Platform.isIOS ? 10 : 5),
         ],
       ),
       appBar: AppBar(
         centerTitle: true,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -199,7 +177,6 @@ class _CreatePasswordState extends State<CreatePassword> {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -211,58 +188,48 @@ class _CreatePasswordState extends State<CreatePassword> {
                 const SizedBox(height: 15),
                 const Text(
                   "Create your password",
-                  style:MyStyle.tx22RWhite,
+                  style: MyStyle.tx22RWhite,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15),
-
                 Text(
                   "Lock your wallet on this device",
-                  style:MyStyle.tx22RWhite.copyWith(
-                      fontSize: 18,
-                      color: MyColor.grey01Color
-                  ),
+                  style: MyStyle.tx22RWhite
+                      .copyWith(fontSize: 18, color: MyColor.grey01Color),
                   textAlign: TextAlign.center,
                 ),
-
-
                 const SizedBox(height: 22),
-
                 Visibility(
                   visible: widget.isNew,
                   child: TextFormField(
                     controller: nameController,
                     validator: (value) {
-                      if(value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Please enter wallet name";
-                      }else{
+                      } else {
                         return null;
                       }
                     },
                     cursorColor: MyColor.greenColor,
                     style: MyStyle.tx18RWhite,
                     decoration: MyStyle.textInputDecoration.copyWith(
-                        hintText: "Wallet Name",
-                        isDense: false,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15
-                        ),
-
+                      hintText: "Wallet Name",
+                      isDense: false,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 15),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
-
                 Visibility(
                   visible: !widget.isNew,
                   child: TextFormField(
                     controller: passController,
                     obscureText: showPassword,
                     validator: (value) {
-                      if(value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Please enter login password";
-                      }else{
+                      } else {
                         return null;
                       }
                     },
@@ -272,40 +239,31 @@ class _CreatePasswordState extends State<CreatePassword> {
                         hintText: "Passwords",
                         isDense: false,
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15
-                        ),
+                            vertical: 20, horizontal: 15),
                         suffixIcon: showPassword
-                            ?
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showPassword = false;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                            :
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showPassword = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility_off,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                    ),
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = false;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility,
+                                  color: MyColor.mainWhiteColor,
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = true;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility_off,
+                                  color: MyColor.mainWhiteColor,
+                                ))),
                   ),
                 ),
                 const SizedBox(height: 10),
-
-
                 Visibility(
                   visible: !widget.isNew,
                   child: TextFormField(
@@ -314,11 +272,11 @@ class _CreatePasswordState extends State<CreatePassword> {
                     cursorColor: MyColor.greenColor,
                     style: MyStyle.tx18RWhite,
                     validator: (value) {
-                      if(value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Please enter confirm password.";
-                      }else if(value != passController.text){
+                      } else if (value != passController.text) {
                         return "Confirm password is not matched.";
-                      }else{
+                      } else {
                         return null;
                       }
                     },
@@ -326,43 +284,35 @@ class _CreatePasswordState extends State<CreatePassword> {
                         hintText: "Confirm Passwords",
                         isDense: false,
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15
-                        ),
+                            vertical: 20, horizontal: 15),
                         suffixIcon: showRePassword
-                            ?
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showRePassword = false;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                            :
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showRePassword = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility_off,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                    ),
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showRePassword = false;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility,
+                                  color: MyColor.mainWhiteColor,
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showRePassword = true;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility_off,
+                                  color: MyColor.mainWhiteColor,
+                                ))),
                   ),
                 ),
                 SizedBox(height: widget.isNew ? 0 : 10),
-
                 Visibility(
                   visible: !widget.isNew,
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         fingerBool = !fingerBool;
                       });
@@ -370,19 +320,27 @@ class _CreatePasswordState extends State<CreatePassword> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-
                         Container(
                           height: 24,
                           width: 24,
                           decoration: BoxDecoration(
-                              color: fingerBool ? MyColor.greenColor : Colors.transparent,
+                              color: fingerBool
+                                  ? MyColor.greenColor
+                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
                                   width: 1.5,
-                                  color: fingerBool ?  MyColor.greenColor : MyColor.whiteColor.withOpacity(0.4)
-                              )
-                          ),
-                          child: fingerBool ? const Center(child: Icon(Icons.check,size: 18,color: Colors.white,)) : const SizedBox(),
+                                  color: fingerBool
+                                      ? MyColor.greenColor
+                                      : MyColor.whiteColor.withOpacity(0.4))),
+                          child: fingerBool
+                              ? const Center(
+                                  child: Icon(
+                                  Icons.check,
+                                  size: 18,
+                                  color: Colors.white,
+                                ))
+                              : const SizedBox(),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -390,15 +348,15 @@ class _CreatePasswordState extends State<CreatePassword> {
                             "Sign in with FaceID and Finger Print",
                             style: MyStyle.tx18RWhite.copyWith(
                                 fontSize: 14,
-                                color: fingerBool ? MyColor.whiteColor : MyColor.greyColor
-                            ),
+                                color: fingerBool
+                                    ? MyColor.whiteColor
+                                    : MyColor.greyColor),
                           ),
                         )
                       ],
                     ),
                   ),
                 ),
-
               ],
             ),
           ),

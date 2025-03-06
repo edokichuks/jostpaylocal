@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-List<NewAccountList> productFromJson(String str) =>
-    List<NewAccountList>.from(json.decode(str).map((x) => NewAccountList.fromJson(x)));
+List<NewAccountList> productFromJson(String str) => List<NewAccountList>.from(
+    json.decode(str).map((x) => NewAccountList.fromJson(x)));
 
 class NewAccountList {
   NewAccountList({
@@ -17,10 +17,9 @@ class NewAccountList {
   String mnemonic;
 
   factory NewAccountList.fromJson(Map<String, dynamic> json) => NewAccountList(
-    id: "${json["id"]}",
-    deviceId: json["device_id"],
-    name: json["name"],
-    mnemonic: json["mnemonic"],
-  );
-
+        id: "${json["id"]}",
+        deviceId: json["device_id"],
+        name: json["name"],
+        mnemonic: json["mnemonic"],
+      );
 }

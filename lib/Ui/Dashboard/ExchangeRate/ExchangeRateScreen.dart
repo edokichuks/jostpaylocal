@@ -34,7 +34,8 @@ class _ExchangeRateScreenState extends State<ExchangeRateScreen> {
     setState(() {
       isLoading = true;
     });
-    const String url = 'https://instantexchangers.com/mobile_server/get-exchange-rates';
+    const String url =
+        'https://instantexchangers.com/mobile_server/get-exchange-rates';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -44,42 +45,34 @@ class _ExchangeRateScreenState extends State<ExchangeRateScreen> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'type': 'all',
-          'status': 'all'
-        },
+        body: {'type': 'all', 'status': 'all'},
       );
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = await jsonDecode(response.body);
-        if(mounted) {
+        if (mounted) {
           setState(() {
             rateInfo = res['coins'];
             isLoading = false;
           });
         }
       } else {
-        if(response.statusCode == 301)
-          {
-            final redirectedResponse = await http.post(
-              Uri.parse(response.headers['location']!),
-              headers: {
-                'Authorization': 'Bearer $token',
-              },
-              body: {
-                'type': 'all',
-                'status': 'all'
-              },
-            );
-            Map<String, dynamic> res = await jsonDecode(redirectedResponse.body);
-            if(mounted) {
-              setState(() {
-                rateInfo = res['coins'];
-                isLoading = false;
-              });
-            }
+        if (response.statusCode == 301) {
+          final redirectedResponse = await http.post(
+            Uri.parse(response.headers['location']!),
+            headers: {
+              'Authorization': 'Bearer $token',
+            },
+            body: {'type': 'all', 'status': 'all'},
+          );
+          Map<String, dynamic> res = await jsonDecode(redirectedResponse.body);
+          if (mounted) {
+            setState(() {
+              rateInfo = res['coins'];
+              isLoading = false;
+            });
           }
-        else {
+        } else {
           setState(() {
             isLoading = false;
           });
@@ -100,19 +93,15 @@ class _ExchangeRateScreenState extends State<ExchangeRateScreen> {
 
       final response = await http.post(
           Uri.parse('https://instantexchangers.com/mobile_server/get-coins'),
-          headers: {
-            'Authorization': 'Bearer $token'
-          },
-          body: {
-            'type': 'buy'
-          }
-      );
+          headers: {'Authorization': 'Bearer $token'},
+          body: {'type': 'buy'});
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
+        Map<String, dynamic> res = await jsonDecode(response.body);
         List<dynamic> result = res['coins'];
-        List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
-        if(mounted) {
+        List<Map<String, dynamic>> info =
+            result.map((item) => Map<String, dynamic>.from(item)).toList();
+        if (mounted) {
           setState(() {
             sCoinList = info;
             coinList = info;
@@ -132,10 +121,11 @@ class _ExchangeRateScreenState extends State<ExchangeRateScreen> {
 
   filterCoins() async {
     List<Map<String, dynamic>> filteredCoins = sCoinList.where((coin) {
-      return coin['coin_code'].contains(searchCoin!.toUpperCase()) || coin['coin_name'].toUpperCase().contains(searchCoin!.toUpperCase());
+      return coin['coin_code'].contains(searchCoin!.toUpperCase()) ||
+          coin['coin_name'].toUpperCase().contains(searchCoin!.toUpperCase());
     }).toList();
 
-    if(mounted) {
+    if (mounted) {
       setState(() {
         coinList = filteredCoins;
       });
@@ -152,196 +142,208 @@ class _ExchangeRateScreenState extends State<ExchangeRateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading ?
-      const Align(
-        alignment: Alignment.center,
-        child: Center(
-            child: CircularProgressIndicator(
-              color: MyColor.greenColor,
-            )),
-      ) : Padding(
-        padding: const EdgeInsets.only(top: 72, left: 24, right: 24),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: searchController,
-              cursorColor: NewColor.btnBgGreenColor,
-              style: NewStyle.tx28White.copyWith(fontSize: 12),
-              onChanged: (value) {
-                setState(() {
-                  searchCoin = value;
-                });
-                filterCoins();
-              },
-              decoration: NewStyle.searchInputDecoration.copyWith(
-                prefixIcon: SizedBox(
-                  width: 30,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(
-                        "assets/images/search.png",
-                        height: 18,
-                        width: 18,
+      body: isLoading
+          ? const Align(
+              alignment: Alignment.center,
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: MyColor.greenColor,
+              )),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(top: 72, left: 24, right: 24),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: searchController,
+                    cursorColor: NewColor.btnBgGreenColor,
+                    style: NewStyle.tx28White.copyWith(fontSize: 12),
+                    onChanged: (value) {
+                      setState(() {
+                        searchCoin = value;
+                      });
+                      filterCoins();
+                    },
+                    decoration: NewStyle.searchInputDecoration.copyWith(
+                      prefixIcon: SizedBox(
+                        width: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Image.asset(
+                              "assets/images/search.png",
+                              height: 18,
+                              width: 18,
+                            ),
+                            const SizedBox(width: 12.5),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 12.5),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Container(
-                width: MediaQuery.of(context).size.width - 54,
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Table(columnWidths: const {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(2),
-                  2: FlexColumnWidth(2),
-                }, children: [
-                  TableRow(
-                    children: [
-                      Center(
-                        child: Text(
-                          'Coin',
-                          style: NewStyle.tx28White.copyWith(
-                              fontSize: 10,
-                              color: NewColor.splashContentWhiteColor),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'Your Buy Price (NGN)',
-                          style: NewStyle.tx28White.copyWith(
-                              fontSize: 10,
-                              color: NewColor.splashContentWhiteColor),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'You Buy Sell (NGN)',
-                          style: NewStyle.tx28White.copyWith(
-                              fontSize: 10,
-                              color: NewColor.splashContentWhiteColor),
-                        ),
-                      ),
-                    ],
-                  )
-                ])),
-            Container(
-              height: 0.5,
-              color: const Color(0x33D1D1D1),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-
-                  child:
-                  rateInfo.isEmpty ? const Text("") : Container(
-                    margin: const EdgeInsets.only(bottom: 90),
-                    width: MediaQuery.of(context).size.width - 54,
-                    child: Table(
-                      columnWidths: const {
+                  const SizedBox(height: 24),
+                  Container(
+                      width: MediaQuery.of(context).size.width - 54,
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Table(columnWidths: const {
                         0: FlexColumnWidth(1),
                         1: FlexColumnWidth(2),
                         2: FlexColumnWidth(2),
-                      },
-                      children: [
-                        for (int i = 0; i < coinList.length; i++)
-                          TableRow(
-                            children: [
-                              Container(
-                                height: 90,
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color(
-                                          0x19D1D1D1),
-                                      width: 0.3,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 19, bottom: 19),
-                                  child: Column(
-                                    children: [
-                                      Text(coinList[i]["coin_code"],
-                                          style: NewStyle.tx28White.copyWith(
-                                              fontSize: 10,
-                                              color: NewColor
-                                                  .splashContentWhiteColor)),
-                                      Text(coinList[i]["coin_name"],
-                                          style: NewStyle.tx28White.copyWith(
-                                              fontSize: 8,
-                                              color: NewColor.txGrayColor)),
-                                    ],
-                                  ),
+                      }, children: [
+                        TableRow(
+                          children: [
+                            Center(
+                              child: Text(
+                                'Coin',
+                                style: NewStyle.tx28White.copyWith(
+                                    fontSize: 10,
+                                    color: NewColor.splashContentWhiteColor),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                'Your Buy Price (NGN)',
+                                style: NewStyle.tx28White.copyWith(
+                                    fontSize: 10,
+                                    color: NewColor.splashContentWhiteColor),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                'You Buy Sell (NGN)',
+                                style: NewStyle.tx28White.copyWith(
+                                    fontSize: 10,
+                                    color: NewColor.splashContentWhiteColor),
+                              ),
+                            ),
+                          ],
+                        )
+                      ])),
+                  Container(
+                    height: 0.5,
+                    color: const Color(0x33D1D1D1),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: rateInfo.isEmpty
+                            ? const Text("")
+                            : Container(
+                                margin: const EdgeInsets.only(bottom: 90),
+                                width: MediaQuery.of(context).size.width - 54,
+                                child: Table(
+                                  columnWidths: const {
+                                    0: FlexColumnWidth(1),
+                                    1: FlexColumnWidth(2),
+                                    2: FlexColumnWidth(2),
+                                  },
+                                  children: [
+                                    for (int i = 0; i < coinList.length; i++)
+                                      TableRow(
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            decoration: const BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                  color: Color(0x19D1D1D1),
+                                                  width: 0.3,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 19, bottom: 19),
+                                              child: Column(
+                                                children: [
+                                                  Text(coinList[i]["coin_code"],
+                                                      style: NewStyle.tx28White
+                                                          .copyWith(
+                                                              fontSize: 10,
+                                                              color: NewColor
+                                                                  .splashContentWhiteColor)),
+                                                  Text(coinList[i]["coin_name"],
+                                                      style: NewStyle.tx28White
+                                                          .copyWith(
+                                                              fontSize: 8,
+                                                              color: NewColor
+                                                                  .txGrayColor)),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 90,
+                                            decoration: const BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                  color: Color(0x19D1D1D1),
+                                                  width: 0.3,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 19, bottom: 19),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                      "${rateInfo[coinList[i]["coin_code"]]['buy_price']}",
+                                                      style: NewStyle.tx28White
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: const Color(
+                                                                  0xFF00A478))),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 90,
+                                            decoration: const BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                  color: Color(
+                                                      0x19D1D1D1), // Color of the bottom border
+                                                  width: 0.3,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 19, bottom: 19),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                      "${rateInfo[coinList[i]["coin_code"]]['sell_price']}",
+                                                      style: NewStyle.tx28White
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: const Color(
+                                                                  0xFF00A478))),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                height: 90,
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color(
-                                          0x19D1D1D1),
-                                      width: 0.3,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 19, bottom: 19),
-                                  child: Column(
-                                    children: [
-                                      Text("${rateInfo[coinList[i]["coin_code"]]['buy_price']}",
-                                          style: NewStyle.tx28White.copyWith(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: const Color(0xFF00A478))),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 90,
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Color(
-                                          0x19D1D1D1), // Color of the bottom border
-                                      width: 0.3,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 19, bottom: 19),
-                                  child: Column(
-                                    children: [
-                                      Text("${rateInfo[coinList[i]["coin_code"]]['sell_price']}",
-                                          style: NewStyle.tx28White.copyWith(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: const Color(0xFF00A478))),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

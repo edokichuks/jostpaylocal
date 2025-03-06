@@ -32,7 +32,6 @@ class ReceiveTokenList extends StatefulWidget {
 }
 
 class _ReceiveTokenListState extends State<ReceiveTokenList> {
-
   TextEditingController searchController = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 500);
 
@@ -53,7 +52,7 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -63,8 +62,7 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
           height: 5,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: MyColor.lightGreyColor
-          ),
+              color: MyColor.lightGreyColor),
         ),
         const SizedBox(height: 25),
 
@@ -74,8 +72,7 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
           style: MyStyle.tx28RGreen.copyWith(
               color: MyColor.mainWhiteColor,
               fontFamily: "NimbusSanLBol",
-              fontSize: 22
-          ),
+              fontSize: 22),
         ),
         const SizedBox(height: 25),
 
@@ -86,10 +83,12 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
           style: MyStyle.tx18RWhite,
           onChanged: (value) {
             _debouncer.run(() async {
-              if(searchController.text.isNotEmpty){
-                await DBTokenProvider.dbTokenProvider.getSearchToken(selectedAccountId,value);
-              }else{
-                await DBTokenProvider.dbTokenProvider.getAccountToken(selectedAccountId);
+              if (searchController.text.isNotEmpty) {
+                await DBTokenProvider.dbTokenProvider
+                    .getSearchToken(selectedAccountId, value);
+              } else {
+                await DBTokenProvider.dbTokenProvider
+                    .getAccountToken(selectedAccountId);
               }
               setState(() {});
             });
@@ -98,54 +97,49 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
             isDense: true,
             filled: true,
             fillColor: MyColor.backgroundColor,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 15),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(
                   color: MyColor.darkGrey01Color,
-                )
-            ),
+                )),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(
                   color: MyColor.darkGrey01Color,
-                )
-            ),
+                )),
             hintText: "Search",
-            hintStyle:MyStyle.tx22RWhite.copyWith(
-                fontSize: 14,
-                color: MyColor.grey01Color
-            ),
-
+            hintStyle: MyStyle.tx22RWhite
+                .copyWith(fontSize: 14, color: MyColor.grey01Color),
           ),
         ),
         const SizedBox(height: 25),
 
         // coin list
         Expanded(
-          child : ListView.builder(
+          child: ListView.builder(
             itemCount: DBTokenProvider.dbTokenProvider.tokenList.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               var list = DBTokenProvider.dbTokenProvider.tokenList[index];
 
               return InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ReceiveScreen(
                           networkId: list.networkId,
-                          tokenName:list.name,
+                          tokenName: list.name,
                           tokenSymbol: list.symbol,
                           tokenImage: list.logo,
                           tokenType: list.type,
                         ),
-                      )
-                  );
+                      ));
                 },
-                child : Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: Row(
                     children: [
@@ -157,25 +151,24 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
                           fit: BoxFit.fill,
                           imageUrl: list.logo,
                           placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(color: MyColor.greenColor),
+                            child: CircularProgressIndicator(
+                                color: MyColor.greenColor),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Container(
-                                height: 35,
-                                width: 35,
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: MyColor.whiteColor,
-                                ),
-                                child: Image.asset(
-                                  "assets/images/bitcoin.png",
-                                ),
-                              ),
+                          errorWidget: (context, url, error) => Container(
+                            height: 35,
+                            width: 35,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: MyColor.whiteColor,
+                            ),
+                            child: Image.asset(
+                              "assets/images/bitcoin.png",
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
-
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,17 +181,14 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
                               visible: list.type.isNotEmpty,
                               child: Text(
                                 "type: ${list.type}",
-                                style:MyStyle.tx18RWhite.copyWith(
-                                    fontSize: 13,
-                                    color: MyColor.grey01Color
-                                ),
+                                style: MyStyle.tx18RWhite.copyWith(
+                                    fontSize: 13, color: MyColor.grey01Color),
                               ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(width: 12),
-
                       Text(
                         list.symbol,
                         style: MyStyle.tx18RWhite,
@@ -210,7 +200,6 @@ class _ReceiveTokenListState extends State<ReceiveTokenList> {
             },
           ),
         ),
-
       ],
     );
   }

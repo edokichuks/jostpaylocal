@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,10 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:web3dart/web3dart.dart';
 
-
 // ignore: must_be_immutable
 class WithdrawSendPage extends StatefulWidget {
-
   String sendTokenAddress = "",
       sendTokenNetworkId = "",
       sendTokenName = "",
@@ -38,7 +35,7 @@ class WithdrawSendPage extends StatefulWidget {
       sellInvoice = "",
       sendTokenUsd = "";
   int sendTokenDecimals;
-  var params,sellResponce;
+  var params, sellResponce;
 
   WithdrawSendPage({
     super.key,
@@ -68,17 +65,15 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
   TextEditingController toController = TextEditingController();
   late BuySellProvider buySellProvider;
 
-
   GlobalKey<FormState> formKey = GlobalKey();
   List<NetworkList> networkList = [];
-  bool isLoaded = false,checkBox = false;
+  bool isLoaded = false, checkBox = false;
 
   late String deviceId;
   String selectedAccountId = "",
       selectedAccountName = "",
       selectedAccountAddress = "",
       selectedAccountPrivateAddress = "";
-
 
   String sendTokenAddress = "",
       sendTokenNetworkId = "",
@@ -92,14 +87,14 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
       sendTokenBalance = "0",
       sendTokenId = "",
       sendTokenUsd = "0",
-      tokenType = ""; int sendTokenDecimals = 0;
+      tokenType = "";
+  int sendTokenDecimals = 0;
 
   String networkSymbol = "";
   int? isTxfees;
 
   TextEditingController fromAddressController = TextEditingController();
   TextEditingController sendTokenQuantity = TextEditingController();
-
 
   selectedAccount() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -109,7 +104,8 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
       selectedAccountName = sharedPreferences.getString('accountName') ?? "";
     });
 
-    await DbAccountAddress.dbAccountAddress.getAccountAddress(selectedAccountId);
+    await DbAccountAddress.dbAccountAddress
+        .getAccountAddress(selectedAccountId);
     await DbNetwork.dbNetwork.getNetwork();
 
     setState(() {
@@ -118,92 +114,87 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
       sendTokenNetworkId = widget.sendTokenNetworkId;
       sendTokenSymbol = widget.sendTokenSymbol;
       selectTokenMarketId = widget.selectTokenMarketId;
-      sendTokenImage  = widget.sendTokenImage;
-      tokenUpDown  = widget.tokenUpDown;
-      sendTokenBalance  = widget.sendTokenBalance;
-      sendTokenId  = widget.sendTokenId;
-      sendTokenUsd  = widget.sendTokenUsd;
-      explorerUrl  = widget.explorerUrl;
-      selectTokenUSD  = widget.selectTokenUSD;
+      sendTokenImage = widget.sendTokenImage;
+      tokenUpDown = widget.tokenUpDown;
+      sendTokenBalance = widget.sendTokenBalance;
+      sendTokenId = widget.sendTokenId;
+      sendTokenUsd = widget.sendTokenUsd;
+      explorerUrl = widget.explorerUrl;
+      selectTokenUSD = widget.selectTokenUSD;
       sendTokenDecimals = widget.sendTokenDecimals;
     });
 
-
-    await DbAccountAddress.dbAccountAddress.getPublicKey(selectedAccountId, sendTokenNetworkId);
+    await DbAccountAddress.dbAccountAddress
+        .getPublicKey(selectedAccountId, sendTokenNetworkId);
 
     setState(() {
-      selectedAccountAddress = DbAccountAddress.dbAccountAddress.selectAccountPublicAddress;
-      selectedAccountPrivateAddress = DbAccountAddress.dbAccountAddress.selectAccountPrivateAddress;
+      selectedAccountAddress =
+          DbAccountAddress.dbAccountAddress.selectAccountPublicAddress;
+      selectedAccountPrivateAddress =
+          DbAccountAddress.dbAccountAddress.selectAccountPrivateAddress;
     });
 
-
-
-
-    networkList = DbNetwork.dbNetwork.networkList.where((element) => "${element.id}" == sendTokenNetworkId).toList();
-    await DbAccountAddress.dbAccountAddress.getPublicKey(selectedAccountId,networkList[0].id);
+    networkList = DbNetwork.dbNetwork.networkList
+        .where((element) => "${element.id}" == sendTokenNetworkId)
+        .toList();
+    await DbAccountAddress.dbAccountAddress
+        .getPublicKey(selectedAccountId, networkList[0].id);
 
     setState(() {
-      fromAddressController.text = DbAccountAddress.dbAccountAddress.selectAccountPublicAddress;
+      fromAddressController.text =
+          DbAccountAddress.dbAccountAddress.selectAccountPublicAddress;
       networkSymbol = networkList[0].symbol;
       isTxfees = networkList[0].isTxfees;
-      toController = TextEditingController(text: widget.sellResponce['payin_address']);
+      toController =
+          TextEditingController(text: widget.sellResponce['payin_address']);
       // print("payin_amount ${widget.sellResponce['payin_amount']}");
-      sendTokenQuantity.text = widget.sellResponce['payin_amount'].toString().split(" ").first;
+      sendTokenQuantity.text =
+          widget.sellResponce['payin_amount'].toString().split(" ").first;
     });
 
-    if(isTxfees == 0){
-
-      if(sendTokenId == ""
-          || sendTokenQuantity.text.isEmpty
-          || double.parse(sendTokenQuantity.text) == 0.0
-          || toController.text.isEmpty
-          || double.parse(sendTokenQuantity.text) == 0
-          || double.parse(sendTokenQuantity.text) < 0.00
-          || double.parse(sendTokenBalance) <  double.parse(sendTokenQuantity.text)
-      ){
-
-      }else{
+    if (isTxfees == 0) {
+      if (sendTokenId == "" ||
+          sendTokenQuantity.text.isEmpty ||
+          double.parse(sendTokenQuantity.text) == 0.0 ||
+          toController.text.isEmpty ||
+          double.parse(sendTokenQuantity.text) == 0 ||
+          double.parse(sendTokenQuantity.text) < 0.00 ||
+          double.parse(sendTokenBalance) <
+              double.parse(sendTokenQuantity.text)) {
+      } else {
         FocusScope.of(context).unfocus();
         getNetworkFees();
       }
-
-    }else{
-      if(sendTokenId == ""
-          || sendTokenQuantity.text.isEmpty
-          || double.parse(sendTokenQuantity.text) == 0.0
-          || double.parse(sendTokenQuantity.text) == 0
-          || double.parse(sendTokenQuantity.text) < 0.00
-          || double.parse(sendTokenBalance) <  double.parse(sendTokenQuantity.text)
-          || toController.text.isEmpty
-      ){
-
+    } else {
+      if (sendTokenId == "" ||
+          sendTokenQuantity.text.isEmpty ||
+          double.parse(sendTokenQuantity.text) == 0.0 ||
+          double.parse(sendTokenQuantity.text) == 0 ||
+          double.parse(sendTokenQuantity.text) < 0.00 ||
+          double.parse(sendTokenBalance) <
+              double.parse(sendTokenQuantity.text) ||
+          toController.text.isEmpty) {
         // print("object");
-      }else{
+      } else {
         FocusScope.of(context).unfocus();
         getNetworkFees();
       }
-
     }
-
   }
 
   late TransectionProvider transectionProvider;
   late TokenProvider tokenProvider;
   bool isLoading = false;
 
-
   @override
   void initState() {
-    transectionProvider = Provider.of<TransectionProvider>(context, listen: false);
-    buySellProvider = Provider.of<BuySellProvider>(context,listen: false);
+    transectionProvider =
+        Provider.of<TransectionProvider>(context, listen: false);
+    buySellProvider = Provider.of<BuySellProvider>(context, listen: false);
     tokenProvider = Provider.of<TokenProvider>(context, listen: false);
     super.initState();
     selectedAccount();
   }
-
-
-
-
 
   String sendGasPrice = "";
   String sendGas = "";
@@ -215,13 +206,11 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
   bool isGetQuote = false;
 
   getNetworkFees() async {
-
-    setState((){
+    setState(() {
       isLoading = true;
     });
 
     var data = {
-
       "network_id": sendTokenNetworkId,
       "privateKey": selectedAccountPrivateAddress,
       "from": selectedAccountAddress,
@@ -229,20 +218,19 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
       "token_id": sendTokenId,
       "value": sendTokenQuantity.text,
       "gasPrice": "",
-      "gas":"",
+      "gas": "",
       "nonce": 0,
       "isCustomeRPC": false,
-      "network_url":networkList.first.url,
-      "tokenAddress":sendTokenAddress,
-      "decimals":sendTokenDecimals
+      "network_url": networkList.first.url,
+      "tokenAddress": sendTokenAddress,
+      "decimals": sendTokenDecimals
     };
 
     // print(json.encode(data));
 
-    await transectionProvider.getNetworkFees(data,'/getNetrowkFees',context);
+    await transectionProvider.getNetworkFees(data, '/getNetrowkFees', context);
 
-    if( transectionProvider.isSuccess == true){
-
+    if (transectionProvider.isSuccess == true) {
       var body = transectionProvider.networkData;
 
       setState(() {
@@ -254,457 +242,376 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
         sendNonce = "${body['nonce']}";
         sendTransactionFee = "${body['transactionFee']}";
 
-        double networkUsd = 0.0,tokenUsd = 0.0;
+        double networkUsd = 0.0, tokenUsd = 0.0;
 
+        tokenUsd = double.parse(sendTokenQuantity.text) *
+            double.parse(widget.sendTokenUsd);
+        networkUsd = double.parse(sendTransactionFee) *
+            double.parse(widget.sendTokenUsd);
 
+        var tokenPrice = DBTokenProvider.dbTokenProvider.tokenList
+            .where((element) {
+              return "${element.networkId}" == sendTokenNetworkId &&
+                  element.type == "";
+            })
+            .first
+            .price;
 
-        tokenUsd = double.parse(sendTokenQuantity.text) * double.parse(widget.sendTokenUsd);
-        networkUsd = double.parse(sendTransactionFee) * double.parse(widget.sendTokenUsd);
-
-        var tokenPrice = DBTokenProvider.dbTokenProvider.tokenList.where((element) {
-          return "${element.networkId}" == sendTokenNetworkId && element.type == "";
-        }).first.price;
-
-        if(sendTokenAddress != "") {
+        if (sendTokenAddress != "") {
           totalSendValue = double.parse(sendTokenQuantity.text);
           totalUsd = tokenUsd + double.parse(sendTransactionFee) * tokenPrice;
-
-        }else{
-          totalSendValue = double.parse(sendTokenQuantity.text) + double.parse(sendTransactionFee);
+        } else {
+          totalSendValue = double.parse(sendTokenQuantity.text) +
+              double.parse(sendTransactionFee);
           totalUsd = tokenUsd + networkUsd;
         }
-
-
-
-
       });
 
       // ignore: use_build_context_synchronously
       confirmBottomSheet(context);
-    }
-    else{
-
-      var data = DbNetwork.dbNetwork.networkList.where((element) => "${element.id}" == sendTokenNetworkId).toList();
+    } else {
+      var data = DbNetwork.dbNetwork.networkList
+          .where((element) => "${element.id}" == sendTokenNetworkId)
+          .toList();
 
       // ignore: use_build_context_synchronously
-      Helper.dialogCall.showToast(context, "Insufficient balance to cover fees, reduce withdraw amount");
-      setState((){
+      Helper.dialogCall.showToast(context,
+          "Insufficient balance to cover fees, reduce withdraw amount");
+      setState(() {
         isLoading = false;
       });
     }
-
   }
 
   confirmBottomSheet(BuildContext context) {
-
     showModalBottomSheet(
-        isScrollControlled:true,
+        isScrollControlled: true,
         backgroundColor: MyColor.backgroundColor,
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
         builder: (context) {
-          List<AccountTokenList> tokenBalance = DBTokenProvider.dbTokenProvider.tokenList.where((element) {
-            return "${element.networkId}" == sendTokenNetworkId && element.type == "";
+          List<AccountTokenList> tokenBalance =
+              DBTokenProvider.dbTokenProvider.tokenList.where((element) {
+            return "${element.networkId}" == sendTokenNetworkId &&
+                element.type == "";
           }).toList();
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                // print("object $sendTransactionFee");
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20)
+            // print("object $sendTransactionFee");
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10),
+                  // dos icon
+                  Center(
+                    child: Container(
+                      width: 45,
+                      height: 5,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: MyColor.lightGreyColor),
+                    ),
                   ),
-                  padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+                  const SizedBox(height: 20),
 
+                  const Padding(
+                    padding: EdgeInsets.only(left: 5, bottom: 10),
+                    child: Text("Asset", style: MyStyle.tx18BWhite),
+                  ),
 
-                      const SizedBox(height: 10),
-                      // dos icon
-                      Center(
-                        child: Container(
-                          width: 45,
-                          height: 5,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: MyColor.lightGreyColor
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      const Padding(
-                        padding: EdgeInsets.only(left: 5,bottom: 10),
-                        child: Text(
-                            "Asset",
-                            style : MyStyle.tx18BWhite
-                        ),
-                      ),
-
-                      Container(
-                        decoration: BoxDecoration(
-                            color: MyColor.darkGrey01Color,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            children: [
-
-                              const SizedBox(width: 10),
-
-
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(300),
-                                child: CachedNetworkImage(
-                                  width: 40,height: 40,
-                                  fit: BoxFit.fill,
-                                  imageUrl: sendTokenImage,
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(color: MyColor.greenColor),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset("assets/images/bitcoin.png",
-                                          width: 40,
-                                          height: 40
-                                      ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 10),
-
-                              Expanded(
-                                child: Text(
-                                    sendTokenName,
-                                    style: MyStyle.tx18BWhite
-                                ),
-                              ),
-
-                              const SizedBox(width: 12),
-
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Container(
-                        decoration: BoxDecoration(
-                            color: MyColor.darkGrey01Color,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                    "From address",
-                                    style: MyStyle.tx18BWhite.copyWith(
-                                        fontSize: 16
-                                    )
-                                ),
-                              ),
-                              const SizedBox(height: 7),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  fromAddressController.text,
-                                  style: MyStyle.tx18RWhite.copyWith(
-                                      fontSize: 14
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                    "To address",
-                                    style: MyStyle.tx18BWhite.copyWith(
-                                        fontSize: 16
-                                    )
-                                ),
-                              ),
-                              const SizedBox(height: 7),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  toController.text,
-                                  style: MyStyle.tx18RWhite.copyWith(
-                                      fontSize: 14
-                                  ),
-                                ),
-                              ),
-
-
-                              const SizedBox(height: 15),
-
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                    "Token quantity",
-                                    style: MyStyle.tx18BWhite.copyWith(
-                                        fontSize: 14
-                                    )
-                                ),
-                              ),
-
-                              const SizedBox(height: 6),
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  children: [
-
-                                    Expanded(
-                                      child: Text(
-                                        '${ApiHandler.showFiveBalance(sendTokenQuantity.text)} $sendTokenSymbol',
-                                        style: MyStyle.tx18BWhite.copyWith(
-                                            fontSize: 14
-                                        ),
-                                      ),
-                                    ),
-
-                                    Text(
-                                        double.parse("${double.parse(sendTokenQuantity.text)*double.parse(sendTokenUsd)}").toStringAsFixed(3),
-                                        style: MyStyle.tx18RWhite.copyWith(
-                                            fontSize: 14
-                                        )
-                                    ),
-
-                                    Text(
-                                        " USD",
-                                        style: MyStyle.tx18RWhite.copyWith(
-                                            fontSize: 14
-                                        )
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Container(
-                        decoration: BoxDecoration(
-                            color: MyColor.darkGrey01Color,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 13),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-
-                              Row(
-                                children: [
-
-                                  Text(
-                                      "Network Fee",
-                                      style:MyStyle.tx18BWhite.copyWith(
-                                          fontSize: 14
-                                      )
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Flexible(
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                          "${ApiHandler.showFiveBalance(sendTransactionFee)} $networkSymbol (~\$ ${(double.parse(sendTransactionFee) * tokenBalance[0].price).toStringAsFixed(3)})",
-                                          textAlign: TextAlign.end,
-                                          style: MyStyle.tx18RWhite.copyWith(
-                                              fontSize: 14
-                                          )
-                                      ),
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-
-                              const SizedBox(height: 10),
-
-                              Row(
-                                children: [
-
-                                  Expanded(
-                                    child: Text(
-                                        "Max total",
-                                        style: MyStyle.tx18BWhite.copyWith(
-                                            fontSize: 14
-                                        )
-                                    ),
-                                  ),
-
-                                  Text(
-                                      '\$ ${totalUsd.toStringAsFixed(3)} USD',
-                                      style: MyStyle.tx18RWhite.copyWith(
-                                          fontSize: 14
-                                      )
-                                  ),
-                                ],
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                  Container(
+                    decoration: BoxDecoration(
+                        color: MyColor.darkGrey01Color,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
                         children: [
-
-                          Theme(
-                            data: Theme.of(context).copyWith(
-                              unselectedWidgetColor: MyColor.greenColor.withOpacity(0.5),
-                            ),
-                            child: Checkbox(
-                              checkColor: MyColor.whiteColor,
-                              activeColor: MyColor.greenColor,
-                              value: checkBox,
-                              onChanged: (value) {
-
-                                setState(() {
-                                  checkBox = value!;
-                                });
-
-                              },
+                          const SizedBox(width: 10),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(300),
+                            child: CachedNetworkImage(
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.fill,
+                              imageUrl: sendTokenImage,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(
+                                    color: MyColor.greenColor),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  "assets/images/bitcoin.png",
+                                  width: 40,
+                                  height: 40),
                             ),
                           ),
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-
-                              Text(
-                                "I understand all the risk",
-                                style: MyStyle.tx18RWhite.copyWith(
-                                    fontSize: 14
-                                ),
-                              ),
-
-                              Row(
-                                children: [
-                                  Text(
-                                    "I agree to the",
-                                    style: MyStyle.tx18RWhite.copyWith(
-                                        fontSize: 14
-                                    ),
-                                  ),
-                                  Text(
-                                    "Terms and Conditions",
-                                    style: MyStyle.tx18RWhite.copyWith(
-                                        fontSize: 14
-                                    ),
-                                  )],
-                              ),
-
-                            ],
-                          )
-
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child:
+                                Text(sendTokenName, style: MyStyle.tx18BWhite),
+                          ),
+                          const SizedBox(width: 12),
                         ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
 
-                      const SizedBox(height: 30),
-
-                      isLoading == true
-                          ?
-                      Helper.dialogCall.showLoader()
-                          :
-                      checkBox == false || (sendTokenAddress == "" && totalSendValue > double.parse(sendTokenBalance))
-                          || double.parse(tokenBalance[0].balance) < double.parse(sendTransactionFee)
-                          ?
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            if((sendTokenAddress == "" && totalSendValue > double.parse(sendTokenBalance))
-                                || double.parse(tokenBalance[0].balance) < double.parse(sendTransactionFee)){
-                              Helper.dialogCall.showToast(context, "Insufficient balance to cover fees, reduce withdraw amount");
-                            }
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width-180,
-                            height: 45,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: MyColor.greenColor.withOpacity(0.23)
-                            ),
-                            child: const Center(
-                              child: Text(
-                                  "Confirm send",
-                                  style: MyStyle.tx18RWhite
-                              ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: MyColor.darkGrey01Color,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text("From address",
+                                style:
+                                    MyStyle.tx18BWhite.copyWith(fontSize: 16)),
+                          ),
+                          const SizedBox(height: 7),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              fromAddressController.text,
+                              style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text("To address",
+                                style:
+                                    MyStyle.tx18BWhite.copyWith(fontSize: 16)),
+                          ),
+                          const SizedBox(height: 7),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              toController.text,
+                              style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text("Token quantity",
+                                style:
+                                    MyStyle.tx18BWhite.copyWith(fontSize: 14)),
+                          ),
+                          const SizedBox(height: 6),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${ApiHandler.showFiveBalance(sendTokenQuantity.text)} $sendTokenSymbol',
+                                    style: MyStyle.tx18BWhite
+                                        .copyWith(fontSize: 14),
+                                  ),
+                                ),
+                                Text(
+                                    double.parse(
+                                            "${double.parse(sendTokenQuantity.text) * double.parse(sendTokenUsd)}")
+                                        .toStringAsFixed(3),
+                                    style: MyStyle.tx18RWhite
+                                        .copyWith(fontSize: 14)),
+                                Text(" USD",
+                                    style: MyStyle.tx18RWhite
+                                        .copyWith(fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  Container(
+                    decoration: BoxDecoration(
+                        color: MyColor.darkGrey01Color,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 13),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Network Fee",
+                                  style: MyStyle.tx18BWhite
+                                      .copyWith(fontSize: 14)),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      "${ApiHandler.showFiveBalance(sendTransactionFee)} $networkSymbol (~\$ ${(double.parse(sendTransactionFee) * tokenBalance[0].price).toStringAsFixed(3)})",
+                                      textAlign: TextAlign.end,
+                                      style: MyStyle.tx18RWhite
+                                          .copyWith(fontSize: 14)),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text("Max total",
+                                    style: MyStyle.tx18BWhite
+                                        .copyWith(fontSize: 14)),
+                              ),
+                              Text('\$ ${totalUsd.toStringAsFixed(3)} USD',
+                                  style: MyStyle.tx18RWhite
+                                      .copyWith(fontSize: 14)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Theme(
+                        data: Theme.of(context).copyWith(
+                          unselectedWidgetColor:
+                              MyColor.greenColor.withOpacity(0.5),
                         ),
-                      )
-                          :
-                      InkWell(
-                        onTap: () async {
-                          // print("check confirmSend ");
-                          setState((){
-                            isLoading = true;
-                          });
-                          await confirmSend();
-                          setState((){});
-                        },
-                        child: Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width-180,
-                            height: 45,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: MyColor.greenColor
-                            ),
-                            child: const Center(
-                              child: Text(
-                                  "Confirm send",
-                                  style: MyStyle.tx18RWhite
-                              ),
-                            ),
-                          ),
+                        child: Checkbox(
+                          checkColor: MyColor.whiteColor,
+                          activeColor: MyColor.greenColor,
+                          value: checkBox,
+                          onChanged: (value) {
+                            setState(() {
+                              checkBox = value!;
+                            });
+                          },
                         ),
                       ),
-
-                      const SizedBox(height: 30),
-
-
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "I understand all the risk",
+                            style: MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "I agree to the",
+                                style:
+                                    MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                              ),
+                              Text(
+                                "Terms and Conditions",
+                                style:
+                                    MyStyle.tx18RWhite.copyWith(fontSize: 14),
+                              )
+                            ],
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                );
-              }
-          );
-        }).whenComplete(() {
 
+                  const SizedBox(height: 30),
+
+                  isLoading == true
+                      ? Helper.dialogCall.showLoader()
+                      : checkBox == false ||
+                              (sendTokenAddress == "" &&
+                                  totalSendValue >
+                                      double.parse(sendTokenBalance)) ||
+                              double.parse(tokenBalance[0].balance) <
+                                  double.parse(sendTransactionFee)
+                          ? Center(
+                              child: InkWell(
+                                onTap: () {
+                                  if ((sendTokenAddress == "" &&
+                                          totalSendValue >
+                                              double.parse(sendTokenBalance)) ||
+                                      double.parse(tokenBalance[0].balance) <
+                                          double.parse(sendTransactionFee)) {
+                                    Helper.dialogCall.showToast(context,
+                                        "Insufficient balance to cover fees, reduce withdraw amount");
+                                  }
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 180,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color:
+                                          MyColor.greenColor.withOpacity(0.23)),
+                                  child: const Center(
+                                    child: Text("Confirm send",
+                                        style: MyStyle.tx18RWhite),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () async {
+                                // print("check confirmSend ");
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await confirmSend();
+                                setState(() {});
+                              },
+                              child: Center(
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 180,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: MyColor.greenColor),
+                                  child: const Center(
+                                    child: Text("Confirm send",
+                                        style: MyStyle.tx18RWhite),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          });
+        }).whenComplete(() {
       setState(() {
         checkBox = false;
       });
-
     });
   }
 
   confirmSend() async {
-
-    setState((){
+    setState(() {
       isLoading = true;
     });
-
 
     var data = {
       "network_id": sendTokenNetworkId,
@@ -712,30 +619,29 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
       "from": selectedAccountAddress,
       "to": toController.text,
       "token_id": sendTokenId,
-      "value": sendTokenNetworkId != "9" ? sendTokenQuantity.text : double.parse(sendTokenQuantity.text).toStringAsFixed(5),
+      "value": sendTokenNetworkId != "9"
+          ? sendTokenQuantity.text
+          : double.parse(sendTokenQuantity.text).toStringAsFixed(5),
       "gasPrice": sendGasPrice,
       "gas": sendGas,
       "nonce": sendNonce,
       "networkFee": sendTransactionFee,
       "isCustomeRPC": false,
-      "network_url":networkList.first.url,
-      "tokenAddress":sendTokenAddress,
-      "decimals":sendTokenDecimals
+      "network_url": networkList.first.url,
+      "tokenAddress": sendTokenAddress,
+      "decimals": sendTokenDecimals
     };
 
     // print(jsonEncode(data));
-    await transectionProvider.sendToken(data,'/sendAssets');
-    if( transectionProvider.isSend == true){
-
+    await transectionProvider.sendToken(data, '/sendAssets');
+    if (transectionProvider.isSend == true) {
       // ignore: use_build_context_synchronously
-      Navigator.pop(context,"refresh");
+      Navigator.pop(context, "refresh");
 
       // ignore: use_build_context_synchronously
       Helper.dialogCall.showToast(context, "Send Token Successfully Done");
 
-
-      setState((){
-
+      setState(() {
         sendGasPrice = "";
         sendGas = "";
         sendNonce = "";
@@ -746,20 +652,20 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
         sendTokenQuantity.text = "0";
 
         notifyOrder(context);
-
       });
     }
 
     //unfair pact message plastic lunch drama comfort faint start board black job
     else {
-      if (sendTokenNetworkId == "9" && transectionProvider.sendTokenData["status"] == false) {
+      if (sendTokenNetworkId == "9" &&
+          transectionProvider.sendTokenData["status"] == false) {
         // ignore: use_build_context_synchronously
-        Helper.dialogCall.showToast(context, "Insufficient ${networkList[0].symbol} balance please deposit some ${networkList[0].symbol}");
+        Helper.dialogCall.showToast(context,
+            "Insufficient ${networkList[0].symbol} balance please deposit some ${networkList[0].symbol}");
         setState(() {
           isLoading = false;
         });
       } else {
-
         // ignore: use_build_context_synchronously
         Helper.dialogCall.showToast(context, "Send token error");
       }
@@ -768,33 +674,27 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
         isLoading = false;
       });
     }
-
   }
 
-  notifyOrder(context)async{
-
+  notifyOrder(context) async {
     var params = {
-      "action":"notify_payment_made",
-      "email":widget.params['email'],
-      "invoice":widget.sellInvoice.toString(),
-      "auth":"p1~\$*)Ze(@"
+      "action": "notify_payment_made",
+      "email": widget.params['email'],
+      "invoice": widget.sellInvoice.toString(),
+      "auth": "p1~\$*)Ze(@"
     };
 
-    await buySellProvider.notifyOrder(params, context,"");
+    await buySellProvider.notifyOrder(params, context, "");
 
-    if(buySellProvider.placeNotifyOrder) {
-
+    if (buySellProvider.placeNotifyOrder) {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                WithdrawSuccessful(
-                  invoice: widget.sellInvoice,
-                  tokenName: sendTokenName,
-                ),
-          )
-      );
-
+            builder: (context) => WithdrawSuccessful(
+              invoice: widget.sellInvoice,
+              tokenName: sendTokenName,
+            ),
+          ));
     }
 
     setState(() {
@@ -803,9 +703,8 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
   }
 
   Web3Client? _web3client;
-  getWeb3NetWorkFees()async{
-
-    setState((){
+  getWeb3NetWorkFees() async {
+    setState(() {
       isLoading = true;
     });
 
@@ -816,60 +715,60 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
 
     // print(rpcUrl);
 
-    setState((){
+    setState(() {
       isLoading = true;
     });
-
 
     //print(EtherAmount.inWei(BigInt.from(1)));
 
     var estimateGas = await _web3client!.estimateGas(
-        sender:EthereumAddress.fromHex(fromAddressController.text),
+        sender: EthereumAddress.fromHex(fromAddressController.text),
         to: EthereumAddress.fromHex(toController.text),
-        value: EtherAmount.inWei(BigInt.from(double.parse(sendTokenBalance)))
-    );
+        value: EtherAmount.inWei(BigInt.from(double.parse(sendTokenBalance))));
     var getGasPrice = await _web3client!.getGasPrice();
 
     //print("estimateGas === > ${"${estimateGas}"}");
     //print("getGasPrice === > ${"${getGasPrice.getInWei}"}");
 
-    var value = BigInt.from(double.parse("$estimateGas") *  double.parse("${getGasPrice.getInWei}")) / BigInt.from(10).pow(18);
+    var value = BigInt.from(double.parse("$estimateGas") *
+            double.parse("${getGasPrice.getInWei}")) /
+        BigInt.from(10).pow(18);
     //print(value);
 
-    double tokenBalance = double.parse(double.parse(sendTokenBalance).toStringAsFixed(4)) - (value * 2);
+    double tokenBalance =
+        double.parse(double.parse(sendTokenBalance).toStringAsFixed(4)) -
+            (value * 2);
 
     //print(tokenBalance);
 
-
-    if(tokenBalance > 0){
-      setState((){
+    if (tokenBalance > 0) {
+      setState(() {
         sendTokenQuantity = TextEditingController(text: "$tokenBalance");
         isLoading = false;
       });
-    }else{
+    } else {
       // ignore: use_build_context_synchronously
-      Helper.dialogCall.showToast(context, "Insufficient ${networkList[0].symbol} balance please deposit some ${networkList[0].symbol}");
+      Helper.dialogCall.showToast(context,
+          "Insufficient ${networkList[0].symbol} balance please deposit some ${networkList[0].symbol}");
     }
 
-    setState((){
+    setState(() {
       isLoading = false;
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
-    transectionProvider = Provider.of<TransectionProvider>(context, listen: true);
+    transectionProvider =
+        Provider.of<TransectionProvider>(context, listen: true);
     tokenProvider = Provider.of<TokenProvider>(context, listen: true);
-    buySellProvider = Provider.of<BuySellProvider>(context,listen: true);
+    buySellProvider = Provider.of<BuySellProvider>(context, listen: true);
 
     // print(networkList[0].isEVM);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -883,170 +782,141 @@ class _WithdrawSendPageState extends State<WithdrawSendPage> {
           "Send ${widget.sendTokenSymbol}",
         ),
       ),
-
       body: isLoading == true
-          ?
-      Helper.dialogCall.showLoader()
-          :
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
+          ? Helper.dialogCall.showLoader()
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
 
-
-            // to address
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                "Recipient Address",
-                style: MyStyle.tx18RWhite.copyWith(
-                    fontSize: 16
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-
-            TextFormField(
-              readOnly: true,
-              controller: toController,
-              cursorColor: MyColor.greenColor,
-              style: MyStyle.tx18RWhite,
-              onChanged: (value) {
-                setState(() {});
-              },
-              decoration: MyStyle.textInputDecoration2,
-            ),
-            const SizedBox(height: 15),
-
-            //Amount text or Available Balance
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "Amount",
-                    style: MyStyle.tx18RWhite.copyWith(
-                        fontSize: 16
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.topRight,
+                  // to address
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-
-                      sendTokenBalance == "0"
-                          ?
-                      "Available: 0.0 $sendTokenSymbol"
-                          :
-                      "Available: ${ApiHandler.showFiveBalance(sendTokenBalance)} $sendTokenSymbol",
-                      style:MyStyle.tx18RWhite.copyWith(
-                          fontSize: 14,
-                          color: MyColor.grey01Color
-                      ),
+                      "Recipient Address",
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
-
-            // Amount
-            TextFormField(
-              readOnly: true,
-              keyboardType: TextInputType.number,
-              controller: sendTokenQuantity,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-              ],
-              onChanged: (value) {
-                setState(() {});
-              },
-              cursorColor: MyColor.greenColor,
-              style: MyStyle.tx18RWhite,
-              decoration: MyStyle.textInputDecoration2.copyWith(
-                  isDense: false,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      if(networkList[0].isEVM == 1){
-
-                        if(toController.text != "") {
-                          setState((){
-                            FocusScope.of(context).unfocus();
-                            // maxButtonCall = true;
-                          });
-                          // addressValidator();
-                          getWeb3NetWorkFees();
-                        }
-                        else{
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-
-                      }
-                      else {
-
-                        // print(sendTokenAddress);
-                        if(sendTokenAddress == "") {
-                          double tokenBalance = (double.parse(sendTokenBalance) * 96) / 100;
-
-                          //print(tokenBalance.toStringAsFixed(3));
-                          setState(() {
-                            sendTokenQuantity = TextEditingController(
-                                text: tokenBalance.toStringAsFixed(6)
-                            );
-                          });
-                        }else{
-                          // print("object");
-                          setState(() {
-                            sendTokenQuantity.text = sendTokenBalance;
-                          });
-                        }
-                      }
+                  TextFormField(
+                    readOnly: true,
+                    controller: toController,
+                    cursorColor: MyColor.greenColor,
+                    style: MyStyle.tx18RWhite,
+                    onChanged: (value) {
+                      setState(() {});
                     },
-                    child: SizedBox(
-                      width: 60,
-                      child: Center(
+                    decoration: MyStyle.textInputDecoration2,
+                  ),
+                  const SizedBox(height: 15),
+
+                  //Amount text or Available Balance
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          "Max",
-                          textAlign: TextAlign.center,
-                          style: MyStyle.tx18BWhite.copyWith(
-                              fontSize: 14,
-                              color: MyColor.greenColor
+                          "Amount",
+                          style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Flexible(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            sendTokenBalance == "0"
+                                ? "Available: 0.0 $sendTokenSymbol"
+                                : "Available: ${ApiHandler.showFiveBalance(sendTokenBalance)} $sendTokenSymbol",
+                            style: MyStyle.tx18RWhite.copyWith(
+                                fontSize: 14, color: MyColor.grey01Color),
                           ),
                         ),
                       ),
-                    ),
-                  )
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Amount
+                  TextFormField(
+                    readOnly: true,
+                    keyboardType: TextInputType.number,
+                    controller: sendTokenQuantity,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    cursorColor: MyColor.greenColor,
+                    style: MyStyle.tx18RWhite,
+                    decoration: MyStyle.textInputDecoration2.copyWith(
+                        isDense: false,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 15),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            if (networkList[0].isEVM == 1) {
+                              if (toController.text != "") {
+                                setState(() {
+                                  FocusScope.of(context).unfocus();
+                                  // maxButtonCall = true;
+                                });
+                                // addressValidator();
+                                getWeb3NetWorkFees();
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            } else {
+                              // print(sendTokenAddress);
+                              if (sendTokenAddress == "") {
+                                double tokenBalance =
+                                    (double.parse(sendTokenBalance) * 96) / 100;
+
+                                //print(tokenBalance.toStringAsFixed(3));
+                                setState(() {
+                                  sendTokenQuantity = TextEditingController(
+                                      text: tokenBalance.toStringAsFixed(6));
+                                });
+                              } else {
+                                // print("object");
+                                setState(() {
+                                  sendTokenQuantity.text = sendTokenBalance;
+                                });
+                              }
+                            }
+                          },
+                          child: SizedBox(
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                "Max",
+                                textAlign: TextAlign.center,
+                                style: MyStyle.tx18BWhite.copyWith(
+                                    fontSize: 14, color: MyColor.greenColor),
+                              ),
+                            ),
+                          ),
+                        )),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // usd amount
+                  Text(
+                    "= ${(double.parse(sendTokenQuantity.text.isNotEmpty ? sendTokenQuantity.text : "0") * double.parse(sendTokenUsd)).toStringAsFixed(2)} \$",
+                    style: MyStyle.tx18RWhite
+                        .copyWith(fontSize: 14, color: MyColor.grey01Color),
+                  ),
+
+                  // const SizedBox(height: 30),
+                ],
               ),
-
-
             ),
-            const SizedBox(height: 8),
-
-            // usd amount
-            Text(
-              "= ${(double.parse(sendTokenQuantity.text.isNotEmpty ?sendTokenQuantity.text : "0") * double.parse(sendTokenUsd)).toStringAsFixed(2)} \$",
-              style:MyStyle.tx18RWhite.copyWith(
-                  fontSize: 14,
-                  color: MyColor.grey01Color
-              ),
-            ),
-
-            // const SizedBox(height: 30),
-          ],
-        ),
-      ),
-
     );
   }
-
 }

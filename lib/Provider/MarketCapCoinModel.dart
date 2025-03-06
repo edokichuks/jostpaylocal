@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-MarketCapCoinModel MarketCapCoinModelFromJson(String str) => MarketCapCoinModel.fromJson(json.decode(str));
+MarketCapCoinModel MarketCapCoinModelFromJson(String str) =>
+    MarketCapCoinModel.fromJson(json.decode(str));
 
-String MarketCapCoinModelToJson(MarketCapCoinModel data) => json.encode(data.toJson());
+String MarketCapCoinModelToJson(MarketCapCoinModel data) =>
+    json.encode(data.toJson());
 
 class MarketCapCoinModel {
   Map<String, Datum> data;
@@ -11,13 +13,16 @@ class MarketCapCoinModel {
     required this.data,
   });
 
-  factory MarketCapCoinModel.fromJson(Map<String, dynamic> json) => MarketCapCoinModel(
-    data: Map.from(json["data"]).map((k, v) => MapEntry<String, Datum>(k, Datum.fromJson(v))),
-  );
+  factory MarketCapCoinModel.fromJson(Map<String, dynamic> json) =>
+      MarketCapCoinModel(
+        data: Map.from(json["data"])
+            .map((k, v) => MapEntry<String, Datum>(k, Datum.fromJson(v))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-  };
+        "data": Map.from(data)
+            .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
+      };
 }
 
 class Datum {
@@ -64,48 +69,48 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    id: json["id"],
-    name: json["name"],
-    symbol: json["symbol"],
-    slug: json["slug"],
-    numMarketPairs: json["num_market_pairs"],
-    dateAdded: DateTime.parse(json["date_added"]),
-    maxSupply: json["max_supply"],
-    circulatingSupply: json["circulating_supply"]?.toDouble(),
-    totalSupply: json["total_supply"]?.toDouble(),
-    isActive: json["is_active"],
-    infiniteSupply: json["infinite_supply"],
-    platform: Platform.fromJson(json["platform"]),
-    cmcRank: json["cmc_rank"],
-    isFiat: json["is_fiat"],
-    selfReportedCirculatingSupply: json["self_reported_circulating_supply"],
-    selfReportedMarketCap: json["self_reported_market_cap"]?.toDouble(),
-    tvlRatio: json["tvl_ratio"],
-    lastUpdated: DateTime.parse(json["last_updated"]),
-    quote: Quote.fromJson(json["quote"]),
-  );
+        id: json["id"],
+        name: json["name"],
+        symbol: json["symbol"],
+        slug: json["slug"],
+        numMarketPairs: json["num_market_pairs"],
+        dateAdded: DateTime.parse(json["date_added"]),
+        maxSupply: json["max_supply"],
+        circulatingSupply: json["circulating_supply"]?.toDouble(),
+        totalSupply: json["total_supply"]?.toDouble(),
+        isActive: json["is_active"],
+        infiniteSupply: json["infinite_supply"],
+        platform: Platform.fromJson(json["platform"]),
+        cmcRank: json["cmc_rank"],
+        isFiat: json["is_fiat"],
+        selfReportedCirculatingSupply: json["self_reported_circulating_supply"],
+        selfReportedMarketCap: json["self_reported_market_cap"]?.toDouble(),
+        tvlRatio: json["tvl_ratio"],
+        lastUpdated: DateTime.parse(json["last_updated"]),
+        quote: Quote.fromJson(json["quote"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "symbol": symbol,
-    "slug": slug,
-    "num_market_pairs": numMarketPairs,
-    "date_added": dateAdded.toIso8601String(),
-    "max_supply": maxSupply,
-    "circulating_supply": circulatingSupply,
-    "total_supply": totalSupply,
-    "is_active": isActive,
-    "infinite_supply": infiniteSupply,
-    "platform": platform.toJson(),
-    "cmc_rank": cmcRank,
-    "is_fiat": isFiat,
-    "self_reported_circulating_supply": selfReportedCirculatingSupply,
-    "self_reported_market_cap": selfReportedMarketCap,
-    "tvl_ratio": tvlRatio,
-    "last_updated": lastUpdated.toIso8601String(),
-    "quote": quote.toJson(),
-  };
+        "id": id,
+        "name": name,
+        "symbol": symbol,
+        "slug": slug,
+        "num_market_pairs": numMarketPairs,
+        "date_added": dateAdded.toIso8601String(),
+        "max_supply": maxSupply,
+        "circulating_supply": circulatingSupply,
+        "total_supply": totalSupply,
+        "is_active": isActive,
+        "infinite_supply": infiniteSupply,
+        "platform": platform.toJson(),
+        "cmc_rank": cmcRank,
+        "is_fiat": isFiat,
+        "self_reported_circulating_supply": selfReportedCirculatingSupply,
+        "self_reported_market_cap": selfReportedMarketCap,
+        "tvl_ratio": tvlRatio,
+        "last_updated": lastUpdated.toIso8601String(),
+        "quote": quote.toJson(),
+      };
 }
 
 class Platform {
@@ -124,20 +129,20 @@ class Platform {
   });
 
   factory Platform.fromJson(Map<String, dynamic> json) => Platform(
-    id: json["id"],
-    name: json["name"],
-    symbol: json["symbol"],
-    slug: json["slug"],
-    tokenAddress: json["token_address"],
-  );
+        id: json["id"],
+        name: json["name"],
+        symbol: json["symbol"],
+        slug: json["slug"],
+        tokenAddress: json["token_address"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "symbol": symbol,
-    "slug": slug,
-    "token_address": tokenAddress,
-  };
+        "id": id,
+        "name": name,
+        "symbol": symbol,
+        "slug": slug,
+        "token_address": tokenAddress,
+      };
 }
 
 class Quote {
@@ -148,12 +153,12 @@ class Quote {
   });
 
   factory Quote.fromJson(Map<String, dynamic> json) => Quote(
-    usd: Usd.fromJson(json["USD"]),
-  );
+        usd: Usd.fromJson(json["USD"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "USD": usd.toJson(),
-  };
+        "USD": usd.toJson(),
+      };
 }
 
 class Usd {
@@ -172,21 +177,18 @@ class Usd {
   });
 
   factory Usd.fromJson(Map<String, dynamic> json) => Usd(
-    price: json["price"]?.toDouble(),
-    volume24H: json["volume_24h"]?.toDouble(),
-    volumeChange24H: json["volume_change_24h"]?.toDouble(),
-    percentChange1H: json["percent_change_1h"]?.toDouble(),
-    percentChange24H: json["percent_change_24h"]?.toDouble(),
-  );
+        price: json["price"]?.toDouble(),
+        volume24H: json["volume_24h"]?.toDouble(),
+        volumeChange24H: json["volume_change_24h"]?.toDouble(),
+        percentChange1H: json["percent_change_1h"]?.toDouble(),
+        percentChange24H: json["percent_change_24h"]?.toDouble(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "price": price,
-    "volume_24h": volume24H,
-    "volume_change_24h": volumeChange24H,
-    "percent_change_1h": percentChange1H,
-    "percent_change_24h": percentChange24H,
-
-  };
+        "price": price,
+        "volume_24h": volume24H,
+        "volume_change_24h": volumeChange24H,
+        "percent_change_1h": percentChange1H,
+        "percent_change_24h": percentChange24H,
+      };
 }
-
-

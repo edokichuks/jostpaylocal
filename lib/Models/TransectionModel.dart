@@ -4,9 +4,12 @@
 
 import 'dart:convert';
 
-List<TransectionList> transectionListFromJson(String str) => List<TransectionList>.from(json.decode(str).map((x) => TransectionList.fromJson(x)));
+List<TransectionList> transectionListFromJson(String str) =>
+    List<TransectionList>.from(
+        json.decode(str).map((x) => TransectionList.fromJson(x)));
 
-String transectionListToJson(List<TransectionList> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String transectionListToJson(List<TransectionList> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TransectionList {
   TransectionList({
@@ -39,35 +42,36 @@ class TransectionList {
   String status;
   String explorerUrl;
 
-  factory TransectionList.fromJson(Map<String, dynamic> json) => TransectionList(
-    transactionHash: json["transactionHash"],
-    timeStamp: json["timeStamp"]??"",
-    from: json["from"],
-    to: json["to"],
-    value: json["value"].toDouble(),
-    gas: json["gas"],
-    gasPrice: json["gasPrice"],
-    gasUsed: json["gasUsed"] ?? "",
-    networkFees: json["network_fees"],
-    nonce: json["nonce"] ?? "",
-    txType: json["txType"],
-    status: json["status"],
-    explorerUrl: json["explorer_url"],
-  );
+  factory TransectionList.fromJson(Map<String, dynamic> json) =>
+      TransectionList(
+        transactionHash: json["transactionHash"],
+        timeStamp: json["timeStamp"] ?? "",
+        from: json["from"],
+        to: json["to"],
+        value: json["value"].toDouble(),
+        gas: json["gas"],
+        gasPrice: json["gasPrice"],
+        gasUsed: json["gasUsed"] ?? "",
+        networkFees: json["network_fees"],
+        nonce: json["nonce"] ?? "",
+        txType: json["txType"],
+        status: json["status"],
+        explorerUrl: json["explorer_url"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "transactionHash": transactionHash,
-    "timeStamp": timeStamp,
-    "from": from,
-    "to": to,
-    "value": value,
-    "gas": gas,
-    "gasPrice": gasPrice,
-    "gasUsed": gasUsed,
-    "network_fees": networkFees,
-    "nonce": nonce,
-    "txType": txType,
-    "status": status,
-    "explorer_url": explorerUrl,
-  };
+        "transactionHash": transactionHash,
+        "timeStamp": timeStamp,
+        "from": from,
+        "to": to,
+        "value": value,
+        "gas": gas,
+        "gasPrice": gasPrice,
+        "gasUsed": gasUsed,
+        "network_fees": networkFees,
+        "nonce": nonce,
+        "txType": txType,
+        "status": status,
+        "explorer_url": explorerUrl,
+      };
 }

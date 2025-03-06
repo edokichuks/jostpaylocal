@@ -20,26 +20,23 @@ class BuySellPage extends StatefulWidget {
 }
 
 class _BuySellPageState extends State<BuySellPage> {
-
   var selectedType = "Buy";
   late BuySellProvider buySellProvider;
 
   bool isLoading = false;
 
-
-  checkLogin()async{
-
+  checkLogin() async {
     setState(() {
       isLoading = true;
     });
 
     SharedPreferences sharedPre = await SharedPreferences.getInstance();
-    var date  = sharedPre.getString("expireDate")??"";
+    var date = sharedPre.getString("expireDate") ?? "";
     const storage = FlutterSecureStorage();
 
-    if(date != "") {
+    if (date != "") {
       DateTime expireDate = DateTime.parse(date);
-      if(!expireDate.isAfter(DateTime.now())){
+      if (!expireDate.isAfter(DateTime.now())) {
         await storage.deleteAll();
         setState(() {
           buySellProvider.accessToken = "";
@@ -48,29 +45,24 @@ class _BuySellPageState extends State<BuySellPage> {
           sharedPre.remove("email");
         });
         // ignore: use_build_context_synchronously
-        Helper.dialogCall.showToast(context, "Your Login is expire.Please login again");
-      }else {
-
+        Helper.dialogCall
+            .showToast(context, "Your Login is expire.Please login again");
+      } else {
         var data = await storage.read(key: "loginValue");
         var deCode = jsonDecode(data!);
 
         setState(() {
           List<RatesInfo> ratesInfoList = [];
           deCode['rates_info'].map((e) {
-            ratesInfoList.add(
-                RatesInfo.fromJson(
-                    e,
-                    e['itemCode']
-                )
-            );
+            ratesInfoList.add(RatesInfo.fromJson(e, e['itemCode']));
           }).toList();
 
           buySellProvider.loginModel = null;
-          buySellProvider.loginModel = LoginModel.fromJson(deCode, ratesInfoList);
+          buySellProvider.loginModel =
+              LoginModel.fromJson(deCode, ratesInfoList);
         });
-
       }
-    }else{
+    } else {
       setState(() {
         buySellProvider.loginModel = null;
       });
@@ -83,104 +75,99 @@ class _BuySellPageState extends State<BuySellPage> {
 
   @override
   void initState() {
-    buySellProvider = Provider.of<BuySellProvider>(context,listen: false);
+    buySellProvider = Provider.of<BuySellProvider>(context, listen: false);
     buySellProvider.accessToken = "";
     buySellProvider.loginButtonText = "Get Otp";
     buySellProvider.showOtpText = false;
 
     super.initState();
 
-    Future.delayed(Duration.zero,(){
+    Future.delayed(Duration.zero, () {
       checkLogin();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    buySellProvider = Provider.of<BuySellProvider>(context,listen: true);
+    buySellProvider = Provider.of<BuySellProvider>(context, listen: true);
 
-    return
-
-     SafeArea(
-      child:  buySellProvider.loginModel == null
-          ?
-      const InstantLoginScreen()
-          :
-      isLoading ? Helper.dialogCall.showLoader():
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              height: 45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: MyColor.darkGrey01Color
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child : InkWell(
-                      onTap: (){
-                        setState(() {
-                          selectedType = "Buy";
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
+    return SafeArea(
+      child: buySellProvider.loginModel == null
+          ? const InstantLoginScreen()
+          : isLoading
+              ? Helper.dialogCall.showLoader()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 45,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: selectedType == "Buy" ? MyColor.greenColor :Colors.transparent
-                        ),
-                        child: Text(
-                          "Buy",
-                          style: MyStyle.tx18BWhite.copyWith(
-                            color: selectedType == "Buy" ? MyColor.mainWhiteColor : MyColor.dotBoarderColor,
-                            fontSize: 16
-                          ),
+                            color: MyColor.darkGrey01Color),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedType = "Buy";
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: selectedType == "Buy"
+                                          ? MyColor.greenColor
+                                          : Colors.transparent),
+                                  child: Text(
+                                    "Buy",
+                                    style: MyStyle.tx18BWhite.copyWith(
+                                        color: selectedType == "Buy"
+                                            ? MyColor.mainWhiteColor
+                                            : MyColor.dotBoarderColor,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedType = "Sell";
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: selectedType == "Sell"
+                                          ? MyColor.greenColor
+                                          : Colors.transparent),
+                                  child: Text(
+                                    "Sell",
+                                    style: MyStyle.tx18BWhite.copyWith(
+                                        color: selectedType == "Sell"
+                                            ? MyColor.mainWhiteColor
+                                            : MyColor.dotBoarderColor,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                      Expanded(
+                          child: selectedType == "Buy"
+                              ? const BuyScreen()
+                              : const SellScreen())
+                    ],
                   ),
-                  Expanded(
-                    child : InkWell(
-                      onTap: (){
-                        setState(() {
-                          selectedType = "Sell";
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: selectedType == "Sell" ? MyColor.greenColor :Colors.transparent
-                        ),
-                        child: Text(
-                          "Sell",
-                          style: MyStyle.tx18BWhite.copyWith(
-                            color: selectedType == "Sell" ? MyColor.mainWhiteColor : MyColor.dotBoarderColor,
-                              fontSize: 16
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-
-            Expanded(
-                child: selectedType == "Buy"
-                    ?
-                const BuyScreen()
-                    :
-                const SellScreen()
-            )
-          ],
-        ),
-      ),
+                ),
     );
   }
 }

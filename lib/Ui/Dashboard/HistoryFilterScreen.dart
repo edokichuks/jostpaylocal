@@ -24,7 +24,8 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
   String tType = "All";
 
   getHistoryInfo() async {
-    const String url = 'https://instantexchangers.com/mobile_server/get-transaction-histories';
+    const String url =
+        'https://instantexchangers.com/mobile_server/get-transaction-histories';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -46,9 +47,10 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
+        Map<String, dynamic> res = await jsonDecode(response.body);
         List<dynamic> result = res['transactions'];
-        List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
+        List<Map<String, dynamic>> info =
+            result.map((item) => Map<String, dynamic>.from(item)).toList();
         Fluttertoast.showToast(
             msg: "History searched successfully.",
             toastLength: Toast.LENGTH_SHORT, // Toast duration
@@ -57,10 +59,10 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
             backgroundColor: Colors.black, // Background color
             textColor: Colors.white, // Text color
             fontSize: 16.0 // Font size
-        );
+            );
         return info;
       } else {
-        if(response.statusCode == 301) {
+        if (response.statusCode == 301) {
           final redirectedResponse = await http.post(
             Uri.parse(response.headers['location']!),
             headers: {
@@ -77,9 +79,10 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
             },
           );
 
-          Map<String, dynamic> res= await jsonDecode(redirectedResponse.body);
+          Map<String, dynamic> res = await jsonDecode(redirectedResponse.body);
           List<dynamic> result = res['transactions'];
-          List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
+          List<Map<String, dynamic>> info =
+              result.map((item) => Map<String, dynamic>.from(item)).toList();
           Fluttertoast.showToast(
               msg: "History searched successfully.",
               toastLength: Toast.LENGTH_SHORT, // Toast duration
@@ -88,7 +91,7 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
               backgroundColor: Colors.black, // Background color
               textColor: Colors.white, // Text color
               fontSize: 16.0 // Font size
-          );
+              );
           return info;
         }
       }
@@ -190,7 +193,13 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
                   color: Color(0xFF646565),
                 ),
                 dropdownColor: NewColor.dashboardPrimaryColor,
-                items: ["All", "Waiting", "Confirming", "Processing", "Completed"].map((String category) {
+                items: [
+                  "All",
+                  "Waiting",
+                  "Confirming",
+                  "Processing",
+                  "Completed"
+                ].map((String category) {
                   return DropdownMenuItem(
                       value: category,
                       child: Text(
@@ -300,7 +309,8 @@ class _HistoryFilterScreenState extends State<HistoryFilterScreen> {
                     // width: double.infinity,
                     width: (MediaQuery.of(context).size.width - 72) / 2,
                     child: TextButton(
-                      onPressed: () => (Navigator.pop(context, getHistoryInfo())),
+                      onPressed: () =>
+                          (Navigator.pop(context, getHistoryInfo())),
                       style: TextButton.styleFrom(
                         backgroundColor: NewColor.btnBgGreenColor,
                         padding: const EdgeInsets.symmetric(vertical: 12),

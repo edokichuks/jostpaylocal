@@ -333,14 +333,16 @@ class _CoinScreenState extends State<CoinScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     deviceId = sharedPreferences.getString('deviceId')!;
     // print("deviceId ----> $deviceId");
-    socket = IO.io('https://https://instantexchangers.com/mobile_server/', <String, dynamic>{
-      "secure": true,
-      "path": "/api/socket.io",
-      "rejectUnauthorized": false,
-      "transports": ["websocket", "polling"],
-      "upgrade": false,
-      "query": {"deviceId": deviceId}
-    });
+    socket = IO.io(
+        'https://https://instantexchangers.com/mobile_server/',
+        <String, dynamic>{
+          "secure": true,
+          "path": "/api/socket.io",
+          "rejectUnauthorized": false,
+          "transports": ["websocket", "polling"],
+          "upgrade": false,
+          "query": {"deviceId": deviceId}
+        });
 
     socket!.connect();
 

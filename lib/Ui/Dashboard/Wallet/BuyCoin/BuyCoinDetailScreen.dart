@@ -14,7 +14,8 @@ import '../../../../Values/Helper/helper.dart';
 class BuyCoinDetailScreen extends StatefulWidget {
   final Map<String, dynamic> data;
   final Map<String, dynamic> bank;
-  const BuyCoinDetailScreen({super.key, required this.data, required this.bank});
+  const BuyCoinDetailScreen(
+      {super.key, required this.data, required this.bank});
 
   @override
   State<BuyCoinDetailScreen> createState() => _BuyCoinDetailScreenState();
@@ -40,7 +41,8 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
       isLoading = true;
     });
 
-    const String url = 'https://instantexchangers.com/mobile_server/paid-buy-order';
+    const String url =
+        'https://instantexchangers.com/mobile_server/paid-buy-order';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -64,16 +66,14 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black54,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
 
         setState(() {
           isLoading = false;
         });
 
-        Navigator.push(context,
-          MaterialPageRoute(builder: (context) {
-            return const HistoryScreen();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const HistoryScreen();
         }));
       } else {
         setState(() {
@@ -268,7 +268,8 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
                       const SizedBox(height: 11),
                       Container(
                           height: 0.5,
-                          decoration: const BoxDecoration(color: Color(0x33D1D1D1))),
+                          decoration:
+                              const BoxDecoration(color: Color(0x33D1D1D1))),
                       const SizedBox(height: 10),
                       Text(
                           textAlign: TextAlign.center,
@@ -281,7 +282,8 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
                       const SizedBox(height: 15),
                       Container(
                           height: 0.5,
-                          decoration: const BoxDecoration(color: Color(0x33D1D1D1))),
+                          decoration:
+                              const BoxDecoration(color: Color(0x33D1D1D1))),
                       const SizedBox(height: 10),
                       Text(
                           "Kindly transfer  ${NumberFormat('#,###.####').format(resultData['send_ngn_amount'])} NGN to the bank details below",
@@ -299,12 +301,13 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
                                   height: 1.2,
                                   color: NewColor.txGrayColor)),
                           const Spacer(),
-                          Text("${bankData['bank_full_name']}",
-                              style: NewStyle.tx14SplashWhite.copyWith(
-                                  fontSize: 12,
-                                  height: 1.2,
-                                  color: NewColor.mainWhiteColor),
-                              overflow: TextOverflow.ellipsis,
+                          Text(
+                            "${bankData['bank_full_name']}",
+                            style: NewStyle.tx14SplashWhite.copyWith(
+                                fontSize: 12,
+                                height: 1.2,
+                                color: NewColor.mainWhiteColor),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -320,37 +323,41 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
                           SizedBox(
                             width: 150.0, // Set the desired width
                             child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "${bankData['account_number']}",
-                                    style: NewStyle.tx14SplashWhite.copyWith(
-                                      fontSize: 12,
-                                      height: 1.2,
-                                      color: NewColor.mainWhiteColor,
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "${bankData['account_number']}",
+                                      style: NewStyle.tx14SplashWhite.copyWith(
+                                        fontSize: 12,
+                                        height: 1.2,
+                                        color: NewColor.mainWhiteColor,
+                                      ),
+                                      overflow: TextOverflow
+                                          .ellipsis, // Optional: add overflow handling
                                     ),
-                                    overflow: TextOverflow.ellipsis, // Optional: add overflow handling
-                                  ),
-                                  const SizedBox(width: 2,),
-                                  InkWell(
-                                      onTap: () {
-                                        FlutterClipboard.copy(bankData['account_number'])
-                                            .then((value) {
-                                          Helper.dialogCall.showToast(context, "Copied");
-                                        });
-                                        // Handle button press
-                                      },
-                                      child: Image.asset(
-                                        "assets/images/dashboard/copy.png",
-                                        width: 14,
-                                        height: 14,
-                                        fit: BoxFit.cover,
-                                      )),
-                                ],
-                              )
-                            ),
+                                    const SizedBox(
+                                      width: 2,
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          FlutterClipboard.copy(
+                                                  bankData['account_number'])
+                                              .then((value) {
+                                            Helper.dialogCall
+                                                .showToast(context, "Copied");
+                                          });
+                                          // Handle button press
+                                        },
+                                        child: Image.asset(
+                                          "assets/images/dashboard/copy.png",
+                                          width: 14,
+                                          height: 14,
+                                          fit: BoxFit.cover,
+                                        )),
+                                  ],
+                                )),
                           ),
                         ],
                       ),
@@ -363,12 +370,13 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
                                   height: 1.2,
                                   color: NewColor.txGrayColor)),
                           const Spacer(),
-                          Text("${bankData['account_name']}",
-                              style: NewStyle.tx14SplashWhite.copyWith(
-                                  fontSize: 10,
-                                  height: 1.2,
-                                  color: NewColor.mainWhiteColor),
-                                  overflow: TextOverflow.fade,
+                          Text(
+                            "${bankData['account_name']}",
+                            style: NewStyle.tx14SplashWhite.copyWith(
+                                fontSize: 10,
+                                height: 1.2,
+                                color: NewColor.mainWhiteColor),
+                            overflow: TextOverflow.fade,
                           ),
                         ],
                       ),
@@ -379,29 +387,27 @@ class _BuyCoinDetailScreenState extends State<BuyCoinDetailScreen> {
               const SizedBox(height: 35),
               isLoading == true
                   ? const Center(
-                  child: CircularProgressIndicator(
-                    color: MyColor.greenColor,
-                  ))
+                      child: CircularProgressIndicator(
+                      color: MyColor.greenColor,
+                    ))
                   : SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => {
-                    paidBuyOrder()
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: NewColor.btnBgGreenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () => {paidBuyOrder()},
+                        style: TextButton.styleFrom(
+                          backgroundColor: NewColor.btnBgGreenColor,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "I Paid",
+                          style: NewStyle.btnTx16SplashBlue
+                              .copyWith(color: NewColor.mainWhiteColor),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "I Paid",
-                    style: NewStyle.btnTx16SplashBlue
-                        .copyWith(color: NewColor.mainWhiteColor),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

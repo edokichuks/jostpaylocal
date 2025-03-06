@@ -4,10 +4,21 @@ import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 
 class CoinSendProcessingPage extends StatefulWidget {
-  String selectedAccountAddress,tokenId,tokenNetworkId,tokenAddress,tokenName,token_transection_Id,
-      tokenSymbol,tokenBalance,tokenImage,tokenType,tokenMarketId,
-      tokenDecimal,explorerUrl,accAddress;
-  double tokenUsdPrice,tokenUpDown,tokenFullPrice;
+  String selectedAccountAddress,
+      tokenId,
+      tokenNetworkId,
+      tokenAddress,
+      tokenName,
+      token_transection_Id,
+      tokenSymbol,
+      tokenBalance,
+      tokenImage,
+      tokenType,
+      tokenMarketId,
+      tokenDecimal,
+      explorerUrl,
+      accAddress;
+  double tokenUsdPrice, tokenUpDown, tokenFullPrice;
 
   CoinSendProcessingPage({
     super.key,
@@ -40,7 +51,6 @@ class _CoinSendProcessingPageState extends State<CoinSendProcessingPage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-
         Align(
           alignment: Alignment.topRight,
           child: InkWell(
@@ -54,41 +64,31 @@ class _CoinSendProcessingPageState extends State<CoinSendProcessingPage> {
             ),
           ),
         ),
-
         Container(
-          padding: const EdgeInsets.all(18),
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: MyColor.mainWhiteColor,
-          ),
-          child: Image.asset(
-            "assets/images/send_complete.jpg",
-            height: 90,
-            width: 90,
-          )
-        ),
+            padding: const EdgeInsets.all(18),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: MyColor.mainWhiteColor,
+            ),
+            child: Image.asset(
+              "assets/images/send_complete.jpg",
+              height: 90,
+              width: 90,
+            )),
         const SizedBox(height: 20),
-
         Text(
           "Processing…",
-          style: MyStyle.tx18BWhite.copyWith(
-            color: MyColor.whiteColor
-          ),
+          style: MyStyle.tx18BWhite.copyWith(color: MyColor.whiteColor),
         ),
         const SizedBox(height: 20),
-
         Text(
           "Transaction in progress! Blockchain validation is underway."
-              "This may take a few minutes.",
+          "This may take a few minutes.",
           textAlign: TextAlign.center,
-          style: MyStyle.tx18RWhite.copyWith(
-            color: MyColor.dotBoarderColor,
-            fontSize: 15
-          ),
+          style: MyStyle.tx18RWhite
+              .copyWith(color: MyColor.dotBoarderColor, fontSize: 15),
         ),
         const SizedBox(height: 20),
-
-
         InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -109,13 +109,12 @@ class _CoinSendProcessingPageState extends State<CoinSendProcessingPage> {
                     tokenType: widget.tokenType,
                     tokenImage: widget.tokenImage,
                     tokenUsdPrice: widget.tokenUsdPrice,
-                    tokenFullPrice:widget.tokenFullPrice,
+                    tokenFullPrice: widget.tokenFullPrice,
                     tokenUpDown: widget.tokenUpDown,
                     token_transection_Id: widget.token_transection_Id,
                     explorerUrl: widget.explorerUrl,
                   ),
-                )
-            );
+                ));
           },
           child: Container(
             alignment: Alignment.center,
@@ -129,7 +128,6 @@ class _CoinSendProcessingPageState extends State<CoinSendProcessingPage> {
           ),
         ),
         const SizedBox(height: 20),
-
       ],
     );
   }

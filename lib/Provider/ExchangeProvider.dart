@@ -8,9 +8,7 @@ import 'package:jost_pay_wallet/Ui/Dashboard/Wallet/ExchangeCoin/ExchangeTransac
 import 'package:jost_pay_wallet/Values/Helper/helper.dart';
 import 'package:jost_pay_wallet/Values/utils.dart';
 
-class ExchangeProvider with ChangeNotifier{
-  
-
+class ExchangeProvider with ChangeNotifier {
   List<ExchangeTokenModel> exTokenList = [];
   List<ExchangeTokenModel> searchExToList = [];
   List<ExchangeTokenModel> tempExTokenList = [];
@@ -21,11 +19,10 @@ class ExchangeProvider with ChangeNotifier{
 
   bool isLoading = true;
 
-  getTokenList(String url,context)async{
+  getTokenList(String url, context) async {
     isLoading = true;
 
     notifyListeners();
-
 
     isLoading = false;
     notifyListeners();
@@ -34,7 +31,7 @@ class ExchangeProvider with ChangeNotifier{
       var value = json.decode(responseData.body);
       // print("Get Exchange Token ----> $value");
 
-      if(responseData.statusCode == 200) {
+      if (responseData.statusCode == 200) {
         exTokenList.clear();
         searchExToList.clear();
         tempExTokenList.clear();
@@ -53,89 +50,82 @@ class ExchangeProvider with ChangeNotifier{
 
         await getExchangeMinMax(
             "v1/exchange-range/fixed-rate/${sendCoin.ticker.toLowerCase()}_${receiveCoin.ticker.toLowerCase()}",
-            {"api_key":Utils.apiKey},
-            context
-        );
+            {"api_key": Utils.apiKey},
+            context);
 
         isLoading = false;
         notifyListeners();
-
-      }else{
+      } else {
         isLoading = false;
         notifyListeners();
       }
     });
-
   }
 
-  double minAmount = 0,maxAmount = 0;
-  bool exRateLoading= true;
-  getExchangeMinMax(String url,params,context)async{
+  double minAmount = 0, maxAmount = 0;
+  bool exRateLoading = true;
+  getExchangeMinMax(String url, params, context) async {
     exRateLoading = true;
     notifyListeners();
 
-    await ApiHandler.getExchangeParams(url, params).then((responseData){
+    await ApiHandler.getExchangeParams(url, params).then((responseData) {
       var value = json.decode(responseData.body);
       // print("object ---> $value");
 
-      if(responseData.statusCode == 200) {
-
+      if (responseData.statusCode == 200) {
         minAmount = value['minAmount'] ?? -1;
         maxAmount = value['maxAmount'] ?? -1;
 
         exRateLoading = false;
         notifyListeners();
-      }else{
-        Helper.dialogCall.showToast(context, "Please change receive coin this is InValid pair");
+      } else {
+        Helper.dialogCall.showToast(
+            context, "Please change receive coin this is InValid pair");
         exRateLoading = false;
         notifyListeners();
-
       }
     });
   }
 
-
-  bool exMinMaxLoading= false;
-  getMinMax(String url,params,context)async{
+  bool exMinMaxLoading = false;
+  getMinMax(String url, params, context) async {
     exMinMaxLoading = true;
     notifyListeners();
 
-    await ApiHandler.getExchangeParams(url, params).then((responseData){
+    await ApiHandler.getExchangeParams(url, params).then((responseData) {
       var value = json.decode(responseData.body);
       // print("object getMinMax ---> $value");
 
-      if(responseData.statusCode == 200) {
-
+      if (responseData.statusCode == 200) {
         minAmount = value['minAmount'] ?? -1;
         maxAmount = value['maxAmount'] ?? -1;
 
         exMinMaxLoading = false;
         notifyListeners();
-      }else{
-        Helper.dialogCall.showToast(context, "Please change receive coin this is InValid pair");
+      } else {
+        Helper.dialogCall.showToast(
+            context, "Please change receive coin this is InValid pair");
         exMinMaxLoading = false;
         notifyListeners();
-
       }
     });
   }
 
-  changeSendToken(ExchangeTokenModel newToken, context,valueType) async {
+  changeSendToken(ExchangeTokenModel newToken, context, valueType) async {
     if (receiveCoin.ticker != newToken.ticker) {
       // Create a copy of newToken
-      ExchangeTokenModel copiedToken = ExchangeTokenModel.fromJson(newToken.toJson());
+      ExchangeTokenModel copiedToken =
+          ExchangeTokenModel.fromJson(newToken.toJson());
       sendCoin = copiedToken;
 
-      if(valueType == "") {
+      if (valueType == "") {
         Navigator.pop(context);
       }
 
-
       await getMinMax(
           "v1/exchange-range/fixed-rate/${sendCoin.ticker.toLowerCase()}_${receiveCoin.ticker.toLowerCase()}",
-          {"api_key":Utils.apiKey},
-          context
-      );
+          {"api_key": Utils.apiKey},
+          context);
 
       notifyListeners();
     } else {
@@ -143,73 +133,72 @@ class ExchangeProvider with ChangeNotifier{
     }
   }
 
-  changeReceiveToken(ExchangeTokenModel newToken,context) async {
-    if(sendCoin.ticker != newToken.ticker ) {
-      ExchangeTokenModel copiedToken = ExchangeTokenModel.fromJson(newToken.toJson());
+  changeReceiveToken(ExchangeTokenModel newToken, context) async {
+    if (sendCoin.ticker != newToken.ticker) {
+      ExchangeTokenModel copiedToken =
+          ExchangeTokenModel.fromJson(newToken.toJson());
       receiveCoin = copiedToken;
 
       Navigator.pop(context);
 
       await getMinMax(
           "v1/exchange-range/fixed-rate/${sendCoin.ticker.toLowerCase()}_${receiveCoin.ticker.toLowerCase()}",
-          {"api_key":Utils.apiKey},
-          context
-      );
+          {"api_key": Utils.apiKey},
+          context);
       notifyListeners();
-
-    }else{
+    } else {
       Helper.dialogCall.showToast(context, "You can't select same coin");
     }
   }
 
-
   bool estimateLoading = false;
-  double estimatedAmount =0;
+  double estimatedAmount = 0;
   TextEditingController getCoinController = TextEditingController();
-  estimateExchangeAmount(String url,params,context)async{
+  estimateExchangeAmount(String url, params, context) async {
     estimateLoading = true;
     notifyListeners();
 
     // print("object--->  $url");
     // print("object--->  $params");
 
-    await ApiHandler.getExchangeParams(url, params).then((responseData){
+    await ApiHandler.getExchangeParams(url, params).then((responseData) {
       var value = json.decode(responseData.body);
 
       // print("estimate object --->  $value");
 
-      if(responseData.statusCode == 200) {
-
-        estimatedAmount = value['estimatedAmount']??0;
+      if (responseData.statusCode == 200) {
+        estimatedAmount = value['estimatedAmount'] ?? 0;
         getCoinController.text = estimatedAmount.toStringAsFixed(6);
         notifyListeners();
         estimateLoading = false;
-
-      }else{
+      } else {
         estimateLoading = false;
-        Helper.dialogCall.showToast(context, "Please change receive coin this is InValid pair");
+        Helper.dialogCall.showToast(
+            context, "Please change receive coin this is InValid pair");
         notifyListeners();
         print(" =====> exchange estimate Exchange Amount api error <====");
       }
     });
   }
 
-
-  String payinAddress ="",payoutAddress ="",fromCurrency ="",toCurrency ="",validUntil ="",trxId ="";
+  String payinAddress = "",
+      payoutAddress = "",
+      fromCurrency = "",
+      toCurrency = "",
+      validUntil = "",
+      trxId = "";
   double amount = 0;
 
-  bool createExLoading = false,createExSuccess = false;
-  createExchange(url,body,context)async{
-
+  bool createExLoading = false, createExSuccess = false;
+  createExchange(url, body, context) async {
     createExSuccess = false;
     createExLoading = true;
     notifyListeners();
 
-    await ApiHandler.postExchange(url,body).then((responseData) async {
-
+    await ApiHandler.postExchange(url, body).then((responseData) async {
       var value = json.decode(responseData.body);
       // print("object url ---> $value");
-      if(responseData.statusCode == 200) {
+      if (responseData.statusCode == 200) {
         payinAddress = value["payinAddress"];
         payoutAddress = value["payoutAddress"];
         fromCurrency = value["fromCurrency"];
@@ -219,35 +208,26 @@ class ExchangeProvider with ChangeNotifier{
         amount = value["amount"];
         // print("object ---> $value");
 
-
-        Navigator.pop(context,"refresh");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) {
-                  return ExchangeTransactionStatus(statusId: trxId);
-                }
-            )
-        );
+        Navigator.pop(context, "refresh");
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ExchangeTransactionStatus(statusId: trxId);
+        }));
 
         createExLoading = false;
         createExSuccess = true;
         // print("createExSuccess $createExSuccess");
         notifyListeners();
-      }
-      else{
+      } else {
         Helper.dialogCall.showToast(context, "${value['message']}");
         createExLoading = false;
         createExSuccess = false;
         notifyListeners();
       }
     });
-  
   }
 
-
-  bool getTrxStatus = false,statusLoading = false;
-  transactionStatus(url,accountId) async {
+  bool getTrxStatus = false, statusLoading = false;
+  transactionStatus(url, accountId) async {
     statusLoading = true;
     getTrxStatus = false;
     notifyListeners();
@@ -257,31 +237,28 @@ class ExchangeProvider with ChangeNotifier{
       // print("object url ---> $url");
       // print("transactionStatus ---> $value");
 
-      if(responseData.statusCode == 200) {
-
+      if (responseData.statusCode == 200) {
         await DbExTransaction.dbExTransaction.getExTransaction();
 
-        var trxIndex = DbExTransaction.dbExTransaction.exTransactionList.indexWhere((element) => element.id == "${value['id']}");
+        var trxIndex = DbExTransaction.dbExTransaction.exTransactionList
+            .indexWhere((element) => element.id == "${value['id']}");
 
-        if(trxIndex == -1) {
+        if (trxIndex == -1) {
           // print("object 1");
-          await DbExTransaction.dbExTransaction.createExTransaction(
-              ExTransactionModel.fromJson(value)
-          );
-        }else{
+          await DbExTransaction.dbExTransaction
+              .createExTransaction(ExTransactionModel.fromJson(value));
+        } else {
           // print("object 2");
           await DbExTransaction.dbExTransaction.updateExTransaction(
-              ExTransactionModel.fromJson(value),
-              value["id"],
+            ExTransactionModel.fromJson(value),
+            value["id"],
           );
         }
-
 
         statusLoading = false;
         getTrxStatus = true;
         notifyListeners();
-
-      }else{
+      } else {
         statusLoading = false;
         getTrxStatus = false;
         notifyListeners();
@@ -290,39 +267,36 @@ class ExchangeProvider with ChangeNotifier{
     });
   }
 
-
-  bool isAddressVerify = false,verifyAddressLoading =false;
-  addressVerification(String url,params,context) async {
+  bool isAddressVerify = false, verifyAddressLoading = false;
+  addressVerification(String url, params, context) async {
     verifyAddressLoading = true;
     notifyListeners();
 
-    await ApiHandler.getExchangeParams(url, params).then((responseData){
+    await ApiHandler.getExchangeParams(url, params).then((responseData) {
       var value = json.decode(responseData.body);
       // print("object url ---> $params");
       // print("object ---> $value");
       // print("statusCode ---> ${responseData.statusCode}");
 
-      if(responseData.statusCode == 200 && value["result"] == true) {
+      if (responseData.statusCode == 200 && value["result"] == true) {
         isAddressVerify = value["result"];
         verifyAddressLoading = false;
         notifyListeners();
-      }else{
+      } else {
         // print("result 0");
 
-        if(value["result"] != null) {
+        if (value["result"] != null) {
           // print("result 1");
           isAddressVerify = value["result"];
           Helper.dialogCall.showToast(context, "${value['message']}");
-        }else{
+        } else {
           // print("result 2");
           isAddressVerify = value["result"];
           Helper.dialogCall.showToast(context, "Address is not valid");
         }
         verifyAddressLoading = false;
         notifyListeners();
-
       }
     });
   }
-
 }

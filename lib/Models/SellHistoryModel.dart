@@ -37,46 +37,46 @@ class SellHistoryModel {
     required this.accountName,
   });
 
-  factory SellHistoryModel.fromJson(Map<String, dynamic> json,acId,name,bankName,acNo,acName) {
+  factory SellHistoryModel.fromJson(
+      Map<String, dynamic> json, acId, name, bankName, acNo, acName) {
     // print("model id $acName");
     return SellHistoryModel(
-      amountPayableNgn: json["amount_payable_ngn"]??0,
-      invoice: json["invoice"]??"",
-      orderStatus: json["order_status"]??"",
-      invoiceNo: json["invoice_no"]??"",
-      invoiceUrl: json["invoice_url"]??"",
-      time: int.parse("${json["time"]}"),
-      type: json["type"]??"",
-      payinAmount: json["payin_amount"]??"",
-      payoutAmount: json["payout_amount"]??"",
-      payin_address: json["payin_address"]??"",
-      accountId: acId,
-      payoutAddress:json["payout_address"]??"",
-      payinUrl: json["payin_url"]??"",
-      tokenName: name??"",
-      accountName: acName,
-      accountNo: acNo,
-      bank: bankName
-    );
+        amountPayableNgn: json["amount_payable_ngn"] ?? 0,
+        invoice: json["invoice"] ?? "",
+        orderStatus: json["order_status"] ?? "",
+        invoiceNo: json["invoice_no"] ?? "",
+        invoiceUrl: json["invoice_url"] ?? "",
+        time: int.parse("${json["time"]}"),
+        type: json["type"] ?? "",
+        payinAmount: json["payin_amount"] ?? "",
+        payoutAmount: json["payout_amount"] ?? "",
+        payin_address: json["payin_address"] ?? "",
+        accountId: acId,
+        payoutAddress: json["payout_address"] ?? "",
+        payinUrl: json["payin_url"] ?? "",
+        tokenName: name ?? "",
+        accountName: acName,
+        accountNo: acNo,
+        bank: bankName);
   }
 
   Map<String, dynamic> toJson() => {
-    "amount_payable_ngn": amountPayableNgn,
-    "invoice": invoice,
-    "order_status": orderStatus,
-    "invoice_no": invoiceNo,
-    "invoice_url": invoiceUrl,
-    "time": time,
-    "type": type,
-    "payin_amount": payinAmount,
-    "payout_amount": payoutAmount,
-    "payout_address": payoutAddress,
-    "payin_address": payin_address,
-    "payin_url": payinUrl,
-    "accountId": accountId,
-    "tokenName": tokenName,
-    "accountNo": accountNo,
-    "bank": bank,
-    "accountName": accountName,
-  };
+        "amount_payable_ngn": amountPayableNgn,
+        "invoice": invoice,
+        "order_status": orderStatus,
+        "invoice_no": invoiceNo,
+        "invoice_url": invoiceUrl,
+        "time": time,
+        "type": type,
+        "payin_amount": payinAmount,
+        "payout_amount": payoutAmount,
+        "payout_address": payoutAddress,
+        "payin_address": payin_address,
+        "payin_url": payinUrl,
+        "accountId": accountId,
+        "tokenName": tokenName,
+        "accountNo": accountNo,
+        "bank": bank,
+        "accountName": accountName,
+      };
 }

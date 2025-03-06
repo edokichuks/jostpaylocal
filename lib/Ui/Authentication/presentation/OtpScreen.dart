@@ -1,12 +1,12 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/SignUpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
-import '../../Values/MyColor.dart';
-import '../../Values/MyStyle.dart';
+import '../../../Values/MyColor.dart';
+import '../../../Values/MyStyle.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class OtpScreen extends StatefulWidget {

@@ -76,7 +76,7 @@ class _InvoiceState extends State<Invoice> {
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap: ()=>       dashProvider.changeBottomIndex(0),
+                      onTap: () => dashProvider.changeBottomIndex(0),
                       child: Image.asset(
                         'assets/images/arrow_left.png',
                         color: themeProvider.isDarkMode()

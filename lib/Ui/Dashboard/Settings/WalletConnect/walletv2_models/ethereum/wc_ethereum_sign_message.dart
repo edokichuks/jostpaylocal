@@ -12,8 +12,8 @@ class WCEthereumSignMessage {
   final WCSignType type;
 
   const WCEthereumSignMessage({
-     required this.data,
-     required this.address,
-     required this.type,
+    required this.data,
+    required this.address,
+    required this.type,
   });
 }

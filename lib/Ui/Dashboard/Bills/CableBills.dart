@@ -11,46 +11,39 @@ import '../DashboardScreen.dart';
 class CableBills extends StatefulWidget {
   const CableBills({super.key});
 
-
   @override
   State<CableBills> createState() => _CableBillsState();
 }
 
 class _CableBillsState extends State<CableBills> {
-
   final TextEditingController _controller = TextEditingController();
-  final List<String> dayItems = ['Daily', 'Daily', 'Night', 'Weekend', 'Weekly', 'Monthly', 'Yearly'];
+  final List<String> dayItems = [
+    'Daily',
+    'Daily',
+    'Night',
+    'Weekend',
+    'Weekly',
+    'Monthly',
+    'Yearly'
+  ];
   final List<String> _items = ['Yanga', 'Yanga1', 'Yanga2', 'Yanga3'];
-  final List<String> _packageItems = ['Package', 'Package1', 'Package2', 'Package3'];
+  final List<String> _packageItems = [
+    'Package',
+    'Package1',
+    'Package2',
+    'Package3'
+  ];
   int selectedDay = 0;
   String? _selectedItem = 'Yanga';
   String? _selectedPackageItem = '';
 
-  final List<Map<String,dynamic>> data = [
-    {
-      'img': 'assets/images/cable-1.png',
-      'title': 'DSTV'
-    },
-    {
-      'img': 'assets/images/cable-2.png',
-      'title': 'Startimes'
-    },
-    {
-      'img': 'assets/images/cable-3.png',
-      'title': 'GOTV'
-    },
-    {
-      'img': 'assets/images/cable-1.png',
-      'title': 'DSTV'
-    },
-    {
-      'img': 'assets/images/cable-2.png',
-      'title': 'Startimes'
-    },
-    {
-      'img': 'assets/images/cable-3.png',
-      'title': 'GOTV'
-    },
+  final List<Map<String, dynamic>> data = [
+    {'img': 'assets/images/cable-1.png', 'title': 'DSTV'},
+    {'img': 'assets/images/cable-2.png', 'title': 'Startimes'},
+    {'img': 'assets/images/cable-3.png', 'title': 'GOTV'},
+    {'img': 'assets/images/cable-1.png', 'title': 'DSTV'},
+    {'img': 'assets/images/cable-2.png', 'title': 'Startimes'},
+    {'img': 'assets/images/cable-3.png', 'title': 'GOTV'},
   ];
   int selectedItem = 0;
   String selectedBundle = '';
@@ -90,16 +83,14 @@ class _CableBillsState extends State<CableBills> {
                 const Spacer(), // Adds flexible space after the text
               ],
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             Container(
               height: 125,
               decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 0.8,
-                      color: MyColor.borderColor
-                  ),
-                  borderRadius: BorderRadius.circular(16)
-              ),
+                  border: Border.all(width: 0.8, color: MyColor.borderColor),
+                  borderRadius: BorderRadius.circular(16)),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Row(
@@ -109,12 +100,24 @@ class _CableBillsState extends State<CableBills> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Spacer(),
-                        const Text('Total balance', style: MyStyle.tx12Grey,),
+                        const Text(
+                          'Total balance',
+                          style: MyStyle.tx12Grey,
+                        ),
                         Row(
                           children: [
-                            Image.asset('assets/images/currency.png', width: 15,),
-                            const Text('10,000.', style: MyStyle.tx32Black,),
-                            const Text('20', style: MyStyle.tx20Grey,)
+                            Image.asset(
+                              'assets/images/currency.png',
+                              width: 15,
+                            ),
+                            const Text(
+                              '10,000.',
+                              style: MyStyle.tx32Black,
+                            ),
+                            const Text(
+                              '20',
+                              style: MyStyle.tx20Grey,
+                            )
                           ],
                         ),
                         const Spacer(),
@@ -130,7 +133,8 @@ class _CableBillsState extends State<CableBills> {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: MyColor.greenColor,
-                        padding: const EdgeInsets.only(top: 6, bottom: 6, left: 24, right: 12),
+                        padding: const EdgeInsets.only(
+                            top: 6, bottom: 6, left: 24, right: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -149,12 +153,19 @@ class _CableBillsState extends State<CableBills> {
                 ),
               ),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text('Select service provider', style: MyStyle.tx12Grey,),
+              child: Text(
+                'Select service provider',
+                style: MyStyle.tx12Grey,
+              ),
             ),
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
             SizedBox(
                 height: 90,
                 child: ListView.builder(
@@ -164,7 +175,8 @@ class _CableBillsState extends State<CableBills> {
                     itemBuilder: (context, index) {
                       var item = data[index];
                       return Padding(
-                        padding: EdgeInsets.only(right: selectedItem == index ? 0 : 15),
+                        padding: EdgeInsets.only(
+                            right: selectedItem == index ? 0 : 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -175,28 +187,43 @@ class _CableBillsState extends State<CableBills> {
                                   selectedItem = index;
                                 })
                               },
-                              child: selectedItem == index ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.asset(item['img']),
-                                  Transform.translate(offset: const Offset(-18, 4), child: Image.asset('assets/images/checked.png',),)
-                                ],
-                              ) : Image.asset(item['img']),
+                              child: selectedItem == index
+                                  ? Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Image.asset(item['img']),
+                                        Transform.translate(
+                                          offset: const Offset(-18, 4),
+                                          child: Image.asset(
+                                            'assets/images/checked.png',
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Image.asset(item['img']),
                             ),
-                            const SizedBox(height: 4,),
-                            Text(item['title'], style: MyStyle.tx12Black.copyWith(
-                                fontFamily: 'SF Pro Rounded',
-                                color: selectedItem == index ? MyColor.greenColor : MyColor.blackColor
-                            ),)
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              item['title'],
+                              style: MyStyle.tx12Black.copyWith(
+                                  fontFamily: 'SF Pro Rounded',
+                                  color: selectedItem == index
+                                      ? MyColor.greenColor
+                                      : MyColor.blackColor),
+                            )
                           ],
                         ),
                       );
-                    }
-                )
+                    })),
+            const SizedBox(
+              height: 30,
             ),
-            const SizedBox(height: 30,),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center, // Aligns vertically centered
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Aligns vertically centered
               children: [
                 // Container with a placeholder or icon
                 Container(
@@ -204,11 +231,7 @@ class _CableBillsState extends State<CableBills> {
                   decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                              width: 1,
-                              color: MyColor.borderColor
-                          )
-                      )
-                  ),
+                              width: 1, color: MyColor.borderColor))),
                   child: Row(
                     children: [
                       Container(
@@ -224,7 +247,9 @@ class _CableBillsState extends State<CableBills> {
                           style: MyStyle.tx16Green,
                         ),
                       ),
-                      const SizedBox( width: 20,)
+                      const SizedBox(
+                        width: 20,
+                      )
                     ],
                   ),
                 ),
@@ -247,8 +272,10 @@ class _CableBillsState extends State<CableBills> {
                           color: Color(0xFF999999),
                           fontFamily: 'SF Pro Rounded',
                         ),
-                        border: InputBorder.none, // No border for the TextFormField
-                        contentPadding: EdgeInsets.symmetric(vertical: 10), // Adjust as needed
+                        border:
+                            InputBorder.none, // No border for the TextFormField
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10), // Adjust as needed
                       ),
                     ),
                   ),
@@ -306,15 +333,23 @@ class _CableBillsState extends State<CableBills> {
             const SizedBox(height: 30),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text('Select service provider', style: MyStyle.tx12Grey,),
+              child: Text(
+                'Select service provider',
+                style: MyStyle.tx12Grey,
+              ),
             ),
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
             Container(
               width: double.infinity,
               color: MyColor.grey01Color,
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: DropdownButton<String>(
-                hint: const Text('Please select your package', style: MyStyle.tx12Grey,),
+                hint: const Text(
+                  'Please select your package',
+                  style: MyStyle.tx12Grey,
+                ),
                 isExpanded: true,
                 items: _packageItems.map((String value) {
                   return DropdownMenuItem<String>(
@@ -359,7 +394,9 @@ class _CableBillsState extends State<CableBills> {
                 ),
               ),
             ),
-            const SizedBox(height: 30,)
+            const SizedBox(
+              height: 30,
+            )
           ],
         ),
       ),

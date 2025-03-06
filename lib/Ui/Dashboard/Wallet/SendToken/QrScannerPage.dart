@@ -11,10 +11,8 @@ class QrScannerPage extends StatefulWidget {
 
 class _QrScannerPageState extends State<QrScannerPage> {
   late MobileScannerController cameraController;
-  bool flashlight=false;
+  bool flashlight = false;
   bool flashOn = false;
-
-
 
   @override
   void initState() {
@@ -26,16 +24,15 @@ class _QrScannerPageState extends State<QrScannerPage> {
         facing: CameraFacing.back,
         autoStart: true,
         returnImage: false,
-        torchEnabled: false
-    );
+        torchEnabled: false);
   }
+
   @override
   void dispose() {
     cameraController.stop();
     cameraController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +44,12 @@ class _QrScannerPageState extends State<QrScannerPage> {
             onDetect: (capture) async {
               cameraController.stop();
               // print("barcodes -----> ${capture}");
-              if(capture.barcodes.length < 2) {
+              if (capture.barcodes.length < 2) {
                 final barcodes = capture.barcodes[0];
                 var result = barcodes;
-                  // print(result.rawValue.toString());
+                // print(result.rawValue.toString());
                 Navigator.pop(context, result.rawValue.toString());
-                            }
+              }
             },
           ),
           Positioned(
@@ -70,25 +67,22 @@ class _QrScannerPageState extends State<QrScannerPage> {
                           flashOn = !flashOn;
                         });
                       },
-                      child:
-                      flashOn == false ?
-                      const Icon(
-                        Icons.flash_on,
-                        color: MyColor.whiteColor,
-                      )
-                          :
-                      const Icon(
-                        Icons.flash_off,
-                        color: MyColor.whiteColor,
-                      )
-                  ),
+                      child: flashOn == false
+                          ? const Icon(
+                              Icons.flash_on,
+                              color: MyColor.whiteColor,
+                            )
+                          : const Icon(
+                              Icons.flash_off,
+                              color: MyColor.whiteColor,
+                            )),
                 ],
               ),
             ),
           ),
-
           Positioned(
-            top: 50,right: 30,
+            top: 50,
+            right: 30,
             child: GestureDetector(
               onTap: () async {
                 Navigator.pop(context);
@@ -99,7 +93,6 @@ class _QrScannerPageState extends State<QrScannerPage> {
               ),
             ),
           )
-
         ],
       ),
     );

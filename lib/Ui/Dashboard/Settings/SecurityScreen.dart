@@ -45,7 +45,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
   }
 
   getProfileInfo() async {
-    const String url = 'https://instantexchangers.com/mobile_server/get-user-profile';
+    const String url =
+        'https://instantexchangers.com/mobile_server/get-user-profile';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -55,27 +56,25 @@ class _SecurityScreenState extends State<SecurityScreen> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'type': 'buy'
-        },
+        body: {'type': 'buy'},
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
-        if(mounted) {
+        Map<String, dynamic> res = await jsonDecode(response.body);
+        if (mounted) {
           setState(() {
             profile = res['user'];
           });
         }
-      } else {
-      }
+      } else {}
     } catch (e) {
       print(e);
     }
   }
 
   changePassword() async {
-    const String url = 'https://instantexchangers.com/mobile_server/change-password';
+    const String url =
+        'https://instantexchangers.com/mobile_server/change-password';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -95,7 +94,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = jsonDecode(response.body);
-        if(res['result'] == true) {
+        if (res['result'] == true) {
           Fluttertoast.showToast(
               msg: "Password changed successfully.",
               toastLength: Toast.LENGTH_SHORT,
@@ -103,10 +102,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
-        }
-        else {
+              fontSize: 16.0);
+        } else {
           Fluttertoast.showToast(
               msg: "Please input all information correctly.",
               toastLength: Toast.LENGTH_SHORT,
@@ -114,12 +111,11 @@ class _SecurityScreenState extends State<SecurityScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
         }
         Navigator.of(context).pop();
       } else {
-        if(response.statusCode == 301) {
+        if (response.statusCode == 301) {
           final redirectedResponse = await http.post(
             Uri.parse(response.headers['location']!),
             headers: {
@@ -139,11 +135,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
           Navigator.of(context).pop();
-        }
-        else {
+        } else {
           Navigator.of(context).pop();
         }
       }
@@ -156,8 +150,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
   void _validateForm() {
     if (_formKey.currentState?.validate() ?? false) {
       changePassword();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _showPasswordDialog(BuildContext context) async {
@@ -167,134 +160,137 @@ class _SecurityScreenState extends State<SecurityScreen> {
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            decoration: BoxDecoration(
-              color: MyColor.backgroundColor,
-              border: Border.all(
-                color: MyColor.darkGreyColor,
-                width: 0.5,
-              ),
-              borderRadius: BorderRadius.circular(6.0)
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: Form(key: _formKey, child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const Text('Password Change', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: NewColor.txGrayColor)),
-                const SizedBox(height: 16.0),
-                const Text('You can change the password here.', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: NewColor.txGrayColor)),
-                const SizedBox(height: 24.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Current Password',
-                    style: NewStyle.tx14SplashWhite.copyWith(
-                        color: NewColor.txGrayColor,
-                        fontWeight: FontWeight.w500,
-                        height: 2),
+              decoration: BoxDecoration(
+                  color: MyColor.backgroundColor,
+                  border: Border.all(
+                    color: MyColor.darkGreyColor,
+                    width: 0.5,
                   ),
-                ),
-                TextFormField(
-                  controller: _oldPasswordController,
-                  obscureText: true,
-                  decoration: MyStyle.textInputDecoration.copyWith(),
-                  style: const TextStyle(
-                      color: NewColor.txGrayColor
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (value.length < 6) {
-                      return 'Please enter at least 6 letters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'New Password',
-                    style: NewStyle.tx14SplashWhite.copyWith(
-                        color: NewColor.txGrayColor,
-                        fontWeight: FontWeight.w500,
-                        height: 2),
-                  ),
-                ),
-                TextFormField(
-                  controller: _newPasswordController,
-                  obscureText: true,
-                  decoration: MyStyle.textInputDecoration.copyWith(),
-                  style: const TextStyle(
-                      color: NewColor.txGrayColor
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (value.length < 6) {
-                      return 'Please enter at least 6 letters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Confirm Password',
-                    style: NewStyle.tx14SplashWhite.copyWith(
-                        color: NewColor.txGrayColor,
-                        fontWeight: FontWeight.w500,
-                        height: 2),
-                  ),
-                ),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: MyStyle.textInputDecoration.copyWith(),
-                  style: const TextStyle(
-                      color: NewColor.txGrayColor
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (value.length < 6) {
-                      return 'Please enter at least 6 letters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  borderRadius: BorderRadius.circular(6.0)),
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    TextButton(
-                      child: const Text('Change'),
-                      onPressed: () {
-                        _validateForm();
+                    const Text('Password Change',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.txGrayColor)),
+                    const SizedBox(height: 16.0),
+                    const Text('You can change the password here.',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.txGrayColor)),
+                    const SizedBox(height: 24.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Current Password',
+                        style: NewStyle.tx14SplashWhite.copyWith(
+                            color: NewColor.txGrayColor,
+                            fontWeight: FontWeight.w500,
+                            height: 2),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _oldPasswordController,
+                      obscureText: true,
+                      decoration: MyStyle.textInputDecoration.copyWith(),
+                      style: const TextStyle(color: NewColor.txGrayColor),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else if (value.length < 6) {
+                          return 'Please enter at least 6 letters';
+                        }
+                        return null;
                       },
                     ),
-                    TextButton(
-                      child: const Text('Cancel'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
+                    const SizedBox(height: 12.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'New Password',
+                        style: NewStyle.tx14SplashWhite.copyWith(
+                            color: NewColor.txGrayColor,
+                            fontWeight: FontWeight.w500,
+                            height: 2),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _newPasswordController,
+                      obscureText: true,
+                      decoration: MyStyle.textInputDecoration.copyWith(),
+                      style: const TextStyle(color: NewColor.txGrayColor),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else if (value.length < 6) {
+                          return 'Please enter at least 6 letters';
+                        }
+                        return null;
                       },
                     ),
+                    const SizedBox(height: 12.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Confirm Password',
+                        style: NewStyle.tx14SplashWhite.copyWith(
+                            color: NewColor.txGrayColor,
+                            fontWeight: FontWeight.w500,
+                            height: 2),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      decoration: MyStyle.textInputDecoration.copyWith(),
+                      style: const TextStyle(color: NewColor.txGrayColor),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else if (value.length < 6) {
+                          return 'Please enter at least 6 letters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        TextButton(
+                          child: const Text('Change'),
+                          onPressed: () {
+                            _validateForm();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),)
-          ),
+                ),
+              )),
         );
       },
     );
   }
 
   Future<void> _showVerifyDialog(BuildContext context) async {
-    if(profile['verified'] == '0'){
+    if (profile['verified'] == '0') {
       return showDialog<void>(
         context: context,
         barrierDismissible: true,
@@ -307,16 +303,24 @@ class _SecurityScreenState extends State<SecurityScreen> {
                       color: MyColor.darkGreyColor,
                       width: 0.5,
                     ),
-                    borderRadius: BorderRadius.circular(6.0)
-                ),
+                    borderRadius: BorderRadius.circular(6.0)),
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    const Text('Verification Notice', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: NewColor.mainWhiteColor)),
+                    const Text('Verification Notice',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.mainWhiteColor)),
                     const SizedBox(height: 12.0),
-                    const Text('To access the buying feature, you need to complete the verification process.', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: NewColor.txGrayColor)),
+                    const Text(
+                        'To access the buying feature, you need to complete the verification process.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.txGrayColor)),
                     const SizedBox(height: 16.0),
                     Image.asset(
                       "assets/images/verify.png",
@@ -326,17 +330,35 @@ class _SecurityScreenState extends State<SecurityScreen> {
                     const SizedBox(height: 16.0),
                     const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Verify Account', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColor.blueColor)),
+                      child: Text('Verify Account',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: MyColor.blueColor)),
                     ),
                     const SizedBox(height: 12.0),
-                    const Text('Tap "Verify Account" to go to the website. Log in, complete verification, and chat with support to speed up approval. Once approved, return to the app and tap "Update Verification" to refresh your status.', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: NewColor.mainWhiteColor)),
+                    const Text(
+                        'Tap "Verify Account" to go to the website. Log in, complete verification, and chat with support to speed up approval. Once approved, return to the app and tap "Update Verification" to refresh your status.',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.mainWhiteColor)),
                     const SizedBox(height: 16.0),
                     const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Update Status', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColor.greenColor)),
+                      child: Text('Update Status',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: MyColor.greenColor)),
                     ),
                     const SizedBox(height: 12.0),
-                    const Text("Once you've finished verification, tap the button below to update your status and gain access to buy feature.", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: NewColor.mainWhiteColor)),
+                    const Text(
+                        "Once you've finished verification, tap the button below to update your status and gain access to buy feature.",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: NewColor.mainWhiteColor)),
                     const SizedBox(height: 24.0),
                     Container(
                       child: Row(
@@ -344,20 +366,20 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           SizedBox(
                             width: 130,
                             child: TextButton(
-                              onPressed: () => {
-                                _launchURL(Utils.verifyUrl)
-                              },
+                              onPressed: () => {_launchURL(Utils.verifyUrl)},
                               style: TextButton.styleFrom(
                                 backgroundColor: MyColor.blueColor,
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
                               child: Text(
                                 "Verify Account",
-                                style: NewStyle.btnTx16SplashBlue
-                                    .copyWith(fontSize: 14, color: NewColor.mainWhiteColor),
+                                style: NewStyle.btnTx16SplashBlue.copyWith(
+                                    fontSize: 14,
+                                    color: NewColor.mainWhiteColor),
                               ),
                             ),
                           ),
@@ -368,16 +390,15 @@ class _SecurityScreenState extends State<SecurityScreen> {
                               onPressed: () => {
                                 getProfileInfo(),
                                 Navigator.of(context).pop(),
-                                if(profile['verified'] == 1)
+                                if (profile['verified'] == 1)
                                   Fluttertoast.showToast(
-                                    msg: "Your account is verified",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black54,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0
-                                  )
+                                      msg: "Your account is verified",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.black54,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0)
                                 else
                                   Fluttertoast.showToast(
                                       msg: "Your account is not verified",
@@ -386,20 +407,21 @@ class _SecurityScreenState extends State<SecurityScreen> {
                                       timeInSecForIosWeb: 1,
                                       backgroundColor: Colors.black54,
                                       textColor: Colors.white,
-                                      fontSize: 16.0
-                                  )
+                                      fontSize: 16.0)
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: MyColor.greenColor,
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
                               child: Text(
                                 "Update Status",
-                                style: NewStyle.btnTx16SplashBlue
-                                    .copyWith(fontSize: 14, color: NewColor.mainWhiteColor),
+                                style: NewStyle.btnTx16SplashBlue.copyWith(
+                                    fontSize: 14,
+                                    color: NewColor.mainWhiteColor),
                               ),
                             ),
                           )
@@ -407,13 +429,11 @@ class _SecurityScreenState extends State<SecurityScreen> {
                       ),
                     )
                   ],
-                )
-            ),
+                )),
           );
         },
       );
-    }
-    else if(profile['verified'] == '1') {
+    } else if (profile['verified'] == '1') {
       Fluttertoast.showToast(
           msg: "Your account is already verified.",
           toastLength: Toast.LENGTH_SHORT,
@@ -421,10 +441,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.black54,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
-    }
-    else {}
+          fontSize: 16.0);
+    } else {}
   }
 
   @override
@@ -492,19 +510,17 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           fontWeight: FontWeight.w500,
                           color: NewColor.txGrayColor,
                         )),
-                    profile['verified'] == "1" ? Text(
-                      "Verified",
-                        style: NewStyle.tx14SplashWhite.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: MyColor.greenColor,
-                        )) :
-                    Text(
-                        "Not Verified",
-                        style: NewStyle.tx14SplashWhite.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: MyColor.redColor,
-                        )
-                    ),
+                    profile['verified'] == "1"
+                        ? Text("Verified",
+                            style: NewStyle.tx14SplashWhite.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: MyColor.greenColor,
+                            ))
+                        : Text("Not Verified",
+                            style: NewStyle.tx14SplashWhite.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: MyColor.redColor,
+                            )),
                     const Spacer(),
                     Image.asset(
                       "assets/images/right.png",

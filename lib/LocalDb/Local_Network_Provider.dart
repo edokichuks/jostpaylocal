@@ -4,9 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-
-class DbNetwork{
-
+class DbNetwork {
   static Database? _database;
   static final DbNetwork dbNetwork = DbNetwork._();
 
@@ -24,7 +22,10 @@ class DbNetwork{
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentDirectory.path, 'network_DB.db');
 
-    return await openDatabase(path, version: 1, onOpen: (db) {},
+    return await openDatabase(
+      path,
+      version: 1,
+      onOpen: (db) {},
       onCreate: (Database db, int version) async {
         await db.execute('CREATE TABLE Network('
             'id INTEGER PRIMARY KEY UNIQUE,'
@@ -48,16 +49,17 @@ class DbNetwork{
     );
   }
 
-  createNetwork(NetworkList networkLists) async{
-    final db= await database;
-    final res = await db!.insert("Network",networkLists.toJson());
+  createNetwork(NetworkList networkLists) async {
+    final db = await database;
+    final res = await db!.insert("Network", networkLists.toJson());
     return res;
   }
 
-  updateNetwork(NetworkList networkLists,id) async{
-    final db= await database;
-      final res = await db!.update("Network",networkLists.toJson(),where: "id = ? ",whereArgs: [id]);
-      return res;
+  updateNetwork(NetworkList networkLists, id) async {
+    final db = await database;
+    final res = await db!.update("Network", networkLists.toJson(),
+        where: "id = ? ", whereArgs: [id]);
+    return res;
   }
 
   List<NetworkList> networkList = [];
@@ -70,6 +72,4 @@ class DbNetwork{
     }).toList();
     networkList = list;
   }
-
-
 }

@@ -43,10 +43,8 @@ class _PinScreenState extends State<PinScreen> {
   }
 
   savePinCode(String verificationCode) async {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const DashboardScreen()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()));
   }
 
   loginAccount() async {
@@ -144,8 +142,7 @@ class _PinScreenState extends State<PinScreen> {
                           color: NewColor.mainWhiteColor),
                       borderWidth: 1,
                       autoFocus: true,
-                      onCodeChanged: (String code) {
-                      },
+                      onCodeChanged: (String code) {},
                       onSubmit: (String verificationCode) {
                         savePinCode(verificationCode);
                       },

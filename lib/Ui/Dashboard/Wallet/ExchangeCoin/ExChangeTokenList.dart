@@ -21,54 +21,46 @@ class Debouncer {
   }
 }
 
-
 class ExChangeTokenList extends StatefulWidget {
   final String pageType;
-  const ExChangeTokenList({
-    super.key,
-    required this.pageType
-  });
+  const ExChangeTokenList({super.key, required this.pageType});
 
   @override
   State<ExChangeTokenList> createState() => _ExChangeTokenListState();
 }
 
 class _ExChangeTokenListState extends State<ExChangeTokenList> {
-
   TextEditingController searchController = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 500);
 
   late ExchangeProvider exchangeProvider;
-  var selectedAccountId ="";
+  var selectedAccountId = "";
 
   getAcID() async {
-    if(exchangeProvider.tempExTokenList.isNotEmpty){
+    if (exchangeProvider.tempExTokenList.isNotEmpty) {
       setState(() {
         exchangeProvider.searchExToList.clear();
-        exchangeProvider.searchExToList.addAll(
-            exchangeProvider.tempExTokenList
-        );
+        exchangeProvider.searchExToList
+            .addAll(exchangeProvider.tempExTokenList);
       });
     }
-
   }
-
 
   @override
   void initState() {
-    exchangeProvider = Provider.of<ExchangeProvider>(context,listen: false);
+    exchangeProvider = Provider.of<ExchangeProvider>(context, listen: false);
     super.initState();
     getAcID();
   }
 
   @override
   Widget build(BuildContext context) {
-    exchangeProvider = Provider.of<ExchangeProvider>(context,listen: true);
+    exchangeProvider = Provider.of<ExchangeProvider>(context, listen: true);
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -95,15 +87,19 @@ class _ExChangeTokenListState extends State<ExChangeTokenList> {
               style: MyStyle.tx18RWhite,
               onChanged: (value) {
                 _debouncer.run(() async {
-                  if(value.isNotEmpty){
+                  if (value.isNotEmpty) {
                     setState(() {
-                      exchangeProvider.searchExToList = exchangeProvider.exTokenList.where((element) {
-                        return element.name.toLowerCase().contains(value.toLowerCase());
+                      exchangeProvider.searchExToList =
+                          exchangeProvider.exTokenList.where((element) {
+                        return element.name
+                            .toLowerCase()
+                            .contains(value.toLowerCase());
                       }).toList();
                     });
-                  }else{
+                  } else {
                     setState(() {
-                      exchangeProvider.searchExToList.addAll(exchangeProvider.tempExTokenList);
+                      exchangeProvider.searchExToList
+                          .addAll(exchangeProvider.tempExTokenList);
                     });
                   }
                 });
@@ -112,25 +108,21 @@ class _ExChangeTokenListState extends State<ExChangeTokenList> {
                 isDense: true,
                 filled: true,
                 fillColor: MyColor.backgroundColor,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 15),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: const BorderSide(
                       color: MyColor.boarderColor,
-                    )
-                ),
+                    )),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: const BorderSide(
                       color: MyColor.boarderColor,
-                    )
-                ),
+                    )),
                 hintText: "Search",
-                hintStyle:MyStyle.tx22RWhite.copyWith(
-                    fontSize: 14,
-                    color: MyColor.grey01Color
-                ),
-
+                hintStyle: MyStyle.tx22RWhite
+                    .copyWith(fontSize: 14, color: MyColor.grey01Color),
               ),
             ),
           ),
@@ -138,27 +130,26 @@ class _ExChangeTokenListState extends State<ExChangeTokenList> {
 
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               itemCount: exchangeProvider.searchExToList.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 var list = exchangeProvider.searchExToList[index];
                 return InkWell(
                   onTap: () async {
-                    if(widget.pageType == "send"){
-                      exchangeProvider.changeSendToken(list,context,"");
-                    }else{
-                      exchangeProvider.changeReceiveToken(list,context);
+                    if (widget.pageType == "send") {
+                      exchangeProvider.changeSendToken(list, context, "");
+                    } else {
+                      exchangeProvider.changeReceiveToken(list, context);
                     }
                   },
-                  child : Padding(
+                  child: Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Row(
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child:
-                          SizedBox(
+                          child: SizedBox(
                             height: 25,
                             width: 25,
                             child: SvgPicture.network(
@@ -168,23 +159,19 @@ class _ExChangeTokenListState extends State<ExChangeTokenList> {
                           ),
                         ),
                         const SizedBox(width: 12),
-
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 list.name,
-                                style: MyStyle.tx18RWhite.copyWith(
-                                  fontSize: 14
-                                ),
+                                style:
+                                    MyStyle.tx18RWhite.copyWith(fontSize: 14),
                               ),
                               Text(
                                 "Symbol: ${list.ticker}",
-                                style:MyStyle.tx18RWhite.copyWith(
-                                    fontSize: 12,
-                                    color: MyColor.grey01Color
-                                ),
+                                style: MyStyle.tx18RWhite.copyWith(
+                                    fontSize: 12, color: MyColor.grey01Color),
                               ),
                             ],
                           ),
@@ -193,7 +180,6 @@ class _ExChangeTokenListState extends State<ExChangeTokenList> {
                     ),
                   ),
                 );
-
               },
             ),
           ),

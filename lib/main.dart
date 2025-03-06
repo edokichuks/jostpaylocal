@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Ui/Static/onboarding_screen.dart';
+import 'package:jost_pay_wallet/services/navigation_service.dart';
 import 'package:provider/provider.dart';
 // import 'package:uni_links/uni_links.dart';
 
@@ -75,8 +77,6 @@ class _MyAppState extends State<MyApp> {
     _handleIncomingLinks();
   }
 
-  
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => BuySellProvider()),
         ChangeNotifierProvider(create: (context) => ExchangeProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
       child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
         return ScreenUtilInit(
@@ -99,6 +100,7 @@ class _MyAppState extends State<MyApp> {
           splitScreenMode: true,
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
+            navigatorKey: NavigationService.navigatorKey,
             title: 'JostPayWallet',
             theme: themeProvider.lightTheme,
             darkTheme: themeProvider.darkTheme,

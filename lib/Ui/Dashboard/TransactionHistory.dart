@@ -6,7 +6,6 @@ import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:provider/provider.dart';
 
-
 class Transactionhistory extends StatefulWidget {
   const Transactionhistory({super.key});
 

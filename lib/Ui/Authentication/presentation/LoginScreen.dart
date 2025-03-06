@@ -1,37 +1,35 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:jost_pay_wallet/LocalDb/Local_Account_address.dart';
 import 'package:jost_pay_wallet/LocalDb/Local_Ex_Transaction_address.dart';
 import 'package:jost_pay_wallet/LocalDb/Local_Sell_History_address.dart';
 import 'package:jost_pay_wallet/LocalDb/Local_Token_provider.dart';
 import 'package:jost_pay_wallet/LocalDb/Local_Walletv2_provider.dart';
 import 'package:jost_pay_wallet/Provider/DashboardProvider.dart';
-import 'package:jost_pay_wallet/Values/Helper/helper.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/WelcomeScreen.dart';
+import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:jost_pay_wallet/Values/utils.dart';
 import 'package:local_auth_ios/types/auth_messages_ios.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:jost_pay_wallet/LocalDb/Local_Account_address.dart';
-import 'package:jost_pay_wallet/LocalDb/Local_Account_provider.dart';
 import 'package:jost_pay_wallet/Provider/Account_Provider.dart';
 import 'package:jost_pay_wallet/Provider/Token_Provider.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/WelcomeScreen.dart';
-import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
-import 'package:custom_pin_screen/custom_pin_screen.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:pin_code_fields/pin_code_fields.dart' as pin;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-class LoginWithPassCode extends StatefulWidget {
-  const LoginWithPassCode({super.key});
+import '../../../LocalDb/Local_Account_provider.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginWithPassCode> createState() => _LoginWithPassCodeState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginWithPassCodeState extends State<LoginWithPassCode> {
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   bool showPassword = true;
@@ -45,6 +43,7 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
   bool fingerOn = false;
   String isLogin = "";
 
+  var errorText = "";
   bool isLoading = false;
 
   getDeviceId() async {
@@ -142,37 +141,27 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
   }
 
   autologin() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    deviceId = sharedPreferences.getString('deviceId')!;
-    String? password = sharedPreferences.getString('passcode');
-
     setState(() {
-      passwordController.text = password!;
-    });
-
-    // ignore: use_build_context_synchronously
-    Helper.dialogCall.showAlertDialog(context);
-    setState(() {
+      errorText = "";
       isLoading = true;
     });
 
-    // print(password);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    deviceId = sharedPreferences.getString('deviceId')!;
+    String? password = sharedPreferences.getString('password');
+
     var data = {
       "device_id": deviceId,
       "password": "$password",
     };
 
-    // print("login ${json.encode(data)}");
-
+    // print(json.encode(data));
     await accountProvider.loginAccount(data, '/deviceLogin');
     if (accountProvider.isSuccess == true) {
       getAccount();
     } else {
-      // ignore: use_build_context_synchronously
-      Helper.dialogCall.showToast(context, "Incorrect Password !!");
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
       setState(() {
+        errorText = "Incorrect Password";
         isLoading = false;
       });
     }
@@ -215,14 +204,10 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
     sharedPreferences.setString(
         "loginTime", "${DateTime.now().add(const Duration(minutes: 1))}");
 
-    // print(Utils.pageType);
-    // print(Utils.wcUrlVal == "");
     if (Utils.pageType == "NewPage" && Utils.wcUrlVal == "") {
-      Navigator.pop(context);
       Navigator.pop(context);
     } else {
       if (Utils.pageType == "NewPage" && Utils.wcUrlVal != "") {
-        Navigator.pop(context);
         Navigator.pop(context);
       } else {
         // print("object gooing in else");
@@ -235,6 +220,7 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
         );
       }
     }
+    // ignore: use_build_context_synchronously
 
     setState(() {
       isLoading = false;
@@ -242,11 +228,11 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
   }
 
   loginAccount() async {
-    Helper.dialogCall.showAlertDialog(context);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     deviceId = sharedPreferences.getString('deviceId')!;
     // print("object --> $deviceId");
     setState(() {
+      errorText = "";
       isLoading = true;
     });
 
@@ -254,6 +240,8 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
       "device_id": deviceId,
       "password": passwordController.text,
     };
+
+    //print(json.encode(data));
 
     try {
       await accountProvider.loginAccount(data, '/deviceLogin');
@@ -263,17 +251,10 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
         setState(() {
           isLoading = false;
         });
-        // ignore: use_build_context_synchronously
-        Helper.dialogCall.showToast(context, "Incorrect Password!!");
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context);
+        errorText = "Incorrect Password!!";
       }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      Helper.dialogCall.showToast(context, "Incorrect Password!!");
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-
+      errorText = "Incorrect Password!!";
       setState(() {
         isLoading = false;
       });
@@ -285,7 +266,7 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: MyColor.backgroundColor,
-        title: Text("Are you sure",
+        title: Text("Are you sure?",
             style: MyStyle.tx18BWhite.copyWith(fontSize: 16)),
         content: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,8 +337,6 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
         sharedPreferences.setString('deviceId', deviceId!);
       });
     }
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
 
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(context,
@@ -387,90 +366,129 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
     var width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SizedBox(
-          height: height,
-          width: width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(height: 15),
-              Image.asset(
-                "assets/images/logo.png",
-                height: 60,
-                width: width * 0.4,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 5),
-
-              // title
-              Text(
-                "Please Enter your passcode \nto proceed!",
-                textAlign: TextAlign.center,
-                style: MyStyle.tx18RWhite
-                    .copyWith(fontSize: 14, color: MyColor.grey01Color),
-              ),
-
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: pin.PinCodeTextField(
-                    appContext: context,
-                    pastedTextStyle: TextStyle(
-                      color: Colors.green.shade600,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    length: 6,
-                    obscureText: true,
-                    obscuringWidget: Container(
-                      decoration: const BoxDecoration(
-                          color: MyColor.greenColor, shape: BoxShape.circle),
-                    ),
-                    pinTheme: pin.PinTheme(
-                        shape: pin.PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(100),
-                        fieldHeight: 20,
-                        fieldWidth: 20,
-                        inactiveColor: MyColor.boarderColor,
-                        inactiveBorderWidth: 2,
-                        inactiveFillColor: MyColor.transparentColor),
-                    cursorColor: MyColor.greenColor,
-                    animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: true,
-                    controller: passwordController,
-                    keyboardType: TextInputType.number,
-                    onCompleted: (v) {},
-                    onChanged: (value) {
-                      // debugPrint(value);
-                    },
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+              child: Column(
+                children: [
+                  // app image
+                  Image.asset(
+                    "assets/images/logo.png",
+                    height: 60,
+                    width: width * 0.4,
+                    fit: BoxFit.contain,
                   ),
-                ),
-              ),
+                  const SizedBox(height: 5),
 
-              SizedBox(
-                height: height * 0.4,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomKeyBoard(
-                      maxLength: 6,
-                      pinTheme: PinTheme(keysColor: MyColor.mainWhiteColor),
-                      onChanged: (p0) {
-                        setState(() {
-                          passwordController.text = p0;
-                        });
+                  // title
+                  Text(
+                    "Please Enter your password \nto proceed!",
+                    textAlign: TextAlign.center,
+                    style: MyStyle.tx18RWhite
+                        .copyWith(fontSize: 14, color: MyColor.grey01Color),
+                  ),
+                  SizedBox(height: height * 0.09),
+
+                  //password field
+                  TextFormField(
+                    controller: passwordController,
+                    readOnly: isLoading,
+                    obscureText: showPassword,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter login password";
+                      } else {
+                        return null;
+                      }
+                    },
+                    cursorColor: MyColor.greenColor,
+                    style: MyStyle.tx18RWhite,
+                    decoration: MyStyle.textInputDecoration.copyWith(
+                        hintText: "Passwords",
+                        isDense: false,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 15),
+                        suffixIcon: showPassword
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = false;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility,
+                                  color: MyColor.mainWhiteColor,
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = true;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility_off,
+                                  color: MyColor.mainWhiteColor,
+                                ))),
+                  ),
+                  Visibility(
+                      visible: errorText.isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          errorText,
+                          style: MyStyle.tx18BWhite
+                              .copyWith(color: MyColor.redColor, fontSize: 14),
+                        ),
+                      )),
+                  const SizedBox(height: 30),
+
+                  // login button
+                  isLoading == true
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                          color: MyColor.greenColor,
+                        ))
+                      : InkWell(
+                          onTap: () async {
+                            if (passwordController.text.isNotEmpty) {
+                              FocusScope.of(context).unfocus();
+                              loginAccount();
+                            }
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 45,
+                            margin: const EdgeInsets.only(
+                                left: 12, right: 12, bottom: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: MyStyle.buttonDecoration,
+                            child: Text("Login",
+                                style: MyStyle.tx18BWhite
+                                    .copyWith(color: MyColor.mainWhiteColor)),
+                          ),
+                        ),
+                  const SizedBox(height: 15),
+
+                  // reset button
+                  InkWell(
+                    onTap: () {
+                      deleteAlert();
+                    },
+                    child:
+                        const Text("Reset wallet", style: MyStyle.tx18RWhite),
+                  ),
+
+                  Visibility(
+                    visible: fingerOn,
+                    child: InkWell(
+                      onTap: () {
+                        _authenticate();
                       },
-                      onCompleted: (p0) {
-                        loginAccount();
-                      },
-                      specialKey: Visibility(
-                        visible: fingerOn,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
                         child: Image.asset(
                           "assets/images/fingerprint.png",
                           height: 45,
@@ -479,25 +497,12 @@ class _LoginWithPassCodeState extends State<LoginWithPassCode> {
                           color: MyColor.whiteColor,
                         ),
                       ),
-                      specialKeyOnTap: () {
-                        if (fingerOn) {
-                          _authenticate();
-                        }
-                      },
                     ),
-                  ],
-                ),
+                  ),
+                  // SizedBox(height: height*0.07),
+                ],
               ),
-              const SizedBox(height: 20),
-
-              InkWell(
-                onTap: () {
-                  deleteAlert();
-                },
-                child: const Text("Reset wallet", style: MyStyle.tx18RWhite),
-              ),
-              const SizedBox(height: 15),
-            ],
+            ),
           ),
         ),
       ),

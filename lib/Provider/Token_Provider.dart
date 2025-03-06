@@ -8,7 +8,6 @@ import '../Models/AccountTokenModel.dart';
 import '../Models/NetworkModel.dart';
 
 class TokenProvider with ChangeNotifier {
-
   bool isLoading = true;
   bool isSuccess = false;
 
@@ -20,82 +19,80 @@ class TokenProvider with ChangeNotifier {
     networkLoad = false;
     notifyListeners();
 
-      await ApiHandler.get(url).then((responseData) async {
+    await ApiHandler.get(url).then((responseData) async {
+      var value = json.decode(responseData.body);
 
-        var value = json.decode(responseData.body);
+      // print("get network");
 
-        // print("get network");
+      // await DbNetwork.dbNetwork.deleteAllNetwork();
 
-        // await DbNetwork.dbNetwork.deleteAllNetwork();
+      if (responseData.statusCode == 200 && value["status"] == true) {
+        // isSuccess = true;
+        netWorkData = value;
 
-
-        if(responseData.statusCode == 200 && value["status"] == true){
-          // isSuccess = true;
-          netWorkData = value;
-
-          await DbNetwork.dbNetwork.getNetwork();
-          (netWorkData["data"] as List).map((token) async {
-            var index = DbNetwork.dbNetwork.networkList.indexWhere((element) => "${element.id}" == "${token["id"]}");
-            if(index != -1 ){
-              await DbNetwork.dbNetwork.updateNetwork(NetworkList.fromJson(token),token["id"]);
-            }else {
-              await DbNetwork.dbNetwork.createNetwork(NetworkList.fromJson(token));
-            }
-          }).toList();
-
-          await DbNetwork.dbNetwork.getNetwork();
-
-          networkLoad = true;
-          isLoading = false;
-          notifyListeners();
-        }
-        else {
-          // isSuccess = false;
-          isLoading = false;
-          networkLoad = false;
-
-          notifyListeners();
-
-          if (kDebugMode) {
-            print("=========== Get Network Api Error ==========");
+        await DbNetwork.dbNetwork.getNetwork();
+        (netWorkData["data"] as List).map((token) async {
+          var index = DbNetwork.dbNetwork.networkList
+              .indexWhere((element) => "${element.id}" == "${token["id"]}");
+          if (index != -1) {
+            await DbNetwork.dbNetwork
+                .updateNetwork(NetworkList.fromJson(token), token["id"]);
+          } else {
+            await DbNetwork.dbNetwork
+                .createNetwork(NetworkList.fromJson(token));
           }
+        }).toList();
 
+        await DbNetwork.dbNetwork.getNetwork();
+
+        networkLoad = true;
+        isLoading = false;
+        notifyListeners();
+      } else {
+        // isSuccess = false;
+        isLoading = false;
+        networkLoad = false;
+
+        notifyListeners();
+
+        if (kDebugMode) {
+          print("=========== Get Network Api Error ==========");
         }
-
-      });
-
+      }
+    });
   }
-
 
   bool isAddTokenDone = false;
   // ignore: prefer_typing_uninitialized_variables
   var allToken;
-  getAccountToken(data, url,id) async {
+  getAccountToken(data, url, id) async {
     isLoading = true;
     notifyListeners();
 
     await ApiHandler.post(data, url).then((responseData) async {
-
       var value = json.decode(responseData.body);
       // print("get Token api :- $value");
-      if(responseData.statusCode == 200 && value["status"] == true){
-
+      if (responseData.statusCode == 200 && value["status"] == true) {
         allToken = value;
 
         // await DBTokenProvider.dbTokenProvider.deleteAccountToken(id);
 
-
-        await DBTokenProvider.dbTokenProvider.getAccountToken(id,);
+        await DBTokenProvider.dbTokenProvider.getAccountToken(
+          id,
+        );
 
         (allToken["data"] as List).map((token) async {
-          var index = DBTokenProvider.dbTokenProvider.tokenList.indexWhere((element) {
-            return "${element.id}"== "${token["id"]}";
+          var index =
+              DBTokenProvider.dbTokenProvider.tokenList.indexWhere((element) {
+            return "${element.id}" == "${token["id"]}";
           });
           // print(index);
-          if(index != -1){
-            await DBTokenProvider.dbTokenProvider.updateToken(AccountTokenList.fromJson(token,id), token["id"],id);
-          }else{
-            await DBTokenProvider.dbTokenProvider.createToken(AccountTokenList.fromJson(token,id));
+          if (index != -1) {
+            await DBTokenProvider.dbTokenProvider.updateToken(
+                AccountTokenList.fromJson(token, id), token["id"], id);
+          } else {
+            await DBTokenProvider.dbTokenProvider
+                .createToken(AccountTokenList.fromJson(token, id));
           }
         }).toList();
 
@@ -104,9 +101,7 @@ class TokenProvider with ChangeNotifier {
         isSuccess = true;
         isLoading = false;
         notifyListeners();
-
-      }
-      else {
+      } else {
         isSuccess = false;
         isLoading = false;
         notifyListeners();
@@ -114,65 +109,50 @@ class TokenProvider with ChangeNotifier {
         if (kDebugMode) {
           print("=========== Get Account Token Api Error ==========");
         }
-
       }
-
     });
-
   }
 
   // ignore: prefer_typing_uninitialized_variables
   var deleteData;
-  deleteToken(data,url) async {
+  deleteToken(data, url) async {
     isLoading = true;
     notifyListeners();
 
-    await ApiHandler.post(data,url).then((responseData){
+    await ApiHandler.post(data, url).then((responseData) {
+      var value = json.decode(responseData.body);
+      // print(value);
+      if (responseData.statusCode == 200 && value["status"] == true) {
+        isSuccess = true;
+        deleteData = value;
+        isLoading = false;
+        notifyListeners();
+      } else {
+        isLoading = false;
+        isSuccess = false;
+        notifyListeners();
 
-        var value = json.decode(responseData.body);
-        // print(value);
-        if(responseData.statusCode == 200 && value["status"] == true)
-        {
-          isSuccess = true;
-          deleteData = value;
-          isLoading = false;
-          notifyListeners();
+        if (kDebugMode) {
+          print("=========== Delete Token Api Error ==========");
         }
-        else
-        {
-          isLoading = false;
-          isSuccess = false;
-          notifyListeners();
-
-          if (kDebugMode) {
-            print("=========== Delete Token Api Error ==========");
-          }
-
-        }
-
-      });
-
+      }
+    });
   }
-
 
   // ignore: prefer_typing_uninitialized_variables
   var tokenData;
-  getCustomToken(data,url) async {
+  getCustomToken(data, url) async {
     isLoading = true;
     notifyListeners();
 
-    await ApiHandler.post(data,url).then((responseData){
-
+    await ApiHandler.post(data, url).then((responseData) {
       var value = json.decode(responseData.body);
       // print(value);
-      if(responseData.statusCode == 200 && value["status"] == true)
-      {
+      if (responseData.statusCode == 200 && value["status"] == true) {
         isSuccess = true;
         tokenData = value;
         notifyListeners();
-      }
-      else
-      {
+      } else {
         tokenData = null;
         isSuccess = false;
         isLoading = false;
@@ -181,29 +161,23 @@ class TokenProvider with ChangeNotifier {
         if (kDebugMode) {
           print("=========== Get Custom Token Api Error ==========");
         }
-
       }
-
     });
-
   }
-
 
   bool isTokenLoading = false;
   bool isTokenAdded = false;
   // ignore: prefer_typing_uninitialized_variables
   var tokenDetail;
-  addCustomToken(data,url,id) async {
+  addCustomToken(data, url, id) async {
     isTokenLoading = true;
     isTokenAdded = false;
     notifyListeners();
 
-    await ApiHandler.post(data,url).then((responseData){
-
+    await ApiHandler.post(data, url).then((responseData) {
       var value = json.decode(responseData.body);
       // print("add token response ===> $value");
-      if(responseData.statusCode == 200 && value["status"] == true)
-      {
+      if (responseData.statusCode == 200 && value["status"] == true) {
         tokenDetail = value;
 
         /* (tokenDetail["data"] as List).map((token){
@@ -213,9 +187,7 @@ class TokenProvider with ChangeNotifier {
         isTokenAdded = true;
         isTokenLoading = false;
         notifyListeners();
-      }
-      else
-      {
+      } else {
         isTokenAdded = false;
         isTokenLoading = false;
         notifyListeners();
@@ -223,68 +195,56 @@ class TokenProvider with ChangeNotifier {
         if (kDebugMode) {
           print("=========== Add Custom Token Api Error ==========");
         }
-
       }
-
     });
   }
-
-
 
   // ignore: prefer_typing_uninitialized_variables
   var tokenBalance;
   bool isBalance = false;
 
   /// get specific token balance use in coin detail page
-  getTokenBalance(data,url) async {
+  getTokenBalance(data, url) async {
     isLoading = true;
     notifyListeners();
 
     // print(data);
 
-      await ApiHandler.post(data,url).then((responseData){
+    await ApiHandler.post(data, url).then((responseData) {
+      var value = json.decode(responseData.body);
+      // print("get balance ---> $value");
 
-        var value = json.decode(responseData.body);
-        // print("get balance ---> $value");
+      if (responseData.statusCode == 200 && value["status"] == true) {
+        tokenBalance = value;
 
-        if(responseData.statusCode == 200 && value["status"] == true) {
-          tokenBalance = value;
+        isBalance = true;
+        isLoading = false;
+        notifyListeners();
+      } else {
+        tokenBalance = null;
 
-          isBalance = true;
-          isLoading = false;
-          notifyListeners();
+        isLoading = false;
+        isBalance = false;
+        notifyListeners();
+
+        if (kDebugMode) {
+          print("=========== get Token Balance Api Error ==========");
         }
-        else {
-          tokenBalance = null;
-
-          isLoading = false;
-          isBalance = false;
-          notifyListeners();
-
-          if (kDebugMode) {
-            print("=========== get Token Balance Api Error ==========");
-          }
-
-        }
-
-      });
-
+      }
+    });
   }
 
-
-
   List<SearchTokenModel> searchTokenList = [];
-  List<Map<String,dynamic>> selectTokenBool = [];
-  List<Map<String,dynamic>> searchSelectTokenBool = [];
+  List<Map<String, dynamic>> selectTokenBool = [];
+  List<Map<String, dynamic>> searchSelectTokenBool = [];
   var allTokenDetails;
   bool isSearch = false;
 
   /// use in add assets page to get all token
   /// and show which selected and not
-  getSearchToken(data,url) async {
+  getSearchToken(data, url) async {
     isLoading = true;
     notifyListeners();
-
 
     await ApiHandler.post(data, url).then((responseData) async {
       List<SearchTokenModel> list;
@@ -304,17 +264,20 @@ class TokenProvider with ChangeNotifier {
 
         searchTokenList.addAll(list);
         selectTokenBool = List.generate(
-            searchTokenList.length, (index) => {
-              "tokenName": searchTokenList[index].name,
-              "symbol": searchTokenList[index].symbol,
-              "tokenId": searchTokenList[index].id,
-              "isSelected": false
-            }
-        );
+            searchTokenList.length,
+            (index) => {
+                  "tokenName": searchTokenList[index].name,
+                  "symbol": searchTokenList[index].symbol,
+                  "tokenId": searchTokenList[index].id,
+                  "isSelected": false
+                });
 
-        for (int i = 0; i < DBTokenProvider.dbTokenProvider.tokenList.length; i++) {
+        for (int i = 0;
+            i < DBTokenProvider.dbTokenProvider.tokenList.length;
+            i++) {
           var index = searchTokenList.indexWhere((element) {
-            return "${element.id}" == "${DBTokenProvider.dbTokenProvider.tokenList[i].token_id}";
+            return "${element.id}" ==
+                "${DBTokenProvider.dbTokenProvider.tokenList[i].token_id}";
           });
           if (index != -1) {
             selectTokenBool[index]['isSelected'] = true;
@@ -322,7 +285,6 @@ class TokenProvider with ChangeNotifier {
         }
 
         searchSelectTokenBool = selectTokenBool;
-
 
         isSearch = true;
         isLoading = false;
@@ -335,8 +297,5 @@ class TokenProvider with ChangeNotifier {
         print("=========== Search Token List Api Error ==========");
       }
     });
-
-
   }
-
 }

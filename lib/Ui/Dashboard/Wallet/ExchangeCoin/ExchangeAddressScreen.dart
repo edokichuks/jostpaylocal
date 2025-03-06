@@ -11,26 +11,20 @@ import 'package:provider/provider.dart';
 
 class ExchangeAddressScreen extends StatefulWidget {
   final String sendAmount;
-  const ExchangeAddressScreen({
-    super.key,
-    required this.sendAmount
-  });
+  const ExchangeAddressScreen({super.key, required this.sendAmount});
 
   @override
   State<ExchangeAddressScreen> createState() => _ExchangeAddressScreenState();
 }
 
 class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
-
   TextEditingController addressController = TextEditingController();
 
   late ExchangeProvider exchangeProvider;
 
   var selectedAccountId = "";
 
-
-  createExchange()async {
-
+  createExchange() async {
     var data = {
       "from": exchangeProvider.sendCoin.ticker.toLowerCase().trim(),
       "to": exchangeProvider.receiveCoin.ticker.toLowerCase().trim(),
@@ -41,115 +35,107 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
     // print(json.encode(data));
 
     await exchangeProvider.createExchange(
-        "/v1/transactions/fixed-rate/${Utils.apiKey}",
-        data,context
-    );
-
+        "/v1/transactions/fixed-rate/${Utils.apiKey}", data, context);
   }
-
-
 
   addressVerification(context) async {
     var params = {
-      "currency":exchangeProvider.receiveCoin.ticker.toLowerCase().trim(),
-      "address":addressController.text.trim()
+      "currency": exchangeProvider.receiveCoin.ticker.toLowerCase().trim(),
+      "address": addressController.text.trim()
     };
-    await exchangeProvider.addressVerification("/v2/validate/address",params,context);
+    await exchangeProvider.addressVerification(
+        "/v2/validate/address", params, context);
   }
-
 
   @override
   void initState() {
-    exchangeProvider = Provider.of<ExchangeProvider>(context,listen: false);
+    exchangeProvider = Provider.of<ExchangeProvider>(context, listen: false);
     exchangeProvider.isAddressVerify = false;
     exchangeProvider.createExSuccess = false;
     exchangeProvider.statusLoading = false;
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    exchangeProvider = Provider.of<ExchangeProvider>(context,listen: true);
+    exchangeProvider = Provider.of<ExchangeProvider>(context, listen: true);
 
     return Scaffold(
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-
           !exchangeProvider.isAddressVerify
-              ?
-          exchangeProvider.verifyAddressLoading
-              ?
-          SizedBox(
-            height: 50,
-            child: Helper.dialogCall.showLoader(),
-          )
-              :
-          InkWell(
-            onTap: () {
-              if(addressController.text.isNotEmpty) {
-                addressVerification(context);
-              }else{
-                Helper.dialogCall.showToast(context, "Please enter receive address");
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              height: 45,
-              margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: addressController.text.isEmpty ? MyStyle.invalidDecoration : MyStyle.buttonDecoration,
-              child:Text(
-                "Verify address",
-                style: MyStyle.tx18BWhite.copyWith(
-                  color:  addressController.text.isEmpty ? MyColor.mainWhiteColor.withOpacity(0.4) : MyColor.mainWhiteColor,
-                ),
-              ),
-            ),
-          )
-              :
-          exchangeProvider.createExLoading
-              ?
-          SizedBox(
-            height: 50,
-            child: Helper.dialogCall.showLoader(),
-          )
-              :
-          InkWell(
-            onTap: () {
-              if(exchangeProvider.isAddressVerify){
-                createExchange();
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              height: 45,
-              margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: addressController.text.isEmpty ? MyStyle.invalidDecoration : MyStyle.buttonDecoration,
-              child:Text(
-                "Start Exchange",
-                style: MyStyle.tx18BWhite.copyWith(
-                  color:  addressController.text.isEmpty ? MyColor.mainWhiteColor.withOpacity(0.4) : MyColor.mainWhiteColor,
-                ),
-              ),
-            ),
-          ),
-
+              ? exchangeProvider.verifyAddressLoading
+                  ? SizedBox(
+                      height: 50,
+                      child: Helper.dialogCall.showLoader(),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        if (addressController.text.isNotEmpty) {
+                          addressVerification(context);
+                        } else {
+                          Helper.dialogCall.showToast(
+                              context, "Please enter receive address");
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 45,
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: addressController.text.isEmpty
+                            ? MyStyle.invalidDecoration
+                            : MyStyle.buttonDecoration,
+                        child: Text(
+                          "Verify address",
+                          style: MyStyle.tx18BWhite.copyWith(
+                            color: addressController.text.isEmpty
+                                ? MyColor.mainWhiteColor.withOpacity(0.4)
+                                : MyColor.mainWhiteColor,
+                          ),
+                        ),
+                      ),
+                    )
+              : exchangeProvider.createExLoading
+                  ? SizedBox(
+                      height: 50,
+                      child: Helper.dialogCall.showLoader(),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        if (exchangeProvider.isAddressVerify) {
+                          createExchange();
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 45,
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: addressController.text.isEmpty
+                            ? MyStyle.invalidDecoration
+                            : MyStyle.buttonDecoration,
+                        child: Text(
+                          "Start Exchange",
+                          style: MyStyle.tx18BWhite.copyWith(
+                            color: addressController.text.isEmpty
+                                ? MyColor.mainWhiteColor.withOpacity(0.4)
+                                : MyColor.mainWhiteColor,
+                          ),
+                        ),
+                      ),
+                    ),
           SizedBox(height: Platform.isIOS ? 10 : 5),
-
         ],
       ),
-
       appBar: AppBar(
         backgroundColor: MyColor.darkGreyColor,
         centerTitle: true,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -162,9 +148,7 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
         title: Text(
           "Enter ${exchangeProvider.receiveCoin.ticker} address",
         ),
-
       ),
-
       body: SizedBox(
         height: height,
         width: width,
@@ -175,7 +159,6 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
               width: width,
               child: Stack(
                 children: [
-
                   // background color container
                   Container(
                     color: MyColor.darkGreyColor,
@@ -200,29 +183,28 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
                         },
                         decoration: InputDecoration(
                             filled: true,
-                            hintText: "Add ${exchangeProvider.receiveCoin.ticker} Address",
+                            hintText:
+                                "Add ${exchangeProvider.receiveCoin.ticker} Address",
                             fillColor: MyColor.blackColor,
                             border: InputBorder.none,
-                            hintStyle:MyStyle.tx22RWhite.copyWith(
+                            hintStyle: MyStyle.tx22RWhite.copyWith(
                                 fontSize: 18,
-                                color: MyColor.whiteColor.withOpacity(0.7)
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+                                color: MyColor.whiteColor.withOpacity(0.7)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 20),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
                                   color: MyColor.blackColor,
-                                )
-                            ),
+                                )),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
                                   color: MyColor.blackColor,
-                                )
-                            ),
+                                )),
                             suffixIcon: InkWell(
-                              onTap: (){
-                                FlutterClipboard.paste().then((value){
+                              onTap: () {
+                                FlutterClipboard.paste().then((value) {
                                   setState(() {
                                     exchangeProvider.isAddressVerify = false;
                                     addressController.text = value;
@@ -239,15 +221,11 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
                                     "Paste",
                                     style: MyStyle.tx18RWhite.copyWith(
                                         fontSize: 16,
-                                        color: MyColor.greenColor
-                                    ),
+                                        color: MyColor.greenColor),
                                   ),
                                 ),
                               ),
-                            )
-
-                        )
-                    ),
+                            ))),
                   ),
 
                   // // add wallet text and icon
@@ -282,16 +260,12 @@ class _ExchangeAddressScreenState extends State<ExchangeAddressScreen> {
                   //     ],
                   //   ),
                   // )
-
                 ],
               ),
             )
           ],
         ),
       ),
-
     );
   }
-
 }
-

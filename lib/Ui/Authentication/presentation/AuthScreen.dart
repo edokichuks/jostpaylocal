@@ -1,5 +1,5 @@
-import 'package:jost_pay_wallet/Ui/Authentication/SignInScreen.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/SignUpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignInScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';

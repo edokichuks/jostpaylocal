@@ -110,10 +110,11 @@ class _HelpsupportState extends State<Helpsupport> {
                                                   color: themedata.tertiary)),
                                           Text('AVG.Response time: 2mins',
                                               style: MyStyle.tx12Black.copyWith(
-                                                  color:
-                                                      themeProvider.isDarkMode()
-                                                          ? const Color(0XFFCBD2EB)
-                                                          : const Color(0xff30333A))),
+                                                  color: themeProvider
+                                                          .isDarkMode()
+                                                      ? const Color(0XFFCBD2EB)
+                                                      : const Color(
+                                                          0xff30333A))),
                                           const SizedBox(
                                             height: 12,
                                           ),
@@ -287,7 +288,7 @@ class _HelpsupportState extends State<Helpsupport> {
                               .copyWith(color: themedata.tertiary),
                         ),
                         const SizedBox(
-                          height: 24, 
+                          height: 24,
                         ),
                         Container(
                           padding: const EdgeInsets.all(24),

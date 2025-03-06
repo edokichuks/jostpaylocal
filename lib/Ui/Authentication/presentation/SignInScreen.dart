@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/OtpScreen.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/SignUpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,15 +38,6 @@ class _SignInScreenState extends State<SignInScreen> {
     await prefs.setString("token", token);
   }
 
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   void _validateForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
@@ -54,9 +48,19 @@ class _SignInScreenState extends State<SignInScreen> {
         "email": _emailController.text,
         "password": _passwordController.text,
       };
+      AuthProvider auth = AuthProvider();
 
-      loginAccount();
+      await auth.login(
+          _emailController.text.trim(), _passwordController.text.trim());
+
+      setState(() {
+        isLoading = false;
+      });
+      // loginAccount();
     } else {
+      setState(() {
+        isLoading = false;
+      });
       // Form is invalid, no action needed here since warnings are shown automatically
     }
   }
@@ -171,29 +175,41 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 32),
               Column(children: [
-                isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        color: MyColor.greenColor,
-                      ))
-                    : SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: _validateForm,
-                          style: TextButton.styleFrom(
-                            backgroundColor: MyColor.greenColor,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            "Login",
-                            style: NewStyle.btnTx16SplashBlue
-                                .copyWith(color: NewColor.mainWhiteColor),
-                          ),
+                // isLoading
+                //     ? const Center(
+                //         child: CircularProgressIndicator(
+                //         color: MyColor.greenColor,
+                //       ))
+                //     :
+                Consumer<AuthProvider>(builder: (context, data, _) {
+           
+                  return SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          log('Sign in here');
+                          await data.login(_emailController.text.trim(),
+                              _passwordController.text.trim());
+                        } else {
+                          log('validated else');
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: MyColor.greenColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      child: Text(
+                        data.isLogin ? '...' : "Login",
+                        style: NewStyle.btnTx16SplashBlue
+                            .copyWith(color: NewColor.mainWhiteColor),
+                      ),
+                    ),
+                  );
+                }),
                 const SizedBox(
                   height: 410,
                 ),

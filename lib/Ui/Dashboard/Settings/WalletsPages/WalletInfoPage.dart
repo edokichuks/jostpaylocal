@@ -10,8 +10,7 @@ import '../../../../Values/MyStyle.dart';
 
 // ignore: must_be_immutable
 class WalletInfoScreen extends StatefulWidget {
-
-  String  accountId,name;
+  String accountId, name;
   List? seedPhare;
 
   WalletInfoScreen({
@@ -26,7 +25,6 @@ class WalletInfoScreen extends StatefulWidget {
 }
 
 class _WalletInfoScreenState extends State<WalletInfoScreen> {
-
   bool showPhrase = false;
   TextEditingController nameController = TextEditingController();
 
@@ -41,7 +39,7 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
     getAllACKey();
   }
 
-  getAllACKey()async {
+  getAllACKey() async {
     DbAccountAddress.dbAccountAddress.getAccountAddress(widget.accountId);
     nameController.text = widget.name;
     setState(() {});
@@ -49,7 +47,7 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     secureScreenOff();
   }
@@ -58,17 +56,15 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
     // await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -83,10 +79,9 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15,20,15,10),
+        padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
         child: Column(
           children: [
-
             const SizedBox(height: 10),
 
             // name text filed
@@ -103,14 +98,12 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(
                       color: MyColor.boarderColor,
-                    )
-                ),
+                    )),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(
                       color: MyColor.boarderColor,
-                    )
-                ),
+                    )),
               ),
             ),
             SizedBox(height: height * 0.09),
@@ -127,21 +120,21 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
                     crossAxisCount: 3,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 10),
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: widget.seedPhare!.length,
                     itemBuilder: (context, index) {
-                      var list =widget.seedPhare![index];
+                      var list = widget.seedPhare![index];
                       return Container(
                         height: 50,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: MyColor.backgroundColor
-                        ),
+                            color: MyColor.backgroundColor),
                         child: Text(
-                          "${index+1} $list",
+                          "${index + 1} $list",
                           textAlign: TextAlign.center,
                           style: MyStyle.tx18RWhite,
                         ),
@@ -159,14 +152,16 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                            filter:
+                                ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                             child: Container(
                               width: width,
                               height: 260,
-                              padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 10),
                               decoration: BoxDecoration(
-                                  color: MyColor.mainWhiteColor.withOpacity(0.001)
-                              ),
+                                  color: MyColor.mainWhiteColor
+                                      .withOpacity(0.001)),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,32 +172,25 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
                                     size: 35,
                                   ),
                                   const SizedBox(height: 20),
-
                                   Text(
                                     'Tap to reveal you seed \nphrase',
                                     textAlign: TextAlign.center,
                                     style: MyStyle.tx28BYellow.copyWith(
                                         color: MyColor.mainWhiteColor,
-                                        fontSize: 21
-                                    ),
+                                        fontSize: 21),
                                   ),
                                   const SizedBox(height: 12),
-
                                   Text(
                                     'Make sure no one is watching your screen',
                                     textAlign: TextAlign.center,
-                                    style: MyStyle.tx22RWhite.copyWith(
-                                        fontSize: 15
-                                    ),
+                                    style: MyStyle.tx22RWhite
+                                        .copyWith(fontSize: 15),
                                   ),
-
                                   const SizedBox(height: 25),
-
                                 ],
                               ),
                             ),
-                          )
-                      ),
+                          )),
                     ),
                   )
                 ],
@@ -213,12 +201,14 @@ class _WalletInfoScreenState extends State<WalletInfoScreen> {
             // copy button
             InkWell(
               onTap: () {
-                FlutterClipboard.copy(widget.seedPhare!.join(" ")).then((value) {
+                FlutterClipboard.copy(widget.seedPhare!.join(" "))
+                    .then((value) {
                   Helper.dialogCall.showToast(context, "Copied");
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 width: 120,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),

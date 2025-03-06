@@ -45,7 +45,8 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
       isLoading = true;
     });
 
-    const String url = 'https://instantexchangers.com/mobile_server/create-sell-order';
+    const String url =
+        'https://instantexchangers.com/mobile_server/create-sell-order';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -65,17 +66,17 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
+        Map<String, dynamic> res = await jsonDecode(response.body);
         setState(() {
           walletAddress = res['admin_wallet'];
         });
         setState(() {
           isLoading = false;
         });
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) {
-              return SellCoinDetailScreen(data: res, sData: sellInfo, cData: coinInfo);
-            }));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return SellCoinDetailScreen(
+              data: res, sData: sellInfo, cData: coinInfo);
+        }));
       } else {
         setState(() {
           isLoading = false;
@@ -144,27 +145,27 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                   )),
             ),
             const SizedBox(height: 8),
-            Text("${NumberFormat('#,###.#########').format(sellInfo['coin_amount'])} ${sellInfo['coin_code']}",
+            Text(
+                "${NumberFormat('#,###.#########').format(sellInfo['coin_amount'])} ${sellInfo['coin_code']}",
                 style: NewStyle.tx28White.copyWith(
                   fontSize: 20,
                 )),
-            Text("=${NumberFormat('#,###.####').format(double.parse(sellInfo['usd_amount']))}",
+            Text(
+                "=${NumberFormat('#,###.####').format(double.parse(sellInfo['usd_amount']))}",
                 style: NewStyle.tx14SplashWhite
                     .copyWith(height: 1.3, color: NewColor.txGrayColor)),
             const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:
-                [
-                  Text("Transaction details",
-                    style: NewStyle.tx28White.copyWith(
-                      fontSize: 20,
-                    ))
-                ]
-              ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Transaction details",
+                        style: NewStyle.tx28White.copyWith(
+                          fontSize: 20,
+                        ))
+                  ]),
             ),
             const SizedBox(height: 12),
             Container(
@@ -173,7 +174,8 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                   color: NewColor.dashboardPrimaryColor,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                padding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 24),
+                padding: const EdgeInsets.only(
+                    top: 24, left: 24, right: 24, bottom: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -187,7 +189,8 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                                 fontSize: 12,
                                 color: NewColor.txGrayColor,
                                 fontWeight: FontWeight.w500)),
-                        Text("${coinInfo['coin_name']} ${coinInfo['coin_code']}",
+                        Text(
+                            "${coinInfo['coin_name']} ${coinInfo['coin_code']}",
                             style: NewStyle.tx14SplashWhite.copyWith(
                                 fontSize: 12,
                                 color: NewColor.txGrayColor,
@@ -204,7 +207,8 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                                 fontSize: 12,
                                 color: NewColor.txGrayColor,
                                 fontWeight: FontWeight.w500)),
-                        Text("${NumberFormat('#,###.##').format(sellInfo['ngn_amount'])} NGN",
+                        Text(
+                            "${NumberFormat('#,###.##').format(sellInfo['ngn_amount'])} NGN",
                             style: NewStyle.tx14SplashWhite.copyWith(
                               fontSize: 12,
                               color: NewColor.txGrayColor,
@@ -222,15 +226,16 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                     child: TextButton(
                       onPressed: () => (Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            return const DashboardScreen();
-                          }))),
+                        return const DashboardScreen();
+                      }))),
                       style: TextButton.styleFrom(
                         backgroundColor: MyColor.backgroundColor,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                           side: const BorderSide(
-                            color: MyColor.darkGreyColor, // Set your desired border color here
+                            color: MyColor
+                                .darkGreyColor, // Set your desired border color here
                             width: 2.0, // Set the border width
                           ),
                         ),
@@ -246,9 +251,7 @@ class _SellCoinConfirmScreenState extends State<SellCoinConfirmScreen> {
                   SizedBox(
                     width: 160,
                     child: TextButton(
-                      onPressed: () => {
-                        createSellOrder()
-                      },
+                      onPressed: () => {createSellOrder()},
                       style: TextButton.styleFrom(
                         backgroundColor: NewColor.btnBgGreenColor,
                         padding: const EdgeInsets.symmetric(vertical: 12),

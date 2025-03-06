@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Provider/DashboardProvider.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/SignInScreen.dart';
+import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignInScreen.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/HelpSupport.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Settings/ProfileScreen.dart';
 import 'package:jost_pay_wallet/Ui/Static/AboutUs.dart';
@@ -161,7 +161,7 @@ class _SettingScreenState extends State<SettingScreen> {
             Row(
               children: [
                 InkWell(
-                  onTap: () =>       dashProvider.changeBottomIndex(0),
+                  onTap: () => dashProvider.changeBottomIndex(0),
                   child: Image.asset(
                     'assets/images/arrow_left.png',
                     color: themeProvider.isDarkMode()

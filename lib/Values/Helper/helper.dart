@@ -7,7 +7,7 @@ class Helper {
 
   Helper._();
 
-  showToast(context,String messages){
+  showToast(context, String messages) {
     Fluttertoast.showToast(
         msg: messages,
         toastLength: Toast.LENGTH_SHORT,
@@ -15,22 +15,19 @@ class Helper {
         timeInSecForIosWeb: 1,
         backgroundColor: MyColor.darkGrey01Color,
         textColor: MyColor.whiteColor,
-        fontSize: 15.0
-    );
+        fontSize: 15.0);
   }
 
-
-  showLoader(){
+  showLoader() {
     return const Center(
         child: CircularProgressIndicator(
-          color: MyColor.greenColor,
-        )
-    );
+      color: MyColor.greenColor,
+    ));
   }
 
-  showAlertDialog(BuildContext context){
-    AlertDialog alert =  AlertDialog(
-      backgroundColor:MyColor.boarderColor,
+  showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      backgroundColor: MyColor.boarderColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -40,9 +37,9 @@ class Helper {
             backgroundColor: Colors.white,
             valueColor: AlwaysStoppedAnimation<Color>(MyColor.greenColor),
           ),
-
           SizedBox(width: 20),
-          Text("Loading...",
+          Text(
+            "Loading...",
             style: TextStyle(
               fontSize: 18,
               color: MyColor.whiteColor,
@@ -51,13 +48,12 @@ class Helper {
         ],
       ),
     );
-    showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
   }
-
-
 }

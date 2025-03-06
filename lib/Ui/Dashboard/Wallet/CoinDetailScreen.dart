@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:declarative_refresh_indicator/declarative_refresh_indicator.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +22,23 @@ import 'package:url_launcher/url_launcher.dart';
 import 'ExchangeCoin/ExchangeScreen.dart';
 import 'ReceiveToken/ReceiveScreen.dart';
 
-
 // ignore: must_be_immutable
 class CoinDetailScreen extends StatefulWidget {
-
-  String selectedAccountAddress,tokenId,tokenNetworkId,tokenAddress,accAddress,tokenName,token_transection_Id,
-      tokenSymbol,tokenBalance,tokenImage,tokenType,tokenMarketId,tokenDecimal,explorerUrl;
-  double tokenUsdPrice,tokenUpDown,tokenFullPrice;
+  String selectedAccountAddress,
+      tokenId,
+      tokenNetworkId,
+      tokenAddress,
+      accAddress,
+      tokenName,
+      token_transection_Id,
+      tokenSymbol,
+      tokenBalance,
+      tokenImage,
+      tokenType,
+      tokenMarketId,
+      tokenDecimal,
+      explorerUrl;
+  double tokenUsdPrice, tokenUpDown, tokenFullPrice;
 
   CoinDetailScreen({
     super.key,
@@ -57,13 +66,18 @@ class CoinDetailScreen extends StatefulWidget {
 }
 
 class _CoinDetailScreenState extends State<CoinDetailScreen> {
-
   late TransectionProvider transectionProvider;
   late ExchangeProvider exchangeProvider;
 
-  String tokenId = "",tokenName = "",tokenNatewokrkId = "",
-      tokenSymbol = "",tokenImage = "",tokenUsd = "",
-      tokenBalance = "",tokenMarketId = "",sendTokenType = "";
+  String tokenId = "",
+      tokenName = "",
+      tokenNatewokrkId = "",
+      tokenSymbol = "",
+      tokenImage = "",
+      tokenUsd = "",
+      tokenBalance = "",
+      tokenMarketId = "",
+      sendTokenType = "";
 
   late TokenProvider tokenProvider;
   List<NetworkList> networkList = [];
@@ -71,7 +85,8 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
   @override
   void initState() {
     super.initState();
-    transectionProvider = Provider.of<TransectionProvider>(context, listen: false);
+    transectionProvider =
+        Provider.of<TransectionProvider>(context, listen: false);
     tokenProvider = Provider.of<TokenProvider>(context, listen: false);
     exchangeProvider = Provider.of<ExchangeProvider>(context, listen: false);
 
@@ -88,9 +103,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
     tokenUsd = "${widget.tokenUsdPrice}";
 
     getNetWork();
-
   }
-
 
   // get selected token network data
   getNetWork() async {
@@ -104,66 +117,59 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
     getCustomTokenBalance();
   }
 
-
   // get transaction list
   getTransection() async {
-
     var data = {
       "network_id": widget.tokenNetworkId,
-      "token_id":widget.token_transection_Id,
+      "token_id": widget.token_transection_Id,
       "tokenDecimal": widget.tokenDecimal,
-      "tokenAddress":widget.tokenAddress,
-      "address":widget.selectedAccountAddress,
+      "tokenAddress": widget.tokenAddress,
+      "address": widget.selectedAccountAddress,
       "isCustomeRPC": false,
-      "network_url":networkList.first.url,
-      "network_name":networkList.first.name,
-      "explorer_url":networkList.first.explorerUrl,
-      "symbol":networkList.first.symbol
+      "network_url": networkList.first.url,
+      "network_name": networkList.first.name,
+      "explorer_url": networkList.first.explorerUrl,
+      "symbol": networkList.first.symbol
     };
     // print(json.encode(data));
-    await transectionProvider.getTransection(data,'/getTransactions');
+    await transectionProvider.getTransection(data, '/getTransactions');
     //print(transectionProvider.transectionList.length);
     setState(() {
       _showRefresh = false;
     });
   }
 
-
   // get token updated balance form api
   getCustomTokenBalance() async {
-
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var selectedAccountId = sharedPreferences.getString('accountId') ?? "";
-    await DbAccountAddress.dbAccountAddress.getPublicKey(selectedAccountId,9);
-    var trxPrivateKey = DbAccountAddress.dbAccountAddress.selectAccountPrivateAddress;
-
+    await DbAccountAddress.dbAccountAddress.getPublicKey(selectedAccountId, 9);
+    var trxPrivateKey =
+        DbAccountAddress.dbAccountAddress.selectAccountPrivateAddress;
 
     var data = {
-      "tokenAddress":widget.tokenAddress,
-      "address":widget.selectedAccountAddress,
-      "network_id":tokenNatewokrkId,
-      "trxPrivateKey":trxPrivateKey,
+      "tokenAddress": widget.tokenAddress,
+      "address": widget.selectedAccountAddress,
+      "network_id": tokenNatewokrkId,
+      "trxPrivateKey": trxPrivateKey,
       "isCustomeRPC": false,
-      "network_url":networkList.first.url,
-      "network_name":networkList.first.name,
+      "network_url": networkList.first.url,
+      "network_name": networkList.first.name,
     };
-
 
     // print("object ${jsonEncode(data)}");
 
-    await tokenProvider.getTokenBalance(data,'/getTokenBalance');
+    await tokenProvider.getTokenBalance(data, '/getTokenBalance');
     var body = tokenProvider.tokenBalance;
-    if(body != null){
-
-      var getPrice = await DBTokenProvider.dbTokenProvider.getTokenUsdPrice(tokenId);
-      setState((){
+    if (body != null) {
+      var getPrice =
+          await DBTokenProvider.dbTokenProvider.getTokenUsdPrice(tokenId);
+      setState(() {
         tokenBalance = "${body['data']['balance']}";
         tokenUsd = "${double.parse(tokenBalance) * getPrice[0]['price']}";
       });
     }
-
   }
-
 
   // pull to refresh
   bool _showRefresh = false;
@@ -175,9 +181,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
     transectionProvider.transectionList.clear();
     getTransection();
     getCustomTokenBalance();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -188,10 +192,10 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColor.darkGreyColor,
-        leading:  InkWell(
+        leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -205,7 +209,6 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           // coin details
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -219,7 +222,6 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 5),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,19 +234,14 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                           Text(
                             widget.tokenName,
                             style: MyStyle.tx18RWhite.copyWith(
-                                fontSize: 18,
-                                color: MyColor.grey01Color
-                            ),
+                                fontSize: 18, color: MyColor.grey01Color),
                           ),
-
                           Visibility(
                             visible: widget.tokenType.isNotEmpty,
                             child: Text(
                               "Type: ${widget.tokenType}",
                               style: MyStyle.tx18RWhite.copyWith(
-                                  fontSize: 13,
-                                  color: MyColor.grey01Color
-                              ),
+                                  fontSize: 13, color: MyColor.grey01Color),
                             ),
                           ),
                         ],
@@ -253,20 +250,20 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                     Text(
                       "\$${widget.tokenFullPrice.toStringAsFixed(2)} ",
                       style: MyStyle.tx18RWhite.copyWith(
-                          fontSize: 14,
+                        fontSize: 14,
                       ),
                     ),
                     Text(
                       "(${widget.tokenUpDown.toStringAsFixed(2)})",
                       style: MyStyle.tx18RWhite.copyWith(
                           fontSize: 14,
-                          color:widget.tokenUpDown < 0 ? MyColor.redColor :  MyColor.greenColor
-                      ),
+                          color: widget.tokenUpDown < 0
+                              ? MyColor.redColor
+                              : MyColor.greenColor),
                     ),
                   ],
                 ),
                 const SizedBox(height: 15),
-
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: const BoxDecoration(
@@ -279,41 +276,39 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                     fit: BoxFit.fill,
                     imageUrl: tokenImage,
                     placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(color: MyColor.greenColor),
+                      child:
+                          CircularProgressIndicator(color: MyColor.greenColor),
                     ),
-                    errorWidget: (context, url, error) =>
-
-                      Container(
-                            height: 45,
-                            width: 45,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: MyColor.whiteColor,
-                            ),
-                            child: Image.asset(
-                              "assets/images/bitcoin.png",
-                            ),
-                          ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 45,
+                      width: 45,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: MyColor.whiteColor,
+                      ),
+                      child: Image.asset(
+                        "assets/images/bitcoin.png",
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 18),
-
                 Text(
                   "${ApiHandler.calculateLength(tokenUsd)} USD",
                   style: MyStyle.tx22RWhite.copyWith(
                     fontSize: 28,
                   ),
                 ),
-
                 Text(
-                  tokenBalance == "0" ? "0 $tokenSymbol" : "${double.parse(ApiHandler.calculateLength3(tokenBalance))} $tokenSymbol",
+                  tokenBalance == "0"
+                      ? "0 $tokenSymbol"
+                      : "${double.parse(ApiHandler.calculateLength3(tokenBalance))} $tokenSymbol",
                   style: MyStyle.tx22RWhite.copyWith(
                     fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 18),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -321,17 +316,16 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                     InkWell(
                       onTap: () {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReceiveScreen(
-                              networkId: int.parse(widget.tokenNetworkId),
-                              tokenName: widget.tokenName,
-                              tokenSymbol: widget.tokenSymbol,
-                              tokenType: widget.tokenType,
-                              tokenImage: widget.tokenImage,
-                            ),
-                          )
-                        );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReceiveScreen(
+                                networkId: int.parse(widget.tokenNetworkId),
+                                tokenName: widget.tokenName,
+                                tokenSymbol: widget.tokenSymbol,
+                                tokenType: widget.tokenType,
+                                tokenImage: widget.tokenImage,
+                              ),
+                            ));
                       },
                       child: Column(
                         children: [
@@ -342,8 +336,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
                                 color: MyColor.backgroundColor,
-                                shape: BoxShape.circle
-                            ),
+                                shape: BoxShape.circle),
                             child: Image.asset(
                               "assets/images/dashboard/receive.png",
                               height: 18,
@@ -355,9 +348,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                           Text(
                             "Receive",
                             style: MyStyle.tx18RWhite.copyWith(
-                                fontSize: 12,
-                                color: MyColor.whiteColor
-                            ),
+                                fontSize: 12, color: MyColor.whiteColor),
                           ),
                         ],
                       ),
@@ -377,20 +368,19 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                                 sendTokenName: widget.tokenName,
                                 sendTokenSymbol: widget.tokenSymbol,
                                 selectTokenMarketId: widget.tokenMarketId,
-                                sendTokenImage : widget.tokenImage,
-                                sendTokenBalance : widget.tokenBalance,
-                                sendTokenId : widget.tokenId,
-                                sendTokenUsd : "${widget.tokenFullPrice}",
-                                sendTokenDecimals:int.parse(widget.tokenDecimal),
-                                tokenUpDown:widget.tokenUpDown.toString() ,
+                                sendTokenImage: widget.tokenImage,
+                                sendTokenBalance: widget.tokenBalance,
+                                sendTokenId: widget.tokenId,
+                                sendTokenUsd: "${widget.tokenFullPrice}",
+                                sendTokenDecimals:
+                                    int.parse(widget.tokenDecimal),
+                                tokenUpDown: widget.tokenUpDown.toString(),
                                 explorerUrl: widget.explorerUrl,
                                 selectTokenUSD: widget.tokenUsdPrice.toString(),
                                 accAddress: widget.accAddress,
-                                sendTonkenType:widget.tokenType,
-
+                                sendTonkenType: widget.tokenType,
                               ),
-                            )
-                        );
+                            ));
                       },
                       child: Column(
                         children: [
@@ -401,8 +391,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
                                 color: MyColor.backgroundColor,
-                                shape: BoxShape.circle
-                            ),
+                                shape: BoxShape.circle),
                             child: Image.asset(
                               "assets/images/dashboard/card.png",
                               height: 18,
@@ -414,9 +403,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                           Text(
                             "Withdraw",
                             style: MyStyle.tx18RWhite.copyWith(
-                                fontSize: 12,
-                                color: MyColor.whiteColor
-                            ),
+                                fontSize: 12, color: MyColor.whiteColor),
                           ),
                         ],
                       ),
@@ -426,12 +413,10 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                     //Exchange
                     InkWell(
                       onTap: () {
-
                         ExchangeTokenModel model = ExchangeTokenModel(
                             ticker: tokenSymbol,
                             name: tokenName,
-                            image: tokenImage
-                        );
+                            image: tokenImage);
 
                         Navigator.push(
                             context,
@@ -439,8 +424,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                               builder: (context) => ExchangeScreen(
                                 tokenList: model,
                               ),
-                            )
-                        );
+                            ));
                       },
                       child: Column(
                         children: [
@@ -451,8 +435,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
                                 color: MyColor.backgroundColor,
-                                shape: BoxShape.circle
-                            ),
+                                shape: BoxShape.circle),
                             child: Image.asset(
                               "assets/images/dashboard/exchange.png",
                               height: 18,
@@ -464,9 +447,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                           Text(
                             "Exchange",
                             style: MyStyle.tx18RWhite.copyWith(
-                                fontSize: 12,
-                                color: MyColor.whiteColor
-                            ),
+                                fontSize: 12, color: MyColor.whiteColor),
                           ),
                         ],
                       ),
@@ -482,17 +463,19 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
           // Cannot find your transaction
           InkWell(
             onTap: () {
-              if(sendTokenType == "BEP20"){
+              if (sendTokenType == "BEP20") {
                 launchUrl(
-                  Uri.parse("https://bscscan.com/token/${widget.tokenAddress}?a=${widget.selectedAccountAddress}"),
+                  Uri.parse(
+                      "https://bscscan.com/token/${widget.tokenAddress}?a=${widget.selectedAccountAddress}"),
                   mode: LaunchMode.externalApplication,
                 );
-              }else if(sendTokenType ==  "TRC20") {
+              } else if (sendTokenType == "TRC20") {
                 launchUrl(
-                  Uri.parse("https://tronscan.org/#/address/${widget.selectedAccountAddress}"),
+                  Uri.parse(
+                      "https://tronscan.org/#/address/${widget.selectedAccountAddress}"),
                   mode: LaunchMode.externalApplication,
                 );
-              }else {
+              } else {
                 launchUrl(
                   Uri.parse(widget.explorerUrl),
                   mode: LaunchMode.externalApplication,
@@ -505,31 +488,21 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 15),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: MyColor.boarderColor
-                )
-              ),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: MyColor.boarderColor)),
               child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Cannot find your transaction? ",
-                      style: MyStyle.tx18BWhite.copyWith(
-                        color: MyColor.dotBoarderColor,
-                        fontSize: 14
-                      ),
-                    ),
-
-                    TextSpan(
-                      text: "Check explorer",
-                      style: MyStyle.tx18BWhite.copyWith(
-                        color: MyColor.greenColor,
-                        fontSize: 14
-                      ),
-                    )
-                  ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: "Cannot find your transaction? ",
+                    style: MyStyle.tx18BWhite
+                        .copyWith(color: MyColor.dotBoarderColor, fontSize: 14),
+                  ),
+                  TextSpan(
+                    text: "Check explorer",
+                    style: MyStyle.tx18BWhite
+                        .copyWith(color: MyColor.greenColor, fontSize: 14),
+                  )
+                ]),
               ),
             ),
           ),
@@ -545,197 +518,189 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
               onRefresh: _getData,
               refreshing: _showRefresh,
               child: transectionProvider.isLoading == true && !_showRefresh
-                    ?
-                const Center(
-                  child: CircularProgressIndicator(
-                    color: MyColor.greenColor,
-                  ),
-                )
-                    :
-                transectionProvider.transectionList.isEmpty
-                    ?
-                SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: SizedBox(
-                    height: height * 0.45,
-                    width: width,
-                    child: Center(
-                      child: Text(
-                        "No Transaction Yet.",
-                        textAlign: TextAlign.center,
-                        style: MyStyle.tx18RWhite.copyWith(
-                            color: MyColor.grey01Color
-                        ),
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: MyColor.greenColor,
                       ),
-                    ),
-                  ),
-                )
-                    :
-                GroupedListView(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  elements: transectionProvider.transectionList,
-                  groupComparator: (value1, value2) => value2.compareTo(value1),
-                  groupBy: (element) {
-                    return element.timeStamp == "undefined"
-                      ?
-                  DateTime.now().toString().substring(0,10)
-                      :
-                  DateTime.fromMillisecondsSinceEpoch(int.parse(element.timeStamp) * 1000).toString().substring(0,10);
-                  },
-
-                  groupHeaderBuilder: (value) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Text(
-                        value.timeStamp == "undefined"
-                            ?
-                        DateFormat("dd MMM yyyy").format(DateTime.now())
-                            :
-                        DateFormat("dd MMM yyyy").format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse( value.timeStamp) * 1000
-                          )
-                        ),
-                        style:MyStyle.tx18RWhite.copyWith(
-                            fontSize: 14,
-                            color: MyColor.grey01Color
-                        ),
-                      ),
-                    );
-                  },
-                  itemBuilder: (context,  element) {
-
-                    return InkWell(
-                      onTap: () {
-                        launchUrl(
-                          Uri.parse(element.explorerUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            // Transactions type icon
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(
-                                color: MyColor.darkGrey01Color,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.asset(
-                                element.from.toLowerCase() == widget.selectedAccountAddress.toLowerCase()
-                                    ?
-                                "assets/images/dashboard/send.png"
-                                    :
-                                "assets/images/dashboard/receive.png",
-                                height: 17,
-                                width: 17,
-                                fit: BoxFit.contain,
-                                color: MyColor.greenColor,
+                    )
+                  : transectionProvider.transectionList.isEmpty
+                      ? SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: SizedBox(
+                            height: height * 0.45,
+                            width: width,
+                            child: Center(
+                              child: Text(
+                                "No Transaction Yet.",
+                                textAlign: TextAlign.center,
+                                style: MyStyle.tx18RWhite
+                                    .copyWith(color: MyColor.grey01Color),
                               ),
                             ),
-                            const SizedBox(width: 12),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      // coin name text
-                                      Expanded(
-                                        child:
-
-                                        Text(
-
-                                        element.txType != ""
-                                            ?
-                                          element.txType
-                                            :
-                                          element.from.toLowerCase() == widget.selectedAccountAddress.toLowerCase()
-                                              ?
-                                          "Transfer" : "Deposit",
-                                          style: MyStyle.tx18RWhite.copyWith(
-                                              fontSize: 15,
-                                            color: MyColor.whiteColor
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-
-                                      // receive text
-                                      Text(
-                                        element.from.toLowerCase() == widget.selectedAccountAddress.toLowerCase()
-                                            ?
-                                        "- ${ApiHandler.showFiveBalance("${element.value}")} ${widget.tokenSymbol}"
-                                            :
-                                        "+ ${ApiHandler.showFiveBalance("${element.value}")} ${widget.tokenSymbol}",
-                                        style: MyStyle.tx22RWhite.copyWith(
-                                            fontSize: 15,
-                                            color:  element.from.toLowerCase() == widget.selectedAccountAddress.toLowerCase()
-                                                ?
-                                            MyColor.whiteColor
-                                                :
-                                            MyColor.greenColor
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          element.from.toLowerCase() == widget.selectedAccountAddress.toLowerCase()
-                                              ?
-                                          "To: ${element.to.substring(0,5)}...${element.to.substring(element.to.length-5,element.to.length)}"
-                                              :
-                                          "From: ${element.from.substring(0,5)}...${element.from.substring(element.from.length-5,element.from.length)}",
-                                          style: MyStyle.tx18RWhite.copyWith(
-                                              fontSize: 13,
-                                            color: MyColor.grey01Color
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        "\$ ${ApiHandler.calculateLength("${(widget.tokenFullPrice * element.value)}")}",
-
-                                        style: MyStyle.tx18RWhite.copyWith(
-                                            fontSize: 14,
-                                            color: MyColor.grey01Color
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // const SizedBox(height: 2),
-                                  // Text(
-                                  //     DateFormat('dd MM yyyyy hh:mma').format(DateTime.fromMillisecondsSinceEpoch(int.parse(element.timeStamp) * 1000)),
-                                  //   style: MyStyle.tx18BWhite.copyWith(
-                                  //     fontSize: 15
-                                  //   ),
-                                  // ),
-                                ],
+                          ),
+                        )
+                      : GroupedListView(
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          elements: transectionProvider.transectionList,
+                          groupComparator: (value1, value2) =>
+                              value2.compareTo(value1),
+                          groupBy: (element) {
+                            return element.timeStamp == "undefined"
+                                ? DateTime.now().toString().substring(0, 10)
+                                : DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(element.timeStamp) * 1000)
+                                    .toString()
+                                    .substring(0, 10);
+                          },
+                          groupHeaderBuilder: (value) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              child: Text(
+                                value.timeStamp == "undefined"
+                                    ? DateFormat("dd MMM yyyy")
+                                        .format(DateTime.now())
+                                    : DateFormat("dd MMM yyyy").format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            int.parse(value.timeStamp) * 1000)),
+                                style: MyStyle.tx18RWhite.copyWith(
+                                    fontSize: 14, color: MyColor.grey01Color),
                               ),
-                            ),
+                            );
+                          },
+                          itemBuilder: (context, element) {
+                            return InkWell(
+                              onTap: () {
+                                launchUrl(
+                                  Uri.parse(element.explorerUrl),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 25.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Transactions type icon
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: const BoxDecoration(
+                                        color: MyColor.darkGrey01Color,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.asset(
+                                        element.from.toLowerCase() ==
+                                                widget.selectedAccountAddress
+                                                    .toLowerCase()
+                                            ? "assets/images/dashboard/send.png"
+                                            : "assets/images/dashboard/receive.png",
+                                        height: 17,
+                                        width: 17,
+                                        fit: BoxFit.contain,
+                                        color: MyColor.greenColor,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
 
-                          ],
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              // coin name text
+                                              Expanded(
+                                                child: Text(
+                                                  element.txType != ""
+                                                      ? element.txType
+                                                      : element.from
+                                                                  .toLowerCase() ==
+                                                              widget
+                                                                  .selectedAccountAddress
+                                                                  .toLowerCase()
+                                                          ? "Transfer"
+                                                          : "Deposit",
+                                                  style: MyStyle.tx18RWhite
+                                                      .copyWith(
+                                                          fontSize: 15,
+                                                          color: MyColor
+                                                              .whiteColor),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+
+                                              // receive text
+                                              Text(
+                                                element.from.toLowerCase() ==
+                                                        widget
+                                                            .selectedAccountAddress
+                                                            .toLowerCase()
+                                                    ? "- ${ApiHandler.showFiveBalance("${element.value}")} ${widget.tokenSymbol}"
+                                                    : "+ ${ApiHandler.showFiveBalance("${element.value}")} ${widget.tokenSymbol}",
+                                                style: MyStyle.tx22RWhite.copyWith(
+                                                    fontSize: 15,
+                                                    color: element.from
+                                                                .toLowerCase() ==
+                                                            widget
+                                                                .selectedAccountAddress
+                                                                .toLowerCase()
+                                                        ? MyColor.whiteColor
+                                                        : MyColor.greenColor),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  element.from.toLowerCase() ==
+                                                          widget
+                                                              .selectedAccountAddress
+                                                              .toLowerCase()
+                                                      ? "To: ${element.to.substring(0, 5)}...${element.to.substring(element.to.length - 5, element.to.length)}"
+                                                      : "From: ${element.from.substring(0, 5)}...${element.from.substring(element.from.length - 5, element.from.length)}",
+                                                  style: MyStyle.tx18RWhite
+                                                      .copyWith(
+                                                          fontSize: 13,
+                                                          color: MyColor
+                                                              .grey01Color),
+                                                ),
+                                              ),
+                                              Text(
+                                                "\$ ${ApiHandler.calculateLength("${(widget.tokenFullPrice * element.value)}")}",
+                                                style: MyStyle.tx18RWhite
+                                                    .copyWith(
+                                                        fontSize: 14,
+                                                        color: MyColor
+                                                            .grey01Color),
+                                              ),
+                                            ],
+                                          ),
+                                          // const SizedBox(height: 2),
+                                          // Text(
+                                          //     DateFormat('dd MM yyyyy hh:mma').format(DateTime.fromMillisecondsSinceEpoch(int.parse(element.timeStamp) * 1000)),
+                                          //   style: MyStyle.tx18BWhite.copyWith(
+                                          //     fontSize: 15
+                                          //   ),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    );
-                  },
-                ),
             ),
           ),
-
         ],
       ),
     );
   }
-
 }

@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/ApiHandlers/ApiHandle.dart';
@@ -73,7 +72,17 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
   final String _response = "";
   final String _network = "";
 
-  final List<String> tokenTypes = ["ETH", "BNB", "MATIC", "BTC", "TRX", "DOGE", "LTC", "USDT(BEP20)", "USDT(TRC20)"];
+  final List<String> tokenTypes = [
+    "ETH",
+    "BNB",
+    "MATIC",
+    "BTC",
+    "TRX",
+    "DOGE",
+    "LTC",
+    "USDT(BEP20)",
+    "USDT(TRC20)"
+  ];
   String? selectedToken;
 
   late String deviceId;
@@ -135,7 +144,7 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
   // }
 
   getNetworkFullName() async {
-    switch(selectedToken) {
+    switch (selectedToken) {
       case "ETH":
         return "Ethereum";
       case "BNB":
@@ -965,8 +974,8 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
               ),
               const SizedBox(height: 5),
               Container(
-                padding:
-                const EdgeInsets.only(top: 0, bottom: 0, right: 16, left: 16),
+                padding: const EdgeInsets.only(
+                    top: 0, bottom: 0, right: 16, left: 16),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -977,30 +986,33 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
                   color: NewColor.dashboardPrimaryColor,
                 ),
                 child: DropdownButton<String>(
-                  value: selectedToken,  // This is the currently selected item.
+                  value: selectedToken, // This is the currently selected item.
                   hint: const Text(
                     'Select a token type.',
-                    style: TextStyle(color: NewColor.txGrayColor), // Change the color here
-                  ),  // Placeholder text.
-                  elevation: 16,  // Elevation for the dropdown menu.
+                    style: TextStyle(
+                        color: NewColor.txGrayColor), // Change the color here
+                  ), // Placeholder text.
+                  elevation: 16, // Elevation for the dropdown menu.
                   isExpanded: true,
-                  style: const TextStyle(color: NewColor.txGrayColor),  // Text style for the dropdown items.
+                  style: const TextStyle(
+                      color: NewColor
+                          .txGrayColor), // Text style for the dropdown items.
                   underline: Container(
                     height: 2,
-                    color: Colors.transparent,  // Color of the underline when dropdown is selected.,
+                    color: Colors
+                        .transparent, // Color of the underline when dropdown is selected.,
                   ),
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedToken = newValue!;  // Update the selected value.
+                      selectedToken = newValue!; // Update the selected value.
                     });
                   },
                   dropdownColor: NewColor.dashboardPrimaryColor,
-                  items: tokenTypes.map<DropdownMenuItem<String>>((String value) {
+                  items:
+                      tokenTypes.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value)
-                    );
-                  }).toList(),  // Map the list of items to DropdownMenuItem widgets.
+                        value: value, child: Text(value));
+                  }).toList(), // Map the list of items to DropdownMenuItem widgets.
                 ),
               ),
               const SizedBox(height: 10),
@@ -1027,7 +1039,9 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                              width: 1, height: 19, color: const Color(0x5CD1D1D1)),
+                              width: 1,
+                              height: 19,
+                              color: const Color(0x5CD1D1D1)),
                           const SizedBox(width: 11),
                           InkWell(
                             onTap: () async {
@@ -1184,11 +1198,10 @@ class _SendTokenScreenState extends State<SendTokenScreen> {
                   onPressed: () => (Navigator.push(context,
                       MaterialPageRoute(builder: (context) {
                     return SendTokenConfirmScreen(
-                      address: toController.text,
-                      network: selectedToken!,
-                      fee: "",
-                      amount: ""
-                    );
+                        address: toController.text,
+                        network: selectedToken!,
+                        fee: "",
+                        amount: "");
                   }))),
                   style: TextButton.styleFrom(
                     backgroundColor: amountController.text.isNotEmpty

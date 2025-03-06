@@ -4,8 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DbExTransaction{
-
+class DbExTransaction {
   static Database? _database;
   static final DbExTransaction dbExTransaction = DbExTransaction._();
 
@@ -23,52 +22,57 @@ class DbExTransaction{
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentDirectory.path, 'exTransaction.db');
 
-    return await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
-          await db.execute('CREATE TABLE ExTransaction('
-              'status TEXT,'
-              'payinAddress TEXT,'
-              'payoutAddress TEXT,'
-              'fromCurrency TEXT,'
-              'toCurrency TEXT,'
-              'validUntil TEXT,'
-              'id TEXT,'
-              'updatedAt TEXT,'
-              'expectedSendAmount REAL,'
-              'expectedReceiveAmount REAL,'
-              'createdAt TEXT,'
-              'payinExtraIdName TEXT,'
-              'payinExtraId TEXT,'
-              'isPartner TEXT'
-              ')');
-        },
+    return await openDatabase(
+      path,
+      version: 1,
+      onOpen: (db) {},
+      onCreate: (Database db, int version) async {
+        await db.execute('CREATE TABLE ExTransaction('
+            'status TEXT,'
+            'payinAddress TEXT,'
+            'payoutAddress TEXT,'
+            'fromCurrency TEXT,'
+            'toCurrency TEXT,'
+            'validUntil TEXT,'
+            'id TEXT,'
+            'updatedAt TEXT,'
+            'expectedSendAmount REAL,'
+            'expectedReceiveAmount REAL,'
+            'createdAt TEXT,'
+            'payinExtraIdName TEXT,'
+            'payinExtraId TEXT,'
+            'isPartner TEXT'
+            ')');
+      },
     );
   }
 
-  createExTransaction(ExTransactionModel newToken) async{
+  createExTransaction(ExTransactionModel newToken) async {
     // print("object newtoken ${newToken.id}");
-    final db= await database;
+    final db = await database;
     final res = await db!.insert('ExTransaction', newToken.toJson());
     // print("data add here $res");
     return res;
   }
 
-  updateExTransaction(ExTransactionModel newToken,tokenId,) async{
-
-
+  updateExTransaction(
+    ExTransactionModel newToken,
+    tokenId,
+  ) async {
     // print("ExTransactionModel ${newToken.toJson()}");
-    final db= await database;
+    final db = await database;
 
-    final res = await db!.update('ExTransaction', newToken.toJson(), where: "id = ?",whereArgs: [tokenId]);
+    final res = await db!.update('ExTransaction', newToken.toJson(),
+        where: "id = ?", whereArgs: [tokenId]);
     getExTransaction();
     return res;
   }
 
   List<ExTransactionModel> exTransactionList = [];
   getExTransaction() async {
-
     final db = await database;
-    final res = await db!.rawQuery("SELECT * FROM ExTransaction ORDER BY createdAt DESC");
+    final res = await db!
+        .rawQuery("SELECT * FROM ExTransaction ORDER BY createdAt DESC");
 
     //print(res);
     List<ExTransactionModel> list = res.map((c) {
@@ -80,14 +84,13 @@ class DbExTransaction{
     return list;
   }
 
-
   ExTransactionModel? getTrxStatusData;
   getTrxStatus(String id) async {
-
     final db = await database;
-    final res = await db!.rawQuery("SELECT * FROM ExTransaction Where id = '$id'");
+    final res =
+        await db!.rawQuery("SELECT * FROM ExTransaction Where id = '$id'");
 
-    if(res.isNotEmpty) {
+    if (res.isNotEmpty) {
       getTrxStatusData = ExTransactionModel.fromJson(
         res[0],
       );

@@ -1,5 +1,4 @@
 class Eip155Data {
-
   static final Map<Eip155Methods, String> methods = {
     Eip155Methods.PERSONAL_SIGN: 'personal_sign',
     Eip155Methods.ETH_SIGN: 'eth_sign',

@@ -3,9 +3,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBWalletConnectV2{
-
-  static Database?_database;
+class DBWalletConnectV2 {
+  static Database? _database;
   static final DBWalletConnectV2 dbWalletConnectV2 = DBWalletConnectV2._();
 
   DBWalletConnectV2._();
@@ -24,25 +23,24 @@ class DBWalletConnectV2{
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-          await db.execute('CREATE TABLE walletConnect('
-              'date TEXT,'
-              'id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'
-              'text TEXT,'
-              'publicKey TEXT,'
-              'type TEXT'
-              ')');
-        });
+      await db.execute('CREATE TABLE walletConnect('
+          'date TEXT,'
+          'id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'
+          'text TEXT,'
+          'publicKey TEXT,'
+          'type TEXT'
+          ')');
+    });
   }
 
   List SignTList = [];
   getSignTByPublicKey(String publicKey) async {
-
     // print(publicKey);
     final db = await database;
-    final res = await db!.rawQuery("SELECT * FROM walletConnect where publicKey = '$publicKey'");
+    final res = await db!
+        .rawQuery("SELECT * FROM walletConnect where publicKey = '$publicKey'");
     // print(res);
     SignTList = res;
-
   }
 
   List signTListAll = [];
@@ -55,17 +53,17 @@ class DBWalletConnectV2{
 
   deleteSignTByKey(List publicKey) async {
     final db = await database;
-    final res = await db!.delete('walletConnect', where: 'publicKey IN (${publicKey.join(',')})');
+    final res = await db!.delete('walletConnect',
+        where: 'publicKey IN (${publicKey.join(',')})');
     return res;
   }
 
   List signTListPublicKey = [];
   getAllSignTByKey(String publicKey) async {
-
     final db = await database;
-    final res = await db!.rawQuery("SELECT * FROM walletConnect where publicKey = '$publicKey'");
+    final res = await db!
+        .rawQuery("SELECT * FROM walletConnect where publicKey = '$publicKey'");
     signTListPublicKey = res;
-
   }
 
   Future<int> deleteAllSign() async {
@@ -74,18 +72,17 @@ class DBWalletConnectV2{
     return res;
   }
 
-  createSignt(String date,String text,String type,String publicKey) async{
-    final db= await database;
-    final res = await db!.rawInsert('INSERT INTO walletConnect(date, text, type,publicKey) VALUES("$date", "$text", "$type", "$publicKey")');
+  createSignt(String date, String text, String type, String publicKey) async {
+    final db = await database;
+    final res = await db!.rawInsert(
+        'INSERT INTO walletConnect(date, text, type,publicKey) VALUES("$date", "$text", "$type", "$publicKey")');
     // print("create wallet $res");
     return res;
   }
-
 
   Future<int?> deleteAllWallet() async {
     final db = await database;
     final res = await db?.rawDelete('DELETE FROM walletConnect');
     return res;
   }
-
 }

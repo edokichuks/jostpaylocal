@@ -31,37 +31,42 @@ class ExTransactionModel {
     required this.payinExtraIdName,
   });
 
-  factory ExTransactionModel.fromJson(Map<String, dynamic> json,) => ExTransactionModel(
-    status: json["status"],
-    payinAddress: json["payinAddress"],
-    payoutAddress: json["payoutAddress"],
-    fromCurrency: json["fromCurrency"],
-    toCurrency: json["toCurrency"],
-    validUntil: DateTime.parse(json["validUntil"]),
-    id: json["id"],
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    expectedSendAmount: json["expectedSendAmount"] == null ? json['amountSend']?.toDouble() : json["expectedSendAmount"]?.toDouble(),
-    expectedReceiveAmount: json["expectedReceiveAmount"]?.toDouble(),
-    createdAt: DateTime.parse(json["createdAt"]),
-    isPartner: json["isPartner"].toString(),
-    payinExtraId: json["payinExtraId"]??"",
-    payinExtraIdName: json["payinExtraIdName"]??"",
-  );
+  factory ExTransactionModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      ExTransactionModel(
+        status: json["status"],
+        payinAddress: json["payinAddress"],
+        payoutAddress: json["payoutAddress"],
+        fromCurrency: json["fromCurrency"],
+        toCurrency: json["toCurrency"],
+        validUntil: DateTime.parse(json["validUntil"]),
+        id: json["id"],
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        expectedSendAmount: json["expectedSendAmount"] == null
+            ? json['amountSend']?.toDouble()
+            : json["expectedSendAmount"]?.toDouble(),
+        expectedReceiveAmount: json["expectedReceiveAmount"]?.toDouble(),
+        createdAt: DateTime.parse(json["createdAt"]),
+        isPartner: json["isPartner"].toString(),
+        payinExtraId: json["payinExtraId"] ?? "",
+        payinExtraIdName: json["payinExtraIdName"] ?? "",
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "payinAddress": payinAddress,
-    "payoutAddress": payoutAddress,
-    "fromCurrency": fromCurrency,
-    "toCurrency": toCurrency,
-    "validUntil": validUntil.toIso8601String(),
-    "id": id,
-    "updatedAt": updatedAt.toIso8601String(),
-    "expectedSendAmount": expectedSendAmount,
-    "expectedReceiveAmount": expectedReceiveAmount,
-    "createdAt": createdAt.toIso8601String(),
-    "isPartner": isPartner.toString(),
-    "payinExtraIdName": payinExtraIdName,
-    "payinExtraId": payinExtraId,
-  };
+        "status": status,
+        "payinAddress": payinAddress,
+        "payoutAddress": payoutAddress,
+        "fromCurrency": fromCurrency,
+        "toCurrency": toCurrency,
+        "validUntil": validUntil.toIso8601String(),
+        "id": id,
+        "updatedAt": updatedAt.toIso8601String(),
+        "expectedSendAmount": expectedSendAmount,
+        "expectedReceiveAmount": expectedReceiveAmount,
+        "createdAt": createdAt.toIso8601String(),
+        "isPartner": isPartner.toString(),
+        "payinExtraIdName": payinExtraIdName,
+        "payinExtraId": payinExtraId,
+      };
 }

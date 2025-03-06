@@ -36,15 +36,15 @@ class _CarouselWithLineNavigationState
                   itemCount: 5,
                   itemBuilder: (context, index, realIndex) {
                     return Container(
-                      margin: const EdgeInsets.only(top: 22, left: 24, right: 24),
+                      margin:
+                          const EdgeInsets.only(top: 22, left: 24, right: 24),
                       padding: const EdgeInsets.all(8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: NewColor.dashboardPrimaryColor,
                       ),
-                      child:
-                      Row(
+                      child: Row(
                         children: [
                           // Image
                           Image.asset(
@@ -107,8 +107,10 @@ class _CarouselWithLineNavigationState
                       });
                     },
                     autoPlay: true, // Enables automatic sliding
-                    autoPlayInterval: const Duration(seconds: 4), // Duration between slides
-                    autoPlayAnimationDuration: const Duration(milliseconds: 800), // Animation duration
+                    autoPlayInterval:
+                        const Duration(seconds: 4), // Duration between slides
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800), // Animation duration
                     autoPlayCurve: Curves.fastOutSlowIn,
                   ),
                 ),

@@ -11,7 +11,8 @@ import 'dart:convert';
 class BuyCoinPreviewScreen extends StatefulWidget {
   final Map<String, dynamic> data;
   final String memo;
-  const BuyCoinPreviewScreen({super.key, required this.data, required this.memo});
+  const BuyCoinPreviewScreen(
+      {super.key, required this.data, required this.memo});
 
   @override
   State<BuyCoinPreviewScreen> createState() => _BuyCoinPreviewScreenState();
@@ -44,17 +45,16 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'type': 'buy'
-        },
+        body: {'type': 'buy'},
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> res= await jsonDecode(response.body);
+        Map<String, dynamic> res = await jsonDecode(response.body);
         List<dynamic> result = res['banks'];
-        List<Map<String, dynamic>> info = result.map((item) => Map<String, dynamic>.from(item)).toList();
-        if(mounted) {
-          if(info.isEmpty) {
+        List<Map<String, dynamic>> info =
+            result.map((item) => Map<String, dynamic>.from(item)).toList();
+        if (mounted) {
+          if (info.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Select Preferred Bank",
                 toastLength: Toast.LENGTH_SHORT,
@@ -62,25 +62,23 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
                 timeInSecForIosWeb: 1,
                 backgroundColor: Colors.black54,
                 textColor: Colors.white,
-                fontSize: 16.0
-            );
+                fontSize: 16.0);
           }
           setState(() {
             banks = info;
             bankType = banks[0]['bank_id'];
           });
         }
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   createBuyOrder() async {
     setState(() {
       isLoading = true;
     });
-    const String url = 'https://instantexchangers.com/mobile_server/create-buy-order';
+    const String url =
+        'https://instantexchangers.com/mobile_server/create-buy-order';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
@@ -106,9 +104,8 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
         setState(() {
           isLoading = false;
         });
-        Navigator.push(context,
-          MaterialPageRoute(builder: (context) {
-            return BuyCoinDetailScreen(data: res, bank: banks[selectedBank]);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return BuyCoinDetailScreen(data: res, bank: banks[selectedBank]);
         }));
       } else {
         setState(() {
@@ -137,9 +134,9 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
+          child: Form(
+        key: _formKey,
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 68, 24, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,14 +193,16 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
                               // const SizedBox(width: 5),
                               Expanded(
                                 child: Align(
-                                  alignment: Alignment.centerRight, // Aligns the text to the right
+                                  alignment: Alignment
+                                      .centerRight, // Aligns the text to the right
                                   child: Text(
                                     "NGN",
                                     style: NewStyle.tx28White.copyWith(
                                       fontSize: 12,
                                     ),
                                   ),
-                                ),)
+                                ),
+                              )
                             ],
                           ),
                         ))),
@@ -239,14 +238,16 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
                             children: [
                               Expanded(
                                 child: Align(
-                                  alignment: Alignment.centerRight, // Aligns the text to the right
+                                  alignment: Alignment
+                                      .centerRight, // Aligns the text to the right
                                   child: Text(
                                     buyAmount['coin_code'],
                                     style: NewStyle.tx28White.copyWith(
                                       fontSize: 12,
                                     ),
                                   ),
-                                ),)
+                                ),
+                              )
                             ],
                           ),
                         ))),
@@ -296,11 +297,14 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
                 isExpanded: true,
                 style: NewStyle.tx28White.copyWith(fontSize: 12),
                 hint: Text(
-                  banks.isNotEmpty ? "Select Bank" : "You should add personal bank information.",
+                  banks.isNotEmpty
+                      ? "Select Bank"
+                      : "You should add personal bank information.",
                   style: NewStyle.tx28White.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                    color: NewColor.txGrayColor),),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: NewColor.txGrayColor),
+                ),
                 decoration: InputDecoration(
                   hintStyle: const TextStyle(
                     color: Colors.grey, // Set the hint text color here
@@ -338,7 +342,8 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
                   color: Color(0xFF646565),
                 ),
                 dropdownColor: NewColor.dashboardPrimaryColor,
-                items: banks.map<DropdownMenuItem<String>>((Map<String, dynamic> bank) {
+                items: banks
+                    .map<DropdownMenuItem<String>>((Map<String, dynamic> bank) {
                   return DropdownMenuItem(
                       value: bank['bank_id'],
                       child: Text(
@@ -550,45 +555,48 @@ class _BuyCoinPreviewScreenState extends State<BuyCoinPreviewScreen> {
               const SizedBox(height: 59),
               isLoading == true
                   ? const Center(
-                  child: CircularProgressIndicator(
-                    color: MyColor.greenColor,
-                  ))
+                      child: CircularProgressIndicator(
+                      color: MyColor.greenColor,
+                    ))
                   : SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => banks.isNotEmpty ? {
-                    if (_formKey.currentState?.validate() ?? false)
-                      createBuyOrder()
-                    else {}
-                  } : {
-                    Fluttertoast.showToast(
-                        msg: "You should add personal bank information.",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.black54,
-                        textColor: Colors.white,
-                        fontSize: 16.0
-                    )
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: NewColor.btnBgGreenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () => banks.isNotEmpty
+                            ? {
+                                if (_formKey.currentState?.validate() ?? false)
+                                  createBuyOrder()
+                                else
+                                  {}
+                              }
+                            : {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "You should add personal bank information.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0)
+                              },
+                        style: TextButton.styleFrom(
+                          backgroundColor: NewColor.btnBgGreenColor,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Proceed",
+                          style: NewStyle.btnTx16SplashBlue
+                              .copyWith(color: NewColor.mainWhiteColor),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "Proceed",
-                    style: NewStyle.btnTx16SplashBlue
-                        .copyWith(color: NewColor.mainWhiteColor),
-                  ),
-                ),
-              ),
             ],
           ),
-        ),)
-      ),
+        ),
+      )),
     );
   }
 }

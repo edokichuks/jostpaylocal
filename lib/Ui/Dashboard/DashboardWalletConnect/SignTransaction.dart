@@ -8,9 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_connect_dart_v2/wallet_connect_dart_v2.dart';
 import 'package:web3dart/web3dart.dart';
 
-
 class SignTransaction extends StatefulWidget {
-
   final int id;
   final Web3Client web3client;
   final int chainId;
@@ -20,7 +18,6 @@ class SignTransaction extends StatefulWidget {
   final VoidCallback onConfirm;
   final VoidCallback onReject;
   final gasPrice;
-
 
   const SignTransaction({
     super.key,
@@ -36,22 +33,20 @@ class SignTransaction extends StatefulWidget {
   });
   @override
   State<SignTransaction> createState() => _SignTransactionState();
-
 }
 
 class _SignTransactionState extends State<SignTransaction> {
-
   late TokenProvider tokenProvider;
 
   @override
   void initState() {
-    tokenProvider = Provider.of<TokenProvider>(context,listen: false);
+    tokenProvider = Provider.of<TokenProvider>(context, listen: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    tokenProvider = Provider.of<TokenProvider>(context,listen: true);
+    tokenProvider = Provider.of<TokenProvider>(context, listen: true);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -78,37 +73,29 @@ class _SignTransactionState extends State<SignTransaction> {
         color: MyColor.backgroundColor,
         child: Padding(
           // key: navigatorKey,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
           child: Column(
-
             children: [
-
               if (widget.session.peer.metadata.icons.isNotEmpty)
                 Container(
                   height: 100.0,
                   width: 100.0,
                   padding: const EdgeInsets.only(bottom: 8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(200)
-                  ),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(200)),
                   child: Image.network(
-                      widget.session.peer.metadata.icons.first,
+                    widget.session.peer.metadata.icons.first,
                     fit: BoxFit.cover,
                   ),
                 ),
               Text(
                 widget.session.peer.metadata.name,
-                style:  MyStyle.tx18RWhite.copyWith(
-                    fontSize: 20
-                ),
+                style: MyStyle.tx18RWhite.copyWith(fontSize: 20),
               ),
               Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  widget.title,
-                  style:  MyStyle.tx18RWhite
-                ),
+                child: Text(widget.title, style: MyStyle.tx18RWhite),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
@@ -116,17 +103,13 @@ class _SignTransactionState extends State<SignTransaction> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                     "Recipient",
-                      style:  MyStyle.tx18RWhite.copyWith(
-                          fontSize: 16
-                      ),
+                      "Recipient",
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                     ),
                     const SizedBox(height: 8.0),
                     Text(
                       '${widget.ethereumTransaction.to}',
-                      style:  MyStyle.tx18RWhite.copyWith(
-                          fontSize: 16
-                      ),
+                      style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                     ),
                   ],
                 ),
@@ -139,21 +122,15 @@ class _SignTransactionState extends State<SignTransaction> {
                       flex: 2,
                       child: Text(
                         "Transaction Fee",
-                        style:  MyStyle.tx18RWhite.copyWith(
-                            fontSize: 16
-                        ),
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         widget.ethereumTransaction.gasPrice == null
-                            ?
-                        "${(BigInt.from(double.parse("${int.parse(widget.ethereumTransaction.gas??"0")}") *  double.parse("${widget.gasPrice.getInWei}")) / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}"
-                            :
-                        "${(BigInt.parse("${int.parse(widget.ethereumTransaction.gas??"0")}") *  BigInt.parse(widget.ethereumTransaction.gasPrice??"0") / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}",
-                        style:  MyStyle.tx18RWhite.copyWith(
-                            fontSize: 16
-                        ),
+                            ? "${(BigInt.from(double.parse("${int.parse(widget.ethereumTransaction.gas ?? "0")}") * double.parse("${widget.gasPrice.getInWei}")) / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}"
+                            : "${(BigInt.parse("${int.parse(widget.ethereumTransaction.gas ?? "0")}") * BigInt.parse(widget.ethereumTransaction.gasPrice ?? "0") / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}",
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                       ),
                     ),
                   ],
@@ -167,21 +144,15 @@ class _SignTransactionState extends State<SignTransaction> {
                       flex: 2,
                       child: Text(
                         "Transaction amount",
-                        style:  MyStyle.tx18RWhite.copyWith(
-                            fontSize: 16
-                        ),
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         widget.ethereumTransaction.gasPrice == null
-                            ?
-                        '${(BigInt.parse(widget.ethereumTransaction.value!) /  BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}'
-                            :
-                        '${(BigInt.parse(widget.ethereumTransaction.value!) /  BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}',
-                        style:  MyStyle.tx18RWhite.copyWith(
-                            fontSize: 16
-                        ),
+                            ? '${(BigInt.parse(widget.ethereumTransaction.value!) / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}'
+                            : '${(BigInt.parse(widget.ethereumTransaction.value!) / BigInt.from(10).pow(18)).toStringAsFixed(5)} ${DbNetwork.dbNetwork.networkList.where((element) => "${element.chain}" == "${widget.chainId}").first.symbol}',
+                        style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                       ),
                     ),
                   ],
@@ -190,8 +161,8 @@ class _SignTransactionState extends State<SignTransaction> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Theme(
-                    data:
-                    Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: ExpansionTile(
@@ -200,16 +171,12 @@ class _SignTransactionState extends State<SignTransaction> {
                         tilePadding: EdgeInsets.zero,
                         title: Text(
                           "Data",
-                          style:  MyStyle.tx18RWhite.copyWith(
-                              fontSize: 16
-                          ),
+                          style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                         ),
                         children: [
                           Text(
                             widget.ethereumTransaction.data ?? "",
-                            style:  MyStyle.tx18RWhite.copyWith(
-                                fontSize: 16
-                            ),
+                            style: MyStyle.tx18RWhite.copyWith(fontSize: 16),
                           ),
                         ],
                       ),
@@ -228,14 +195,11 @@ class _SignTransactionState extends State<SignTransaction> {
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           color: MyColor.greenColor,
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
                         ),
                         child: Text(
                           "CONFIRM",
-                          style:  MyStyle.tx18BWhite.copyWith(
-                              fontSize: 16
-                          ),
+                          style: MyStyle.tx18BWhite.copyWith(fontSize: 16),
                         ),
                       ),
                     ),
@@ -252,10 +216,8 @@ class _SignTransactionState extends State<SignTransaction> {
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                         ),
                         child: Text(
-                           "REJECT",
-                          style:  MyStyle.tx18BWhite.copyWith(
-                              fontSize: 16
-                          ),
+                          "REJECT",
+                          style: MyStyle.tx18BWhite.copyWith(fontSize: 16),
                         ),
                       ),
                     ),
@@ -268,5 +230,4 @@ class _SignTransactionState extends State<SignTransaction> {
       ),
     );
   }
-
 }

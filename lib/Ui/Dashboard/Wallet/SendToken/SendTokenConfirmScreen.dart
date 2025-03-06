@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Provider/Token_Provider.dart';
 import 'package:jost_pay_wallet/Provider/Transection_Provider.dart';
@@ -120,8 +119,7 @@ class _SendTokenConfirmScreenState extends State<SendTokenConfirmScreen> {
                                   Container(
                                     width: 191,
                                     alignment: Alignment.centerRight,
-                                    child: Text(
-                                        widget.address,
+                                    child: Text(widget.address,
                                         style:
                                             NewStyle.tx14SplashWhite.copyWith(
                                           fontSize: 12,
@@ -164,7 +162,8 @@ class _SendTokenConfirmScreenState extends State<SendTokenConfirmScreen> {
                                       color: MyColor.backgroundColor,
                                       borderRadius: BorderRadius.circular(5),
                                     ),
-                                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(12, 6, 12, 6),
                                     child: Text("${widget.fee} USDT",
                                         style: NewStyle.tx28White.copyWith(
                                           fontSize: 12,

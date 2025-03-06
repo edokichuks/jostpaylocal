@@ -1,4 +1,3 @@
-
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/LocalDb/Local_Account_address.dart';
@@ -33,7 +32,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       selectedAccountSymbol = "BTC",
       selectedAccountAddress = "",
       selectedAccountId;
-  final List<String> tokenTypes = ["ETH", "BNB", "MATIC", "BTC", "TRX", "DOGE", "LTC", "USDT(BEP20)", "USDT(TRC20)"];
+  final List<String> tokenTypes = [
+    "ETH",
+    "BNB",
+    "MATIC",
+    "BTC",
+    "TRX",
+    "DOGE",
+    "LTC",
+    "USDT(BEP20)",
+    "USDT(TRC20)"
+  ];
   String? selectedToken;
   bool isLoaded = false;
 
@@ -48,13 +57,14 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     String? token = prefs.getString("token");
     try {
       final response = await http.get(
-        Uri.parse('https://instantexchangers.com/mobile_server/api/wallet/address').replace(queryParameters: {
-          "networkType": selectedToken
-        }), // Get Wallet Information
-        headers: {
-          'Authorization': 'Bearer $token', // Include the JWT token
-        }
-      );
+          Uri.parse(
+                  'https://instantexchangers.com/mobile_server/api/wallet/address')
+              .replace(queryParameters: {
+            "networkType": selectedToken
+          }), // Get Wallet Information
+          headers: {
+            'Authorization': 'Bearer $token', // Include the JWT token
+          });
 
       if (response.statusCode == 200) {
         String? addr = response.body;
@@ -133,44 +143,46 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
             const SizedBox(height: 5),
             Container(
-                padding:
-                    const EdgeInsets.only(top: 0, bottom: 0, right: 16, left: 16),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: const Color(0x99D1D1D1),
-                    width: 0.5,
-                  ),
-                  color: NewColor.dashboardPrimaryColor,
+              padding:
+                  const EdgeInsets.only(top: 0, bottom: 0, right: 16, left: 16),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: const Color(0x99D1D1D1),
+                  width: 0.5,
                 ),
-                child: DropdownButton<String>(
-                  value: selectedToken,  // This is the currently selected item.
-                  hint: const Text(
-                    'Select a token type.',
-                    style: TextStyle(color: NewColor.txGrayColor), // Change the color here
-                  ),  // Placeholder text.
-                  elevation: 16,  // Elevation for the dropdown menu.
-                  isExpanded: true,
-                  style: const TextStyle(color: NewColor.txGrayColor),  // Text style for the dropdown items.
-                  underline: Container(
-                    height: 2,
-                    color: Colors.transparent,  // Color of the underline when dropdown is selected.,
-                  ),
-                  onChanged: (String? newValue) {
-                    getWalletAddress();
-                    setState(() {
-                      selectedToken = newValue;  // Update the selected value.
-                    });
-                  },
-                  dropdownColor: NewColor.dashboardPrimaryColor,
-                  items: tokenTypes.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value)
-                    );
-                  }).toList(),  // Map the list of items to DropdownMenuItem widgets.
+                color: NewColor.dashboardPrimaryColor,
+              ),
+              child: DropdownButton<String>(
+                value: selectedToken, // This is the currently selected item.
+                hint: const Text(
+                  'Select a token type.',
+                  style: TextStyle(
+                      color: NewColor.txGrayColor), // Change the color here
+                ), // Placeholder text.
+                elevation: 16, // Elevation for the dropdown menu.
+                isExpanded: true,
+                style: const TextStyle(
+                    color: NewColor
+                        .txGrayColor), // Text style for the dropdown items.
+                underline: Container(
+                  height: 2,
+                  color: Colors
+                      .transparent, // Color of the underline when dropdown is selected.,
                 ),
+                onChanged: (String? newValue) {
+                  getWalletAddress();
+                  setState(() {
+                    selectedToken = newValue; // Update the selected value.
+                  });
+                },
+                dropdownColor: NewColor.dashboardPrimaryColor,
+                items: tokenTypes.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                      value: value, child: Text(value));
+                }).toList(), // Map the list of items to DropdownMenuItem widgets.
+              ),
             ),
             const SizedBox(height: 19),
             Text(
@@ -182,8 +194,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
             const SizedBox(height: 5),
             Container(
-                padding:
-                    const EdgeInsets.only(top: 5, bottom: 5, right: 16, left: 16),
+                padding: const EdgeInsets.only(
+                    top: 5, bottom: 5, right: 16, left: 16),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -228,8 +240,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   decoration: const BoxDecoration(color: Color(0x5CD1D1D1)),
                 ),
                 Text("OR",
-                    style: NewStyle.tx28White
-                        .copyWith(fontSize: 12, color: const Color(0xFF3F3E3E))),
+                    style: NewStyle.tx28White.copyWith(
+                        fontSize: 12, color: const Color(0xFF3F3E3E))),
                 Container(
                   height: 0.5,
                   width: MediaQuery.of(context).size.width * 0.5 - 46,

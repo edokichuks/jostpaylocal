@@ -75,24 +75,24 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
     setState(() {
       isLoading = true;
     });
-    const String url = 'https://instantexchangers.com/mobile_server/create-sell-order';
+    const String url =
+        'https://instantexchangers.com/mobile_server/create-sell-order';
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");
 
     try {
       http.Response response = await http.post(
-        Uri.parse('https://instantexchangers.com/mobile_server/paid-sell-order'),
+        Uri.parse(
+            'https://instantexchangers.com/mobile_server/paid-sell-order'),
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: {
-          'transaction_no': transaction['transaction']
-        },
+        body: {'transaction_no': transaction['transaction']},
       );
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = jsonDecode(response.body);
-        if(res['result'] == true) {
+        if (res['result'] == true) {
           Fluttertoast.showToast(
               msg: "Successfully paid.",
               toastLength: Toast.LENGTH_SHORT,
@@ -100,10 +100,8 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
-        }
-        else {
+              fontSize: 16.0);
+        } else {
           Fluttertoast.showToast(
               msg: "We can't confirm your payment. Please try again later.",
               toastLength: Toast.LENGTH_SHORT,
@@ -111,16 +109,14 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black54,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
         }
         setState(() {
           isLoading = false;
         });
-        Navigator.push(context,
-          MaterialPageRoute(builder: (context) {
-            return const HistoryScreen();
-          }));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const HistoryScreen();
+        }));
       } else {
         setState(() {
           isLoading = false;
@@ -180,37 +176,42 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12,),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     SizedBox(
                       width: double.infinity,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start, // Vertical alignment
+                        mainAxisAlignment:
+                            MainAxisAlignment.start, // Vertical alignment
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Please transfer the amount shown below and then ",
+                              Text(
+                                  "Please transfer the amount shown below and then ",
                                   style: NewStyle.tx28White.copyWith(
                                       fontSize: 12,
-                                      color: NewColor.txGrayColor
-                                  )),
+                                      color: NewColor.txGrayColor)),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("click the 'I PAID' button to confirm your payment.",
+                              Text(
+                                  "click the 'I PAID' button to confirm your payment.",
                                   style: NewStyle.tx28White.copyWith(
                                       fontSize: 12,
-                                      color: NewColor.txGrayColor
-                                  )),
+                                      color: NewColor.txGrayColor)),
                             ],
                           )
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12,),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -220,14 +221,18 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
                           fit: BoxFit.fill,
                           imageUrl: coinInfo['coin_image'],
                           placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(color: MyColor.greenColor),
+                            child: CircularProgressIndicator(
+                                color: MyColor.greenColor),
                           ),
                         ),
-                        const SizedBox(width: 5,),
-                        Text("${NumberFormat("#,###.#########").format(sellInfo['coin_amount'])} ${coinInfo['coin_code']}",
-                          style: NewStyle.tx28White.copyWith(
-                            fontSize: 18,
-                        ))
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                            "${NumberFormat("#,###.#########").format(sellInfo['coin_amount'])} ${coinInfo['coin_code']}",
+                            style: NewStyle.tx28White.copyWith(
+                              fontSize: 18,
+                            ))
                       ],
                     )
                   ],
@@ -260,7 +265,8 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           const SizedBox(width: 12),
-                          Text("${coinInfo['coin_code']} ${coinInfo['coin_name']}",
+                          Text(
+                              "${coinInfo['coin_code']} ${coinInfo['coin_name']}",
                               style: NewStyle.tx14SplashWhite.copyWith(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
@@ -270,201 +276,228 @@ class _SellCoinDetailScreenState extends State<SellCoinDetailScreen> {
                     )),
               ),
               const SizedBox(height: 12),
-              transaction['admin_wallet'] != "" ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Wallet Address",
-                    style: NewStyle.tx28White.copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: NewColor.txGrayColor),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    controller: amountController,
-                    cursorColor: NewColor.btnBgGreenColor,
-                    style: NewStyle.tx28White.copyWith(fontSize: 12, height: 2.5),
-                    onChanged: (value) {
-                      setState(() {
-                        amountController.text = value.toString();
-                      });
-                    },
-                    decoration: NewStyle.dashboardInputDecoration.copyWith(
-                        hintText: " ",
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(child: Text(transaction['admin_wallet'],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: NewStyle.tx14SplashWhite.copyWith(
-                                        fontSize: 12,
-                                        height: 2,
-                                        fontWeight: FontWeight.w400,
-                                        color: NewColor.txGrayColor))),
-                                InkWell(
-                                    onTap: () {
-                                      FlutterClipboard.copy(transaction['admin_wallet'])
-                                          .then((value) {
-                                        Helper.dialogCall.showToast(context, "Copied");
-                                      });
-                                      // Handle button press
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/dashboard/copy.png",
-                                      width: 14,
-                                      height: 14,
-                                      fit: BoxFit.cover,
-                                    )),
-                              ]),
-                        )),
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                      height: 0.5,
-                      decoration: const BoxDecoration(color: Color(0x33D1D1D1))),
-                  const SizedBox(height: 24),
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+              transaction['admin_wallet'] != ""
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Scan QR Code",
-                              style: NewStyle.tx28White.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: NewColor.txGrayColor),
-                            ),
-                          ],
+                        Text(
+                          "Wallet Address",
+                          style: NewStyle.tx28White.copyWith(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: NewColor.txGrayColor),
                         ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.all(16.0), // Padding around the QR code
-                              decoration: BoxDecoration(
-                                color: Colors.white, // Background color of the container
-                                borderRadius: BorderRadius.circular(8.0), // Rounded corners
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 5.0,
-                                    spreadRadius: 2.0,
-                                    offset: Offset(2.0, 2.0), // Shadow position
+                        const SizedBox(height: 5),
+                        TextFormField(
+                          controller: amountController,
+                          cursorColor: NewColor.btnBgGreenColor,
+                          style: NewStyle.tx28White
+                              .copyWith(fontSize: 12, height: 2.5),
+                          onChanged: (value) {
+                            setState(() {
+                              amountController.text = value.toString();
+                            });
+                          },
+                          decoration:
+                              NewStyle.dashboardInputDecoration.copyWith(
+                                  hintText: " ",
+                                  suffixIcon: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                              child: Text(
+                                                  transaction['admin_wallet'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: NewStyle
+                                                      .tx14SplashWhite
+                                                      .copyWith(
+                                                          fontSize: 12,
+                                                          height: 2,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: NewColor
+                                                              .txGrayColor))),
+                                          InkWell(
+                                              onTap: () {
+                                                FlutterClipboard.copy(
+                                                        transaction[
+                                                            'admin_wallet'])
+                                                    .then((value) {
+                                                  Helper.dialogCall.showToast(
+                                                      context, "Copied");
+                                                });
+                                                // Handle button press
+                                              },
+                                              child: Image.asset(
+                                                "assets/images/dashboard/copy.png",
+                                                width: 14,
+                                                height: 14,
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ]),
+                                  )),
+                        ),
+                        const SizedBox(height: 24),
+                        Container(
+                            height: 0.5,
+                            decoration:
+                                const BoxDecoration(color: Color(0x33D1D1D1))),
+                        const SizedBox(height: 24),
+                        Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Scan QR Code",
+                                    style: NewStyle.tx28White.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                        color: NewColor.txGrayColor),
                                   ),
                                 ],
                               ),
-                              child: QrImageView(
-                                data: transaction['admin_wallet'], // The data to encode in the QR code
-                                version: QrVersions.auto, // Automatically choose the best QR version
-                                size: 200.0, // Size of the QR code
-                                gapless: false, // Set to false to reduce artifacts
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  const Spacer(),
+                                  Container(
+                                    padding: const EdgeInsets.all(
+                                        16.0), // Padding around the QR code
+                                    decoration: BoxDecoration(
+                                      color: Colors
+                                          .white, // Background color of the container
+                                      borderRadius: BorderRadius.circular(
+                                          8.0), // Rounded corners
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 5.0,
+                                          spreadRadius: 2.0,
+                                          offset: Offset(
+                                              2.0, 2.0), // Shadow position
+                                        ),
+                                      ],
+                                    ),
+                                    child: QrImageView(
+                                      data: transaction[
+                                          'admin_wallet'], // The data to encode in the QR code
+                                      version: QrVersions
+                                          .auto, // Automatically choose the best QR version
+                                      size: 200.0, // Size of the QR code
+                                      gapless:
+                                          false, // Set to false to reduce artifacts
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Address Expires in",
+                                        style: NewStyle.tx14SplashWhite
+                                            .copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: NewColor.txGrayColor))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(timerText,
+                                        style: NewStyle.tx14SplashWhite
+                                            .copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: NewColor.txGrayColor)),
+                                  ],
+                                )
+                              ],
+                            )),
+                        const SizedBox(height: 24),
+                        isLoading == true
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                color: MyColor.greenColor,
+                              ))
+                            : SizedBox(
+                                // width: double.infinity,
+                                width: double.infinity,
+                                child: TextButton(
+                                  onPressed: () => {handleSellPayment()},
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: NewColor.btnBgGreenColor,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "I Paid",
+                                    style: NewStyle.btnTx16SplashBlue.copyWith(
+                                        color: NewColor.mainWhiteColor),
+                                  ),
+                                ),
+                              )
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        SizedBox(
+                          // width: double.infinity,
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              _launchURL(
+                                  "${Utils.sellUrl}${transaction['transaction']}"),
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return const HistoryScreen();
+                              }))
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: NewColor.btnBgGreenColor,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            const Spacer(),
-                          ],
+                            child: Text(
+                              "Proceed to sell",
+                              style: NewStyle.btnTx16SplashBlue
+                                  .copyWith(color: NewColor.mainWhiteColor),
+                            ),
+                          ),
                         )
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Address Expires in",
-                                  style: NewStyle.tx14SplashWhite.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: NewColor.txGrayColor))
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(timerText,
-                                  style: NewStyle.tx14SplashWhite.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: NewColor.txGrayColor)),
-                            ],
-                          )
-                        ],
-                      )
-                  ),
-                  const SizedBox(height: 24),
-                  isLoading == true
-                      ? const Center(
-                      child: CircularProgressIndicator(
-                        color: MyColor.greenColor,
-                      ))
-                      : SizedBox(
-                    // width: double.infinity,
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () => {
-                        handleSellPayment()
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: NewColor.btnBgGreenColor,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "I Paid",
-                        style: NewStyle.btnTx16SplashBlue
-                            .copyWith(color: NewColor.mainWhiteColor),
-                      ),
-                    ),
-                  )
-                ],
-              ) : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24,),
-                  SizedBox(
-                    // width: double.infinity,
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () => {
-                        _launchURL("${Utils.sellUrl}${transaction['transaction']}"),
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                          return const HistoryScreen();
-                        }))
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: NewColor.btnBgGreenColor,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "Proceed to sell",
-                        style: NewStyle.btnTx16SplashBlue
-                            .copyWith(color: NewColor.mainWhiteColor),
-                      ),
-                    ),
-                  )
-                ],
-              ),
             ],
           ),
         ),

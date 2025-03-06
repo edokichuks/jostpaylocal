@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Provider/Token_Provider.dart';
@@ -171,7 +170,8 @@ class _SendTokenDetailScreenState extends State<SendTokenDetailScreen> {
                                       color: MyColor.backgroundColor,
                                       borderRadius: BorderRadius.circular(5),
                                     ),
-                                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(12, 6, 12, 6),
                                     child: Text("0.1 USDT",
                                         style: NewStyle.tx28White.copyWith(
                                           fontSize: 12,

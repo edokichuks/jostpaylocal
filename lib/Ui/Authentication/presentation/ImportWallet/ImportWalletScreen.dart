@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,23 +12,19 @@ import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../LocalDb/Local_Account_address.dart';
-import '../../../Provider/Token_Provider.dart';
-import '../../Dashboard/DashboardScreen.dart';
+import '../../../../LocalDb/Local_Account_address.dart';
+import '../../../../Provider/Token_Provider.dart';
+import '../../../Dashboard/DashboardScreen.dart';
 
 class ImportWalletScreen extends StatefulWidget {
   bool isNew;
-  ImportWalletScreen({
-    super.key,
-    required this.isNew
-  });
+  ImportWalletScreen({super.key, required this.isNew});
 
   @override
   State<ImportWalletScreen> createState() => _ImportWalletScreenState();
 }
 
 class _ImportWalletScreenState extends State<ImportWalletScreen> {
-
   TextEditingController phraseController = TextEditingController();
   TextEditingController pinCodeController = TextEditingController();
 
@@ -42,7 +37,6 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
   Future<void> secureScreen() async {
     // await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
-
 
   Future<void> secureScreenOff() async {
     // await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
@@ -59,7 +53,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     secureScreenOff();
   }
@@ -84,7 +78,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       "device_id": deviceId,
       "type": "mnemonic",
       "password": pinCodeController.text,
-      "mnemonic":  phraseController.text.trim(),
+      "mnemonic": phraseController.text.trim(),
     };
 
     // print("initCreateWallet");
@@ -96,24 +90,21 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       sharedPreferences.setString('isLogin', 'true');
       sharedPreferences.setInt('account', 1);
       sharedPreferences.setString('password', pinCodeController.text);
-      sharedPreferences.setBool('fingerOn',fingerBool);
+      sharedPreferences.setBool('fingerOn', fingerBool);
 
       // print("accountProvider.accountData === > ${accountProvider.accountData.length}");
-      for(int i=0; i<accountProvider.accountData.length; i++){
-
-
-        for(int j=0; j<DbNetwork.dbNetwork.networkList.length; j++){
-
+      for (int i = 0; i < accountProvider.accountData.length; i++) {
+        for (int j = 0; j < DbNetwork.dbNetwork.networkList.length; j++) {
           await DbAccountAddress.dbAccountAddress.createAccountAddress(
               accountProvider.accountData[i]["id"],
-              accountProvider.accountData[i][DbNetwork.dbNetwork.networkList[j].publicKeyName],
-              accountProvider.accountData[i][DbNetwork.dbNetwork.networkList[j].privateKeyName],
+              accountProvider.accountData[i]
+                  [DbNetwork.dbNetwork.networkList[j].publicKeyName],
+              accountProvider.accountData[i]
+                  [DbNetwork.dbNetwork.networkList[j].privateKeyName],
               DbNetwork.dbNetwork.networkList[j].publicKeyName,
               DbNetwork.dbNetwork.networkList[j].privateKeyName,
               DbNetwork.dbNetwork.networkList[j].id,
-              DbNetwork.dbNetwork.networkList[j].name
-          );
-
+              DbNetwork.dbNetwork.networkList[j].name);
         }
 
         // print("create account db call");
@@ -121,15 +112,11 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
             "${accountProvider.accountData[i]["id"]}",
             accountProvider.accountData[i]["device_id"],
             accountProvider.accountData[i]["name"],
-            accountProvider.accountData[i]["mnemonic"]
-        );
-
+            accountProvider.accountData[i]["mnemonic"]);
       }
 
       getAccount();
-
     } else {
-
       setState(() {
         isLoading = false;
       });
@@ -141,9 +128,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 15.0
-      );
-
+          fontSize: 15.0);
     }
   }
 
@@ -152,37 +137,39 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
     getToken();
   }
 
-
   // var currency;
   getToken() async {
-    for (int i = 0; i < DBAccountProvider.dbAccountProvider.newAccountList.length; i++) {
-
-      await DbAccountAddress.dbAccountAddress.getAccountAddress(DBAccountProvider.dbAccountProvider.newAccountList[i].id);
+    for (int i = 0;
+        i < DBAccountProvider.dbAccountProvider.newAccountList.length;
+        i++) {
+      await DbAccountAddress.dbAccountAddress.getAccountAddress(
+          DBAccountProvider.dbAccountProvider.newAccountList[i].id);
       var data = {};
 
-      for (int j = 0; j < DbAccountAddress.dbAccountAddress.allAccountAddress.length; j++) {
-        data[DbAccountAddress.dbAccountAddress.allAccountAddress[j].publicKeyName] = DbAccountAddress.dbAccountAddress.allAccountAddress[j].publicAddress;
-
+      for (int j = 0;
+          j < DbAccountAddress.dbAccountAddress.allAccountAddress.length;
+          j++) {
+        data[DbAccountAddress
+                .dbAccountAddress.allAccountAddress[j].publicKeyName] =
+            DbAccountAddress
+                .dbAccountAddress.allAccountAddress[j].publicAddress;
       }
       //print(json.encode(data));
-      await tokenProvider.getAccountToken(data, '/getAccountTokens', DBAccountProvider.dbAccountProvider.newAccountList[i].id);
-
+      await tokenProvider.getAccountToken(data, '/getAccountTokens',
+          DBAccountProvider.dbAccountProvider.newAccountList[i].id);
     }
-
 
     // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const DashboardScreen()
-      ),(route) => false,
+      MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      (route) => false,
     );
 
     setState(() {
       isLoading = false;
     });
   }
-
-
 
   TextEditingController nameController = TextEditingController();
   newImportAccount() async {
@@ -199,52 +186,48 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       "device_id": deviceId,
       "type": "mnemonic",
       "password": "",
-      "mnemonic":  phraseController.text,
+      "mnemonic": phraseController.text,
     };
 
     // print(jsonEncode(data));
 
     await accountProvider.addAccount(data, '/createWallet');
     if (accountProvider.isSuccess == true) {
-
       // print(accountProvider.accountData);
-      for(int j=0; j<DbNetwork.dbNetwork.networkList.length; j++){
-
+      for (int j = 0; j < DbNetwork.dbNetwork.networkList.length; j++) {
         await DbAccountAddress.dbAccountAddress.createAccountAddress(
             accountProvider.accountData[0]["id"],
-            accountProvider.accountData[0][DbNetwork.dbNetwork.networkList[j].publicKeyName],
-            accountProvider.accountData[0][DbNetwork.dbNetwork.networkList[j].privateKeyName],
+            accountProvider.accountData[0]
+                [DbNetwork.dbNetwork.networkList[j].publicKeyName],
+            accountProvider.accountData[0]
+                [DbNetwork.dbNetwork.networkList[j].privateKeyName],
             DbNetwork.dbNetwork.networkList[j].publicKeyName,
             DbNetwork.dbNetwork.networkList[j].privateKeyName,
             DbNetwork.dbNetwork.networkList[j].id,
-            DbNetwork.dbNetwork.networkList[j].name
-        );
-
+            DbNetwork.dbNetwork.networkList[j].name);
       }
 
       await DBAccountProvider.dbAccountProvider.createAccount(
           "${accountProvider.accountData[0]["id"]}",
           accountProvider.accountData[0]["device_id"],
           accountProvider.accountData[0]["name"],
-          accountProvider.accountData[0]["mnemonic"]
-      );
+          accountProvider.accountData[0]["mnemonic"]);
 
       newAccount("${accountProvider.accountData[0]["id"]}");
 
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString('accountId', "${accountProvider.accountData[0]["id"]}");
-      sharedPreferences.setString('accountName', accountProvider.accountData[0]["name"]);
-
-
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          'accountId', "${accountProvider.accountData[0]["id"]}");
+      sharedPreferences.setString(
+          'accountName', accountProvider.accountData[0]["name"]);
     } else {
-
       setState(() {
         isLoading = false;
       });
 
       // ignore: use_build_context_synchronously
       Helper.dialogCall.showToast(context, "Invalid Seed Phrase");
-
     }
   }
 
@@ -258,25 +241,26 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
 
     var data = {};
 
-    for (int j = 0; j < DbAccountAddress.dbAccountAddress.allAccountAddress.length; j++) {
-      data[DbAccountAddress.dbAccountAddress.allAccountAddress[j].publicKeyName] = DbAccountAddress.dbAccountAddress.allAccountAddress[j].publicAddress;
+    for (int j = 0;
+        j < DbAccountAddress.dbAccountAddress.allAccountAddress.length;
+        j++) {
+      data[DbAccountAddress
+              .dbAccountAddress.allAccountAddress[j].publicKeyName] =
+          DbAccountAddress.dbAccountAddress.allAccountAddress[j].publicAddress;
     }
     await tokenProvider.getAccountToken(data, '/getAccountTokens', accountId);
 
-
     // ignore: use_build_context_synchronously
-    Navigator.pop(context,"refresh");
-    Navigator.pop(context,"refresh");
+    Navigator.pop(context, "refresh");
+    Navigator.pop(context, "refresh");
 
     setState(() {
       isLoading = false;
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -284,88 +268,75 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
     tokenProvider = Provider.of<TokenProvider>(context, listen: true);
 
     return Scaffold(
-
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           isLoading == true
-              ?
-          const SizedBox(
-              height:52,
-              child: Center(
-                  child: CircularProgressIndicator(
+              ? const SizedBox(
+                  height: 52,
+                  child: Center(
+                      child: CircularProgressIndicator(
                     color: MyColor.greenColor,
-                  )
-              )
-          )
-              :
-          widget.isNew
-              ?
-          InkWell(
-            onTap: () {
-              if(phraseController.text.isNotEmpty && nameController.text.isNotEmpty) {
-                newImportAccount();
-              }else{
-                Helper.dialogCall.showToast(context, "Please provider all details");
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(15,0,15,15),
-              alignment: Alignment.center,
-              height: 45,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: phraseController.text.isNotEmpty && nameController.text.isNotEmpty
-                  ?
-              MyStyle.buttonDecoration
-                  :
-              MyStyle.invalidDecoration,
-
-              child: Text(
-                "Import wallet",
-                style:  MyStyle.tx18BWhite.copyWith(
-                    color: phraseController.text.isNotEmpty && nameController.text.isNotEmpty
-                        ?
-                    MyColor.mainWhiteColor
-                        :
-                    MyColor.mainWhiteColor.withOpacity(0.4)
-                ),
-              ),
-            ),
-          )
-              :
-          InkWell(
-            onTap: () {
-              if(phraseController.text.isNotEmpty && pinCodeController.text.isNotEmpty) {
-                importAccount();
-              }else{
-                Helper.dialogCall.showToast(context, "Please provider all details");
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(15,0,15,15),
-              alignment: Alignment.center,
-              height: 45,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: phraseController.text.isNotEmpty && pinCodeController.text.isNotEmpty
-                  ?
-              MyStyle.buttonDecoration
-                  :
-              MyStyle.invalidDecoration,
-
-              child: Text(
-                "Import wallet",
-                style:  MyStyle.tx18BWhite.copyWith(
-                    color: phraseController.text.isNotEmpty && pinCodeController.text.isNotEmpty
-                        ?
-                    MyColor.mainWhiteColor
-                        :
-                    MyColor.mainWhiteColor.withOpacity(0.4)
-                ),
-              ),
-            ),
-          ),
-
-
+                  )))
+              : widget.isNew
+                  ? InkWell(
+                      onTap: () {
+                        if (phraseController.text.isNotEmpty &&
+                            nameController.text.isNotEmpty) {
+                          newImportAccount();
+                        } else {
+                          Helper.dialogCall.showToast(
+                              context, "Please provider all details");
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        alignment: Alignment.center,
+                        height: 45,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: phraseController.text.isNotEmpty &&
+                                nameController.text.isNotEmpty
+                            ? MyStyle.buttonDecoration
+                            : MyStyle.invalidDecoration,
+                        child: Text(
+                          "Import wallet",
+                          style: MyStyle.tx18BWhite.copyWith(
+                              color: phraseController.text.isNotEmpty &&
+                                      nameController.text.isNotEmpty
+                                  ? MyColor.mainWhiteColor
+                                  : MyColor.mainWhiteColor.withOpacity(0.4)),
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        if (phraseController.text.isNotEmpty &&
+                            pinCodeController.text.isNotEmpty) {
+                          importAccount();
+                        } else {
+                          Helper.dialogCall.showToast(
+                              context, "Please provider all details");
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        alignment: Alignment.center,
+                        height: 45,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: phraseController.text.isNotEmpty &&
+                                pinCodeController.text.isNotEmpty
+                            ? MyStyle.buttonDecoration
+                            : MyStyle.invalidDecoration,
+                        child: Text(
+                          "Import wallet",
+                          style: MyStyle.tx18BWhite.copyWith(
+                              color: phraseController.text.isNotEmpty &&
+                                      pinCodeController.text.isNotEmpty
+                                  ? MyColor.mainWhiteColor
+                                  : MyColor.mainWhiteColor.withOpacity(0.4)),
+                        ),
+                      ),
+                    ),
           SizedBox(height: Platform.isIOS ? 10 : 5),
         ],
       ),
@@ -385,7 +356,6 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
           "Import Wallet",
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: SizedBox(
@@ -398,10 +368,8 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
 
                 Text(
                   "Enter the 12 recovery phrase your wew given when you created your accounts",
-                  style:MyStyle.tx22RWhite.copyWith(
-                      fontSize: 18,
-                      color: MyColor.grey01Color
-                  ),
+                  style: MyStyle.tx22RWhite
+                      .copyWith(fontSize: 18, color: MyColor.grey01Color),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 22),
@@ -411,11 +379,8 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: MyColor.darkGrey01Color,
-                      border: Border.all(
-                          color: MyColor.boarderColor,
-                          width: 0.8
-                      )
-                  ),
+                      border:
+                          Border.all(color: MyColor.boarderColor, width: 0.8)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -429,30 +394,25 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Recovery Phrase",
-                          hintStyle:MyStyle.tx22RWhite.copyWith(
+                          hintStyle: MyStyle.tx22RWhite.copyWith(
                               fontSize: 18,
-                              color: MyColor.whiteColor.withOpacity(0.7)
-                          ),
+                              color: MyColor.whiteColor.withOpacity(0.7)),
                         ),
                       ),
-
                       const SizedBox(height: 25),
                       InkWell(
                         onTap: () async {
-                          ClipboardData? data = await Clipboard.getData('text/plain');
+                          ClipboardData? data =
+                              await Clipboard.getData('text/plain');
                           String? value = data?.text.toString();
 
                           List list = value!.trim().split(" ");
-                          if(list.length == 12 || list.length == 24){
-
+                          if (list.length == 12 || list.length == 24) {
                             setState(() {
                               phraseController.text = value;
                               //seedList = value.split(" ");
                             });
-
-                          }
-                          else{
-
+                          } else {
                             Fluttertoast.showToast(
                                 msg: "Invalid_Seed_Phrase !!",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -460,16 +420,12 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
-                                fontSize: 16.0
-                            );
-
+                                fontSize: 16.0);
                           }
                         },
-                        child:  Text(
+                        child: Text(
                           "Paste",
-                          style:MyStyle.tx22RWhite.copyWith(
-                              fontSize: 18
-                          ),
+                          style: MyStyle.tx22RWhite.copyWith(fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -485,9 +441,9 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                     controller: pinCodeController,
                     obscureText: showPassword,
                     validator: (value) {
-                      if(value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Please enter login password";
-                      }else{
+                      } else {
                         return null;
                       }
                     },
@@ -497,35 +453,28 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                         hintText: "Passwords",
                         isDense: false,
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15
-                        ),
+                            vertical: 20, horizontal: 15),
                         suffixIcon: showPassword
-                            ?
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showPassword = false;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                            :
-                        IconButton(
-                            onPressed: (){
-                              setState(() {
-                                showPassword = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.visibility_off,
-                              color: MyColor.mainWhiteColor,
-                            )
-                        )
-                    ),
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = false;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility,
+                                  color: MyColor.mainWhiteColor,
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = true;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.visibility_off,
+                                  color: MyColor.mainWhiteColor,
+                                ))),
                   ),
                 ),
                 SizedBox(height: widget.isNew ? 0 : 22),
@@ -536,21 +485,19 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                   child: TextFormField(
                     controller: nameController,
                     validator: (value) {
-                      if(value!.isEmpty){
+                      if (value!.isEmpty) {
                         return "Please enter wallet name";
-                      }else{
+                      } else {
                         return null;
                       }
                     },
                     cursorColor: MyColor.greenColor,
                     style: MyStyle.tx18RWhite,
                     decoration: MyStyle.textInputDecoration.copyWith(
-                        hintText: "Wallet Name",
-                        isDense: false,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15
-                        ),
+                      hintText: "Wallet Name",
+                      isDense: false,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 15),
                     ),
                   ),
                 ),
@@ -560,7 +507,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 Visibility(
                   visible: !widget.isNew,
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         fingerBool = !fingerBool;
                       });
@@ -568,28 +515,37 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-
                         Container(
                           height: 24,
                           width: 24,
                           decoration: BoxDecoration(
-                              color: fingerBool ? MyColor.greenColor : Colors.transparent,
+                              color: fingerBool
+                                  ? MyColor.greenColor
+                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                width: 1.5,
-                                color: fingerBool ?  MyColor.greenColor : MyColor.whiteColor.withOpacity(0.4)
-                              )
-                          ),
-                          child: fingerBool ? const Center(child: Icon(Icons.check,size: 18,color: Colors.white,)) : const SizedBox(),
+                                  width: 1.5,
+                                  color: fingerBool
+                                      ? MyColor.greenColor
+                                      : MyColor.whiteColor.withOpacity(0.4))),
+                          child: fingerBool
+                              ? const Center(
+                                  child: Icon(
+                                  Icons.check,
+                                  size: 18,
+                                  color: Colors.white,
+                                ))
+                              : const SizedBox(),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             "Sign in with FaceID and Finger Print",
                             style: MyStyle.tx18RWhite.copyWith(
-                              fontSize: 14,
-                                color: fingerBool ? MyColor.whiteColor : MyColor.greyColor
-                            ),
+                                fontSize: 14,
+                                color: fingerBool
+                                    ? MyColor.whiteColor
+                                    : MyColor.greyColor),
                           ),
                         )
                       ],
@@ -603,6 +559,5 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
         ),
       ),
     );
-
   }
 }
