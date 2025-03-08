@@ -24,7 +24,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
@@ -105,8 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfileScreen(),
+                              builder: (context) => const ProfileScreen(),
                             ));
                       },
                       child: Row(
@@ -147,8 +145,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfileScreen(),
+                              builder: (context) => const ProfileScreen(),
                             ));
                       },
                       child: Row(
@@ -189,8 +186,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfileScreen(),
+                              builder: (context) => const ProfileScreen(),
                             ));
                       },
                       child: Row(

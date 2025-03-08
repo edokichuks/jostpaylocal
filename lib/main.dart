@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
 import 'package:jost_pay_wallet/Ui/Static/onboarding_screen.dart';
+import 'package:jost_pay_wallet/Ui/giftCard/providers/gift_card_provider.dart';
 import 'package:jost_pay_wallet/services/local_storage.dart/local_storage_export.dart';
 import 'package:jost_pay_wallet/services/navigation_service.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +95,12 @@ class _MyAppState extends State<MyApp> {
           create: (context) => LocalStorageRepoImpl(
               Hive.box(LocalStoreKeysManger.appBox.rawValue)),
         ),
-        ChangeNotifierProvider(create: (context) => AuthProvider(context.read<LocalStorageRepo>())),
+        ChangeNotifierProvider(
+            create: (context) =>
+                AuthProvider(context.read<LocalStorageRepo>())),
+        ChangeNotifierProvider(
+            create: (context) =>
+                GiftCardProvider(context.read<LocalStorageRepo>())),
       ],
       child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
         return ScreenUtilInit(
@@ -105,7 +111,6 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             navigatorKey: NavigationService.navigatorKey,
-            
             title: 'JostPayWallet',
             theme: themeProvider.lightTheme,
             darkTheme: themeProvider.darkTheme,

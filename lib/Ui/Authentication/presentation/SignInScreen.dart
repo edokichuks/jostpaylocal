@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
@@ -144,33 +145,39 @@ class _SignInScreenState extends State<SignInScreen> {
                 //         color: MyColor.greenColor,
                 //       ))
                 //     :
-                  Consumer<AuthProvider>(builder: (context, data, _) {
-                  return SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () async {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          log('Sign in here');
-                          await data.login(_emailController.text.trim(),
-                              _passwordController.text.trim());
-                        } else {
-                          log('validated else');
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: MyColor.greenColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        data.isLogin ? '...' : "Login",
-                        style: NewStyle.btnTx16SplashBlue
-                            .copyWith(color: NewColor.mainWhiteColor),
-                      ),
-                    ),
-                  );
+                Consumer<AuthProvider>(builder: (context, data, _) {
+                  return data.isLogin
+                      ? const Center(
+                          child: CupertinoActivityIndicator(
+                            color: MyColor.greenColor,
+                          ),
+                        )
+                      : SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                log('Sign in here');
+                                await data.login(_emailController.text.trim(),
+                                    _passwordController.text.trim());
+                              } else {
+                                log('validated else');
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: MyColor.greenColor,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              data.isLogin ? '...' : "Login",
+                              style: NewStyle.btnTx16SplashBlue
+                                  .copyWith(color: NewColor.mainWhiteColor),
+                            ),
+                          ),
+                        );
                 }),
                 const SizedBox(
                   height: 410,

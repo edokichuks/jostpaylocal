@@ -6,7 +6,7 @@ import 'package:jost_pay_wallet/Provider/DashboardProvider.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Buy/BuyAirtime.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Buy/BuyData.dart';
-import 'package:jost_pay_wallet/Ui/giftCard/buy_gift_card_screen.dart';
+import 'package:jost_pay_wallet/Ui/giftCard/presentation/buy_gift_card_screen.dart';
 import 'package:jost_pay_wallet/Ui/pay4me/pay4me_screen.dart';
 import 'package:jost_pay_wallet/Ui/promotions/social_boost.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';

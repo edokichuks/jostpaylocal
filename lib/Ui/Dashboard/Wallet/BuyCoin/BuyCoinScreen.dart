@@ -389,8 +389,9 @@ class _BuyCoinScreenState extends State<BuyCoinScreen> {
                           cursorColor: NewColor.btnBgGreenColor,
                           style: NewStyle.tx28White.copyWith(fontSize: 12),
                           onChanged: (value) {
-                            if (_debounce?.isActive ?? false)
+                            if (_debounce?.isActive ?? false) {
                               _debounce!.cancel();
+                            }
                             _debounce =
                                 Timer(const Duration(milliseconds: 200), () {
                               getBuyAmount();

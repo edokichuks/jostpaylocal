@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Provider/Token_Provider.dart';
-import 'package:jost_pay_wallet/Provider/Transection_Provider.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Wallet/SendToken/SendTokenDetailScreen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';

@@ -66,13 +66,13 @@ class AuthRepository {
   }
 
   Future<LoginResponse> verifyEmail(String pin, String token) async {
-    final _header = {
+    final header = {
       "Accept": "application/x-www-form-urlencoded",
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": token,
     };
     var response = await networkService
-        .post("verify-email", headers: _header, body: {"code": pin});
+        .post("verify-email", headers: header, body: {"code": pin});
 
     var resp = LoginResponse.fromMap(response);
     if (resp.result == true) {

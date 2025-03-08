@@ -324,7 +324,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(children: [
                 Consumer<AuthProvider>(builder: (context, prov, _) {
                   return prov.isRegistering
-                      ? Center(
+                      ? const Center(
                           child: CupertinoActivityIndicator(
                             color: MyColor.greenColor,
                           ),

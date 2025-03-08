@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/SignUpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/providers/auth_provider.dart';
-import 'package:jost_pay_wallet/Ui/Dashboard/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Values/Helper/logger.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';

@@ -4,8 +4,6 @@ import 'dart:async';
 // Package imports:
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jost_pay_wallet/services/local_storage.dart/local_storage_export.dart';
-import 'package:provider/provider.dart';
-
 
 // Project imports:
 

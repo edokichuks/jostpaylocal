@@ -7,7 +7,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:jost_pay_wallet/Values/Helper/helper.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
-import 'VerifyRecoveryPhrase.dart';
 import 'package:clipboard/clipboard.dart';
 
 // ignore: must_be_immutable

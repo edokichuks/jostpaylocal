@@ -25,14 +25,14 @@ class Info {
   ) {
     Flushbar(
       message: message,
-      backgroundColor: Color(0xFF219653),
+      backgroundColor: const Color(0xFF219653),
       flushbarStyle: FlushbarStyle.FLOATING,
       duration: const Duration(seconds: 5),
       flushbarPosition: FlushbarPosition.TOP,
       borderRadius: BorderRadius.circular(5),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       margin: const EdgeInsets.all(0),
-      leftBarIndicatorColor: Color(0xFF219653),
+      leftBarIndicatorColor: const Color(0xFF219653),
     ).show(context!);
   }
 }

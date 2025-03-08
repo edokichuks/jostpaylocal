@@ -9,7 +9,7 @@ enum LocalStoreKeysManger {
   currentState('current_state'),
   refreshToken('refresh_token'),
   rememberMe('rememberMe'),
- 
+
   balanceVisibility('balanceVisibility');
 
   final String rawValue;

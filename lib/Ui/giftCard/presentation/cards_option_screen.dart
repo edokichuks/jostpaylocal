@@ -1,13 +1,13 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jost_pay_wallet/Ui/giftCard/gift_card_summary_screen.dart';
+import 'package:jost_pay_wallet/Ui/giftCard/presentation/gift_card_summary_screen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:provider/provider.dart';
 
-import '../../Provider/theme_provider.dart';
+import '../../../Provider/theme_provider.dart';
 
 class CardsOptionScreen extends StatefulWidget {
   const CardsOptionScreen({super.key});

@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:jost_pay_wallet/LocalDb/Local_Walletv2_provider.dart';
 import 'package:jost_pay_wallet/Provider/DashboardProvider.dart';
 import 'package:jost_pay_wallet/Provider/InternetProvider.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Services.dart';
@@ -14,7 +12,6 @@ import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_connect_dart_v2/sign/sign-client/client/sign_client.dart';
-import 'package:wallet_connect_dart_v2/sign/sign-client/session/models.dart';
 
 SignClient? signClient;
 

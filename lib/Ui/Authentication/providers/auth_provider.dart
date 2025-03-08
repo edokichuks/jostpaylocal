@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jost_pay_wallet/Ui/Authentication/models/login_response.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/models/register_model.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/presentation/OtpScreen.dart';
 import 'package:jost_pay_wallet/Ui/Authentication/repository/auth_repository.dart';

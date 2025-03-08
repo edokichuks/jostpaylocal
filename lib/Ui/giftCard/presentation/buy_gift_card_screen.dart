@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jost_pay_wallet/Provider/theme_provider.dart';
-import 'package:jost_pay_wallet/Ui/giftCard/cards_option_screen.dart';
+import 'package:jost_pay_wallet/Ui/giftCard/presentation/cards_option_screen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/MyStyle.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
@@ -15,6 +15,12 @@ class BuyGiftCardScreen extends StatefulWidget {
 }
 
 class _BuyGiftCardScreenState extends State<BuyGiftCardScreen> {
+@override
+  void initState() {
+    super.initState();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);

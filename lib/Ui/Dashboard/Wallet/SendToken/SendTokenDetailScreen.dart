@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jost_pay_wallet/Provider/Token_Provider.dart';
-import 'package:jost_pay_wallet/Provider/Transection_Provider.dart';
-import 'package:jost_pay_wallet/Ui/Dashboard/Wallet/CoinScreen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
 import 'package:jost_pay_wallet/Values/NewStyle.dart';
 import 'package:jost_pay_wallet/Values/NewColor.dart';
@@ -208,7 +206,7 @@ class _SendTokenDetailScreenState extends State<SendTokenDetailScreen> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {},
-                          
+
                           // => (Navigator.push(context,
                           //     MaterialPageRoute(builder: (context) {
                           //   return const CoinScreen();

@@ -8,7 +8,6 @@ import 'package:jost_pay_wallet/Ui/Dashboard/AlarmScreen.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Buy/BuyAirtime.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/Buy/BuyData.dart';
 import 'package:jost_pay_wallet/Ui/Dashboard/HelpSupport.dart';
-import 'package:jost_pay_wallet/Ui/Dashboard/Support/SupportScreen.dart';
 import 'package:jost_pay_wallet/Ui/pay4me/pay4me_screen.dart';
 import 'package:jost_pay_wallet/Ui/promotions/socials_screen.dart';
 import 'package:jost_pay_wallet/Values/MyColor.dart';
